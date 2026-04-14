@@ -1,7 +1,10 @@
 package routes
 
-import ("net/http"; "api-matriculas/handlers")
-func SetupRoutes() 
-{ 
-	http.HandleFunc("/users", handlers.UsersHandler) 
+import (
+	"api-matriculas/handlers"
+	"net/http"
+)
+
+func SetupRoutes() {
+	http.HandleFunc("/teste", handlers.UsersHandler)
 }

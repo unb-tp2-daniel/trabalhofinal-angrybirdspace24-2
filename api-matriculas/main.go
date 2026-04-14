@@ -1,16 +1,11 @@
 package main
 
 import (
+	"api-matriculas/routes"
 	"net/http"
 )
 
-type User struct {
-	Nome string `json:"nome"`
-}
-
-var users User
-
 func main() {
-
+	routes.SetupRoutes()
 	http.ListenAndServe(":8080", nil)
 }

@@ -1,21 +1,30 @@
 package handlers
-import ("encoding/json"; "net/http"; "servidor-api/models")
+
+import (
+	"api-matriculas/models"
+	"encoding/json"
+	"net/http"
+)
+
 var Users []models.User
-func HandleFunc(w http.ResponseWriter, r *http.Request) 
-{
-		if r.Method == http.MethodGet {
-			msg := "Olá, " + users.Nome + "! Bem-vindo ao servidor API."
-			w.Write([]byte(msg))
-		} else if r.Method == http.MethodPost {
-			err := json.NewDecoder(r.Body).Decode(&users)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("Error decoding JSON"))
-				return
-			}
-			w.Write([]byte("POST request received"))
-		} else {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			w.Write([]byte("Method not allowed"))
+
+func UsersHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		for _, u := range Users {
+			w.Write([]byte(u.Nome + "\n"))
 		}
+		return
+	}
+	if r.Method == http.MethodPost {
+		var u models.User
+		err := json.NewDecoder(r.Body).Decode(&u)
+		if err != nil {
+			http.Error(w, "json invalido", http.StatusBadRequest)
+			return
+		}
+		Users = append(Users, u)
+		w.Write([]byte("POST recebido"))
+		return
+	}
+	http.Error(w, "metodo nao permitido", http.StatusMethodNotAllowed)
 }
