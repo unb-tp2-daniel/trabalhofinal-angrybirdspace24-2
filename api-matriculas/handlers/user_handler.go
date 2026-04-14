@@ -1,18 +1,8 @@
-package main
-
-import (
-	"encoding/json"
-	"net/http"
-)
-
-type User struct {
-	Nome string `json:"nome"`
-}
-
-var users User
-
-func main() {
-	http.HandleFunc("/teste", func(w http.ResponseWriter, r *http.Request) {
+package handlers
+import ("encoding/json"; "net/http"; "servidor-api/models")
+var Users []models.User
+func HandleFunc(w http.ResponseWriter, r *http.Request) 
+{
 		if r.Method == http.MethodGet {
 			msg := "Olá, " + users.Nome + "! Bem-vindo ao servidor API."
 			w.Write([]byte(msg))
@@ -28,7 +18,4 @@ func main() {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			w.Write([]byte("Method not allowed"))
 		}
-	})
-
-	http.ListenAndServe(":8080", nil)
 }
