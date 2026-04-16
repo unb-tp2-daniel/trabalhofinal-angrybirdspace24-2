@@ -8,6 +8,10 @@ import (
 
 var Users []models.User
 
+func TesteHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Teste recebido"))
+}
+
 func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		for _, u := range Users {

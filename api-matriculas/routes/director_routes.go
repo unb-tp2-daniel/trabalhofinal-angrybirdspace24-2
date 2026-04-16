@@ -5,7 +5,9 @@ import (
 	"net/http"
 )
 
-func DiretorRoutes() {
-	http.HandleFunc("/alunos", handlers.TesteHandler)
-	http.HandleFunc("/alunos/criar", handlers.TesteHandler)
+func DirectorRoutes() {
+	http.HandleFunc("/director", handlers.TesteHandler)
+	http.HandleFunc("/director/add/subject", handlers.TesteHandler)
+	http.HandleFunc("/director/delete/subject", handlers.TesteHandler)
+	http.HandleFunc("/director/update/subject", handlers.TesteHandler)
 }

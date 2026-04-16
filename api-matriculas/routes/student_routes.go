@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func AlunoRoutes() {
-	http.HandleFunc("/alunos", handlers.TesteHandler)
-	http.HandleFunc("/alunos/criar", handlers.TesteHandler)
+func StudentRoutes() {
+	http.HandleFunc("/student", handlers.TesteHandler)
+	http.HandleFunc("/student/create", handlers.TesteHandler)
 }

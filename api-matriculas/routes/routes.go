@@ -1,7 +1,9 @@
 package routes
 
 func SetupRoutes() {
-	AlunoRoutes()
-	ProfessorRoutes()
-	DiretorRoutes()
+	StudentRoutes()
+	GeneralRoutes()
+	TeacherRoutes()
+	DirectorRoutes()
+	AuthRoutes()
 }
