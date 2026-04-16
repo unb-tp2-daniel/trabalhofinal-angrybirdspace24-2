@@ -3,6 +3,7 @@ package models
 import "time"
 
 type StudentAuth struct {
+	//Api_key
 	StudentID     string `json:"student_id"`
 	InstitutionID string `json:"Institutional_id"`
 }

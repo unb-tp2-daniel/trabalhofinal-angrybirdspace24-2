@@ -8,4 +8,5 @@ import (
 func GeneralRoutes() {
 	http.HandleFunc("/ping", handlers.TesteHandler)
 	http.HandleFunc("/time", handlers.TesteHandler)
+	http.HandleFunc("/subject/view", handlers.TesteHandler)
 }

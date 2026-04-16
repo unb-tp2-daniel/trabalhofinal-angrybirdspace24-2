@@ -6,8 +6,8 @@ import (
 )
 
 func DirectorRoutes() {
-	http.HandleFunc("/director", handlers.TesteHandler)
-	http.HandleFunc("/director/add/subject", handlers.TesteHandler)
-	http.HandleFunc("/director/delete/subject", handlers.TesteHandler)
-	http.HandleFunc("/director/update/subject", handlers.TesteHandler)
+	//http.HandleFunc("/director", handlers.TesteHandler)
+	http.HandleFunc("/director/subject/add", handlers.TesteHandler)
+	http.HandleFunc("/director/subject/delete", handlers.TesteHandler)
+	http.HandleFunc("/director/subject/update", handlers.TesteHandler)
 }
