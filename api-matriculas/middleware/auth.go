@@ -7,10 +7,10 @@ import (
 
 func RequireInstitutionKey(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		key := r.Header.Get("School-API-Key")
+		key := r.Header.Get("institutional_key")
 		expectedKey := os.Getenv("INSTITUTION_KEY")
 		if expectedKey == "" {
-			expectedKey = "coco-bosta-peluda" // valor da chave para desenvolvimento local, deve ser sobrescrito em produção
+			http.Error(w, "Service unavailable", http.StatusInternalServerError)
 		}
 		if key != expectedKey {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)

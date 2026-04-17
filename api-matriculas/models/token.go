@@ -3,9 +3,9 @@ package models
 import "time"
 
 type StudentAuth struct {
-	//Api_key
-	StudentID     string `json:"student_id"`
-	InstitutionID string `json:"Institutional_id"`
+	InstitutionalKey 	string `json:"institutional_key"`
+	StudentID     	 	string `json:"student_id"`
+	InstitutionID 	 	string `json:"Institutional_id"`
 }
 type StudentToken struct {
 	Token         string
@@ -16,7 +16,7 @@ type StudentToken struct {
 
 type TeacherAuth struct {
 	TeacherID     string `json:"teacher_id"`
-	InstitutionID string `json:"Institutional_id"`
+	InstitutionID string `json:"institutional_id"`
 }
 
 type TeacherToken struct {

@@ -8,5 +8,6 @@ import (
 
 func AuthRoutes() {
 	http.HandleFunc("/auth/student", middleware.RequireInstitutionKey(handlers.GenerateStudentToken))
-	http.HandleFunc("/auth/teacher", middleware.RequireInstitutionKey(handlers.GenerateTeacherToken))
+	http.HandleFunc("/auth/professor", middleware.RequireInstitutionKey(handlers.GenerateTeacherToken))
+	http.HandleFunc("/auth/director", middleware.RequireInstitutionKey(handlers.GenerateTeacherToken))
 }

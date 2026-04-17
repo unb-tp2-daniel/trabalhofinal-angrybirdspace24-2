@@ -28,7 +28,6 @@ func GenerateStudentToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func GenerateTeacherToken(w http.ResponseWriter, r *http.Request) {
-
 	var req models.TeacherAuth
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
