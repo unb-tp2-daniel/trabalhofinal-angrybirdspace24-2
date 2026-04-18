@@ -11,6 +11,7 @@ func RequireInstitutionKey(next http.HandlerFunc) http.HandlerFunc {
 		expectedKey := os.Getenv("INSTITUTION_KEY")
 		if expectedKey == "" {
 			http.Error(w, "Service unavailable", http.StatusInternalServerError)
+			return
 		}
 		if key != expectedKey {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)

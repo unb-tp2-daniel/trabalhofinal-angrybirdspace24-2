@@ -11,5 +11,4 @@ func StudentRoutes() {
 	http.HandleFunc("/student/position", handlers.TesteHandler)
 	http.HandleFunc("/student/subjects", handlers.TesteHandler)
 	http.HandleFunc("/student/schedule", handlers.TesteHandler)
-
 }

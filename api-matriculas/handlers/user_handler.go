@@ -15,7 +15,7 @@ func TesteHandler(w http.ResponseWriter, r *http.Request) {
 func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		for _, u := range Users {
-			w.Write([]byte(u.Nome + "\n"))
+			w.Write([]byte(u.Matricula + "\n")) // w.Write([]byte(u.Nome + "\n"))
 		}
 		return
 	}
