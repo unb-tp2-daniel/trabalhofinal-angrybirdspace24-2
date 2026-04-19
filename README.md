@@ -7,3 +7,4 @@ Este repositório visa cria um projeto de desenvolvimento web de um sistema/API 
 Aqui estão os contribuidores do projeto LAMAR e seus respectivos contatos:
 
 - Gabriel de Medeiros Matos - [repositório Gabriel](https://github.com/GabrieldeMedeiros05)
+- Guilherme Silva Cavalcante - [repositório Guilherme](https://github.com/leiturapipoca)
