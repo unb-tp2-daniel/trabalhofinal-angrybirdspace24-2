@@ -23,8 +23,8 @@ func GeneralRoutes() {
 
 	//************************************************
 
-	http.HandleFunc("/time", handlers.TesteHandler)
-	http.HandleFunc("/status", handlers.TesteHandler)
-	http.HandleFunc("/bdcapacity", handlers.TesteHandler)
+	http.HandleFunc("/time", handlers.TestHandler)
+	http.HandleFunc("/status", handlers.TestHandler)
+	http.HandleFunc("/bdcapacity", handlers.TestHandler)
 	http.HandleFunc("/login", middleware.RequireInstitutionKey(handlers.LoginHandler))
 }

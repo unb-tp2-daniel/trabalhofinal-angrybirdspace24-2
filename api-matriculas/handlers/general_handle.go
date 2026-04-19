@@ -70,7 +70,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		*/
 		
-		token, err := auth.GerarToken(user.Matricula, user.Role)
+		token, err := auth.GenerateToken(user.Matricula, user.Role)
 		if (err != nil) {
 			http.Error(w, "Erro ao gerar acesso", http.StatusInternalServerError)
 			println(err.Error())

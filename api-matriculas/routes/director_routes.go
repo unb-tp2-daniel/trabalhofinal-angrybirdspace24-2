@@ -6,14 +6,14 @@ import (
 )
 
 func DirectorRoutes() {
-	http.HandleFunc("/director", handlers.TesteHandler)
-	http.HandleFunc("/director/subject/add", handlers.TesteHandler)
-	http.HandleFunc("/director/subject/delete", handlers.TesteHandler)
-	http.HandleFunc("/director/subject/update", handlers.TesteHandler)
+	http.HandleFunc("/director", handlers.TestHandler)
+	http.HandleFunc("/director/subject/add", handlers.TestHandler)
+	http.HandleFunc("/director/subject/delete", handlers.TestHandler)
+	http.HandleFunc("/director/subject/update", handlers.TestHandler)
 
-	http.HandleFunc("/director/class/add", handlers.TesteHandler)
-	http.HandleFunc("/director/class/delete", handlers.TesteHandler)
-	http.HandleFunc("/director/class/update", handlers.TesteHandler)
+	http.HandleFunc("/director/class/add", handlers.TestHandler)
+	http.HandleFunc("/director/class/delete", handlers.TestHandler)
+	http.HandleFunc("/director/class/update", handlers.TestHandler)
 
 	/*
 	

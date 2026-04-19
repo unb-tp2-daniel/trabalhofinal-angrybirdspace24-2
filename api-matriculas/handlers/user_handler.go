@@ -8,7 +8,7 @@ import (
 
 var Users []models.User
 
-func TesteHandler(w http.ResponseWriter, r *http.Request) {
+func TestHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Teste recebido"))
 }
 

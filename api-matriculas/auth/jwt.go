@@ -10,8 +10,8 @@ import (
 
 var secretKey = []byte(os.Getenv("SECRET_KEY"))
 
-func GerarToken(id string, role string) (string, error) {
-	usuarios := models.Users {
+func GenerateToken(id string, role string) (string, error) {
+	users := models.Users {
 		id,
 		role,
 		jwt.RegisteredClaims {
@@ -20,7 +20,7 @@ func GerarToken(id string, role string) (string, error) {
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, usuarios)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, users)
 
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {

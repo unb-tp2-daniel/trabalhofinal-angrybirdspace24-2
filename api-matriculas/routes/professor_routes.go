@@ -6,5 +6,5 @@ import (
 )
 
 func TeacherRoutes() {
-	http.HandleFunc("/teacher/subject/show", handlers.TesteHandler)
+	http.HandleFunc("/teacher/subject/show", handlers.TestHandler)
 }

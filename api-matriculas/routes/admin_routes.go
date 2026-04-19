@@ -6,10 +6,10 @@ import (
 )
 
 func AdminRoutes() {
-	http.HandleFunc("/admin", handlers.TesteHandler)
+	http.HandleFunc("/admin", handlers.TestHandler)
 
-	http.HandleFunc("admin/rules", handlers.TesteHandler)
-	http.HandleFunc("admin/rules/add", handlers.TesteHandler)
-	http.HandleFunc("admin/rules/delete", handlers.TesteHandler)
-	http.HandleFunc("admin/rules/update", handlers.TesteHandler)
+	http.HandleFunc("admin/rules", handlers.TestHandler)
+	http.HandleFunc("admin/rules/add", handlers.TestHandler)
+	http.HandleFunc("admin/rules/delete", handlers.TestHandler)
+	http.HandleFunc("admin/rules/update", handlers.TestHandler)
 }
