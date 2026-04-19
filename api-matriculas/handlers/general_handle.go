@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"api-matriculas/models"
+	"api-matriculas/repository"
 	"api-matriculas/services"
 	"encoding/json"
 	"net/http"
@@ -33,6 +34,16 @@ func GenerateTokenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func VerifyKeyHandler(w http.ResponseWriter, r *http.Request) {
+	institutionalKey := r.Header.Get("institutional_key")
+	institution, err := repository.FindInstitutionByID(institutionalKey)
+	if err != nil {
+		http.Error(w, "Chave institucional inválida", http.StatusUnauthorized)
+		return
+	}
+	w.Write([]byte("Chave institucional válida para a instituição: " + institution))
 }
 
 func TestHandler(w http.ResponseWriter, r *http.Request) {
