@@ -9,3 +9,4 @@ Aqui estão os contribuidores do projeto Angry Birds 24.2 e seus respectivos con
 - Gabriel de Medeiros Matos - [repositório Gabriel](https://github.com/GabrieldeMedeiros05)
 - Guilherme Silva Cavalcante - [repositório Guilherme](https://github.com/leiturapipoca)
 - Pedro Augusto Martins dos Santos - [repositório Pedro](https://github.com/pekrio)
+- Ana Carolina Dias do Nascimento - [repositório Ana](https://github.com/anansc)
