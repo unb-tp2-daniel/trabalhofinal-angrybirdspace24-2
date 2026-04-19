@@ -2,30 +2,16 @@ package auth
 
 import (
 	"api-matriculas/models"
-	"os"
-	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var secretKey = []byte(os.Getenv("SECRET_KEY"))
-
-func GenerateToken(id string, role string) (string, error) {
-	users := models.Users {
-		id,
-		role,
-		jwt.RegisteredClaims {
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
-			IssuedAt: jwt.NewNumericDate(time.Now()),
-		},
+func SignToken(tokenData models.TokenData, secretKey []byte) (string, error) {
+	claims := jwt.MapClaims{
+		"institution_id": tokenData.InstitutionID,
+		"id":             tokenData.ID,
+		"exp":            tokenData.ExpiresAt.Unix(),
 	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, users)
-
-	tokenString, err := token.SignedString(secretKey)
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, nil
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(secretKey)
 }

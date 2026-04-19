@@ -16,12 +16,12 @@ func DirectorRoutes() {
 	http.HandleFunc("/director/class/update", handlers.TestHandler)
 
 	/*
-	
-	Diretor/Coordenador: 
-		cadastrar materias
-		permissão pra adicionar/remover aluno
-		criar novas turmas
-		aumentar tamanho das turmas
+
+		Diretor/Coordenador:
+			cadastrar materias
+			permissão pra adicionar/remover aluno
+			criar novas turmas
+			aumentar tamanho das turmas
 
 	*/
 }

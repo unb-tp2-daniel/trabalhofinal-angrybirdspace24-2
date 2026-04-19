@@ -2,29 +2,20 @@ package routes
 
 import (
 	"api-matriculas/handlers"
-	"api-matriculas/middleware"
 	"net/http"
 )
 
 func GeneralRoutes() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Online. " + r.Method + " recebido."))
-	})
-	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("pong"))
-	})
+	http.HandleFunc("/", handlers.TestHandler)
+	http.HandleFunc("/ping", handlers.PingHandler)
+	http.HandleFunc("/time", handlers.TimeHandler)
+	http.HandleFunc("/status", handlers.StatusHandler)
 
-	//**********************************************
-
-	// curl -H "institutional_key: KEY" localhost:8080/teste_token
-	http.HandleFunc("/teste_token", middleware.RequireInstitutionKey(func(w http.ResponseWriter, r *http.Request) {
+	/*// curl -H "institutional_key: KEY" localhost:8080/TestHandlere_token
+	http.HandleFunc("/TestHandlere_token", middleware.RequireInstitutionKey(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("funcionou"))
-	}))
+	})) to do
+	http.HandleFunc("/bdcapacity", handlers.TestHandler) To do*/
 
-	//************************************************
-
-	http.HandleFunc("/time", handlers.TestHandler)
-	http.HandleFunc("/status", handlers.TestHandler)
-	http.HandleFunc("/bdcapacity", handlers.TestHandler)
-	http.HandleFunc("/login", middleware.RequireInstitutionKey(handlers.LoginHandler))
+	//http.HandleFunc("/login", middleware.RequireInstitutionKey(handlers.LoginHandler))
 }
