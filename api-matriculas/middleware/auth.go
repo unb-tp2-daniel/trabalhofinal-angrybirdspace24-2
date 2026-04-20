@@ -1,19 +1,15 @@
 package middleware
 
 import (
+	"api-matriculas/repository"
 	"net/http"
-	"os"
 )
 
 func RequireInstitutionKey(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		key := r.Header.Get("institutional_key")
-		expectedKey := os.Getenv("INSTITUTION_KEY")
-		if expectedKey == "" {
-			http.Error(w, "Service unavailable", http.StatusInternalServerError)
-			return
-		}
-		if key != expectedKey {
+		_, err := repository.FindInstitutionByID(key)
+		if err != nil {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}

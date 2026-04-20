@@ -11,11 +11,8 @@ func GeneralRoutes() {
 	http.HandleFunc("/time", handlers.TimeHandler)
 	http.HandleFunc("/status", handlers.StatusHandler)
 
-	/*// curl -H "institutional_key: KEY" localhost:8080/TestHandlere_token
-	http.HandleFunc("/TestHandlere_token", middleware.RequireInstitutionKey(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("funcionou"))
-	})) to do
-	http.HandleFunc("/bdcapacity", handlers.TestHandler) To do*/
+	// curl -H "institutional_key: KEY" localhost:8080/Verify/Key
+	http.HandleFunc("/Verify/Key", handlers.VerifyKeyHandler)
 
-	//http.HandleFunc("/login", middleware.RequireInstitutionKey(handlers.LoginHandler))
+	//http.HandleFunc("/bdcapacity", handlers.TestHandler) To do
 }
