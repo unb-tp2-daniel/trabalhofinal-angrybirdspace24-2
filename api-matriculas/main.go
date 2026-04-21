@@ -1,20 +1,19 @@
 package main
 
 import (
-	"api-matriculas/routes"
+	"fmt"
 	"net/http"
-	"github.com/joho/godotenv"
+	database "trabalho/BD"
+	"trabalho/api-matriculas/routes"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		println("Erro ao carregar arquivo .env")
-		println(err)
-		return
-	}
+	fmt.Println("Iniciando serviços...")
+	database.InitDB()
 
-	println("Servidor iniciado em localhost:8080/")
+	// 2. Garante que a conexão com o banco feche graciosamente quando a API for desligada
+	defer database.Client.Close()
 	routes.SetupRoutes()
 	http.ListenAndServe(":8080", nil)
+
 }

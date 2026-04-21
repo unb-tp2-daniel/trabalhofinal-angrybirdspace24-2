@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"api-matriculas/models"
+	"trabalho/api-matriculas/models"
 
 	"github.com/golang-jwt/jwt/v5"
 )
