@@ -6,4 +6,5 @@ func SetupRoutes() {
 	TeacherRoutes()
 	DirectorRoutes()
 	AuthRoutes()
+	DatabaseRoutes()
 }
