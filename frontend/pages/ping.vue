@@ -18,7 +18,6 @@
 </template>
 
 <script setup>
-    const { data, pending, error } = await useFetch(
-    'http://localhost:8080/status'
-    )
+  const { data, pending, error } = await useFetch('/api/pong')
+
 </script>
