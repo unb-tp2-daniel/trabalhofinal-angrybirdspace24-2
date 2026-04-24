@@ -10,6 +10,7 @@ import (
 func main() {
 	fmt.Println("Iniciando serviços...")
 	database.InitDB()
+	database.SeedBaseData()
 
 	defer database.Client.Close()
 	routes.SetupRoutes()

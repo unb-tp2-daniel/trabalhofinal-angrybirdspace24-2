@@ -3,26 +3,79 @@ package database
 import (
 	"context"
 	"log"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/option"
 )
 
 // Client vai guardar a conexão com o banco para a API usar
-var Client *firestore.Client
+var (
+	Client *firestore.Client
+	Ctx    context.Context
+)
 
 func InitDB() {
-	ctx := context.Background()
+	Ctx = context.Background()
 
 	opt := option.WithAuthCredentialsFile(option.ServiceAccount, "../serviceAccountKey.json")
 
 	//Conecta diretamente no banco matriculas242
 	var err error
-	Client, err = firestore.NewClientWithDatabase(ctx, "matriculas242", "matriculas242", opt)
+	Client, err = firestore.NewClientWithDatabase(Ctx, "matriculas242", "matriculas242", opt)
 
 	if err != nil {
 		log.Fatalf("Erro ao conectar no Firestore: %v", err)
 	}
 
 	log.Println("✅ BD online")
+}
+
+// SeedBaseData cria dados iniciais no banco
+func SeedBaseData() {
+	log.Println("🌱 Iniciando seed do banco...")
+
+	// Exemplo: criar um curso
+	_, err := Client.Collection("cursos").Doc("CCO").Set(Ctx, map[string]interface{}{
+		"codigo":  "CCO",
+		"nome":    "Ciência da Computação",
+		"campus":  "Darcy Ribeiro",
+		"ativo":   true,
+		"created": time.Now(),
+	})
+	if err != nil {
+		log.Println("erro ao criar curso:", err)
+	}
+
+	// Exemplo: criar matéria
+	_, err = Client.Collection("materias").Doc("MAT101").Set(Ctx, map[string]interface{}{
+		"codigo":           "MAT101",
+		"nome":             "Cálculo I",
+		"creditos":         4,
+		"cargaHoraria":     60,
+		"preRequisitosIds": []string{},
+		"coRequisitosIds":  []string{},
+		"equivalenciasIds": []string{},
+		"ativa":            true,
+	})
+	if err != nil {
+		log.Println("erro ao criar matéria:", err)
+	}
+
+	// Exemplo: criar turma
+	_, err = Client.Collection("turmas").Doc("T2026-1-MAT101-01").Set(Ctx, map[string]interface{}{
+		"codigoTurma":    "T2026-1-MAT101-01",
+		"materiaId":      "MAT101",
+		"nomeMateria":    "Cálculo I",
+		"semestre":       "2026.1",
+		"capacidade":     40,
+		"ocupadas":       0,
+		"vagasRestantes": 40,
+		"status":         "aberta",
+	})
+	if err != nil {
+		log.Println("erro ao criar turma:", err)
+	}
+
+	log.Println("✅ Seed finalizado")
 }
