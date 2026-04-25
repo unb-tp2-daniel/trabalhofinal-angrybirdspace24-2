@@ -1,2 +1,5 @@
+node_modules/
+.nuxt/
+dist/
 .env
 serviceAccountKey.json
