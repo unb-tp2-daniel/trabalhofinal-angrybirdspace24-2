@@ -1,21 +1,20 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	database "trabalho/BD"
 	"trabalho/api-matriculas/routes"
-
-	"github.com/joho/godotenv"
+  "github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		println("Erro ao carregar arquivo .env")
-		println(err)
-		return
-	}
+	fmt.Println("Iniciando serviços...")
+	database.InitDB()
+	database.SeedBaseData()
 
-	println("Servidor iniciado em localhost:8080/")
+	defer database.Client.Close()
 	routes.SetupRoutes()
 	http.ListenAndServe(":8080", nil)
+
 }
