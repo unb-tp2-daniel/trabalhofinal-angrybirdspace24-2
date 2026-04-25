@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"api-matriculas/models"
-	"api-matriculas/repository"
-	"api-matriculas/services"
 	"encoding/json"
 	"net/http"
 	"time"
+	"trabalho/api-matriculas/models"
+	"trabalho/api-matriculas/repository"
+	"trabalho/api-matriculas/services"
 )
 
 func GenerateTokenHandler(w http.ResponseWriter, r *http.Request) {

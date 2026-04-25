@@ -1,11 +1,11 @@
 package services
 
 import (
-	"api-matriculas/auth"
-	"api-matriculas/models"
-	"api-matriculas/repository"
 	"crypto/rand"
 	"time"
+	"trabalho/api-matriculas/auth"
+	"trabalho/api-matriculas/models"
+	"trabalho/api-matriculas/repository"
 )
 
 var secretKey = []byte("minha-chave-secreta-super-forte")

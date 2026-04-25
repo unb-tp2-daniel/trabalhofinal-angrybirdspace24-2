@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"api-matriculas/handlers"
-	"api-matriculas/middleware"
 	"net/http"
+	"trabalho/api-matriculas/handlers"
+	"trabalho/api-matriculas/middleware"
 )
 
 func AuthRoutes() {

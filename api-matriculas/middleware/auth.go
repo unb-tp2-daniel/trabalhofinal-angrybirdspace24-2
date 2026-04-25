@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"api-matriculas/repository"
 	"net/http"
+	"trabalho/api-matriculas/repository"
 )
 
 func RequireInstitutionKey(next http.HandlerFunc) http.HandlerFunc {

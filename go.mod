@@ -1,4 +1,4 @@
-module api-matriculas
+module trabalho
 
 go 1.26.2
 
