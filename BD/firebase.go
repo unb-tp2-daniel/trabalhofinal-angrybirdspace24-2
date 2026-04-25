@@ -28,14 +28,14 @@ func InitDB() {
 		log.Fatalf("Erro ao conectar no Firestore: %v", err)
 	}
 
-	log.Println("✅ BD online")
+	log.Println(" BD online")
 }
 
 // SeedBaseData cria dados iniciais no banco
 func SeedBaseData() {
-	log.Println("🌱 Iniciando seed do banco...")
+	log.Println("Iniciando seed do banco...")
 
-	// Exemplo: criar um curso
+	// criar um curso
 	_, err := Client.Collection("cursos").Doc("CCO").Set(Ctx, map[string]interface{}{
 		"codigo":  "CCO",
 		"nome":    "Ciência da Computação",
@@ -47,7 +47,7 @@ func SeedBaseData() {
 		log.Println("erro ao criar curso:", err)
 	}
 
-	// Exemplo: criar matéria
+	// criar matéria
 	_, err = Client.Collection("materias").Doc("MAT101").Set(Ctx, map[string]interface{}{
 		"codigo":           "MAT101",
 		"nome":             "Cálculo I",
@@ -62,7 +62,7 @@ func SeedBaseData() {
 		log.Println("erro ao criar matéria:", err)
 	}
 
-	// Exemplo: criar turma
+	// criar turma
 	_, err = Client.Collection("turmas").Doc("T2026-1-MAT101-01").Set(Ctx, map[string]interface{}{
 		"codigoTurma":    "T2026-1-MAT101-01",
 		"materiaId":      "MAT101",
@@ -77,5 +77,5 @@ func SeedBaseData() {
 		log.Println("erro ao criar turma:", err)
 	}
 
-	log.Println("✅ Seed finalizado")
+	log.Println(" Seed finalizado")
 }
