@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"api-matriculas/handlers"
 	"net/http"
+	"trabalho/api-matriculas/handlers"
 )
 
 func StudentRoutes() {

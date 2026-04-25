@@ -1,8 +1,9 @@
 package main
 
 import (
-	"api-matriculas/routes"
 	"net/http"
+	"trabalho/api-matriculas/routes"
+
 	"github.com/joho/godotenv"
 )
 

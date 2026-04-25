@@ -1,0 +1,16 @@
+/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* BASE */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  background-color: #dcdcdc;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
