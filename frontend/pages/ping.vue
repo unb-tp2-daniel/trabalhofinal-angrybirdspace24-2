@@ -18,6 +18,6 @@
 </template>
 
 <script setup>
+//Usa proxy pra evitar problema de conexão
   const { data, pending, error } = await useFetch('/api/pong')
-
 </script>
