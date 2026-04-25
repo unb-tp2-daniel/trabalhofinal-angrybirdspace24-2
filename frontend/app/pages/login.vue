@@ -7,16 +7,18 @@
         <h1 class="titulo">AUTENTICAÇÃO INTEGRADA</h1>
         <div class="linha"></div>
 
-        <form>
+        <form @submit.prevent="login">
           <label for="usuario">Nome de usuário:</label>
-          <input
+          <input 
+            v-model="usuario"
             type="text"
             id="usuario"
             placeholder="Digite seu usuário"
           >
 
           <label for="senha">Senha:</label>
-          <input
+          <input 
+            v-model="senha"
             type="password"
             id="senha"
             placeholder="Digite sua senha"
@@ -42,6 +44,34 @@
     //mudança no nuxt.config.ts
     //import Header from '~/components/layout/Header.vue'
     //import Footer from '~/components/layout/Footer.vue';
+    import { ref } from 'vue'
+
+    const usuario = ref('')
+    const senha = ref('')
+    const error = ref('')
+
+    const login = async () => {
+        try {
+            const response = await $fetch('/api/login', {
+                method: 'POST',
+                body: {
+                    email: usuario.value,
+                    password: senha.value
+                }
+            })
+
+            localStorage.setItem(
+                'token',
+                response.token
+            )
+
+            await navigateTo('/login')
+        } 
+
+        catch (err) {
+            error.value = 'Falha no login'
+        }
+    }
 </script>
 
 <style scoped>
