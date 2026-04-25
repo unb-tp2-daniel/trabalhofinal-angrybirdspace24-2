@@ -6,3 +6,7 @@
 
     </div>
 </template>
+
+<script setup>
+    navigateTo('/login')
+</script>
