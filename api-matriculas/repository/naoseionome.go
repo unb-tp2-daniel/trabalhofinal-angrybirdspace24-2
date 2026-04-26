@@ -1,11 +1,28 @@
 package repository
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+	database "trabalho/BD"
+
+	"google.golang.org/api/iterator"
+)
 
 func FindInstitutionByID(institutionalKey string) (string, error) {
-	// Simulação de busca no banco de dados
-	if institutionalKey != "ChaveInstitucional123" {
-		return "", fmt.Errorf("instituição não encontrada")
+	ctx := context.Background()
+
+	iter := database.Client.Collection("instituicoes").Where("chave_acesso", "==", institutionalKey).Limit(1).Documents(ctx)
+	// Tenta ler o primeiro resultado
+	doc, err := iter.Next()
+
+	// FB retorna iterator.Done qnd a query falha
+	if err == iterator.Done {
+		return "", fmt.Errorf("chave inválida")
 	}
-	return "Unb", nil
+	// erro externoo
+	if err != nil {
+		return "", fmt.Errorf("erro interno ao buscar instituição: %v", err)
+	}
+	//se a query der certo vai ser "UnB"
+	return doc.Ref.ID, nil
 }
