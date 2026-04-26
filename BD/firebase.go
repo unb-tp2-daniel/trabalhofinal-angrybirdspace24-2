@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/api/option"
 )
 
@@ -35,8 +36,34 @@ func InitDB() {
 func SeedBaseData() {
 	log.Println("Iniciando seed do banco...")
 
+	// 1. Criptografando a senha de teste ANTES de salvar no banco
+	senhaPlana := "senha123"
+	hash, err := bcrypt.GenerateFromPassword([]byte(senhaPlana), bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatalf("Erro ao gerar hash da senha: %v", err)
+	}
+
+	// 2. Montando o documento do aluno
+	alunoTeste := map[string]interface{}{
+		"instituicao_id":        "Unb", // Tem que bater com o seu FindInstitutionByID
+		"matricula":             "20260001",
+		"nome":                  "Guilherme Silva Cavalcante",
+		"senha_hash":            string(hash), // Nunca salve a senha plana!
+		"disciplinas_aprovadas": []string{"MAT0011"},
+		"created":               time.Now(),
+	}
+
+	// 3. Salvando no Firestore com um ID Composto (Instituicao + Matricula)
+	docID := "Unb_20260001"
+	_, err = Client.Collection("alunos").Doc(docID).Set(Ctx, alunoTeste)
+
+	if err != nil {
+		log.Println("Erro ao criar aluno de teste:", err)
+	} else {
+		log.Printf("Aluno de teste criado com sucesso! Documento: %s\n", docID)
+	}
 	// criar um curso
-	_, err := Client.Collection("cursos").Doc("CCO").Set(Ctx, map[string]interface{}{
+	_, err = Client.Collection("cursos").Doc("CCO").Set(Ctx, map[string]interface{}{
 		"codigo":  "CCO",
 		"nome":    "Ciência da Computação",
 		"campus":  "Darcy Ribeiro",

@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"trabalho/api-matriculas/models"
+
 	// Imports de debug
-	//"fmt"
-	//"io"
+	"fmt"
+	"io"
 )
 
 func TestHandler(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +23,8 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	// Simulação de pegar os dados de login do front
 	authtest := models.Auth{
 		InstitutionalKey: "ChaveInstitucional123",
-		Id:               "id",
+		Id:               "20260001",
+		Password:         "senha123", //TESTE
 	}
 
 	// Transforma o modelo Auth em json
@@ -53,7 +55,7 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Para Debug
 
-	//body, _ := io.ReadAll(resp.Body)
-	//fmt.Println(string(body))
-	//w.Write([]byte("Token = " + string(body)))
+	body, _ := io.ReadAll(resp.Body)
+	fmt.Println(string(body))
+	w.Write([]byte("Token = " + string(body)))
 }
