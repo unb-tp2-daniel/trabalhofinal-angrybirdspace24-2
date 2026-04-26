@@ -17,12 +17,17 @@
           >
 
           <label for="senha">Senha:</label>
-          <input 
-            v-model="senha"
-            type="password"
-            id="senha"
-            placeholder="Digite sua senha"
-          >
+          <div class="password-wrapper">
+            <input 
+                v-model="senha"
+                :type="mostrarSenha ? 'text' : 'password'" 
+                id="senha"
+                placeholder="Digite sua senha"
+            >
+            <button type="button" class="toggle-btn" @click="togglePassword">
+                <Icon :name="mostrarSenha ? 'uil:eye-slash' : 'uil:eye'" size="20px" />
+            </button>
+            </div>
 
           <button type="submit" class="botao">ENTRAR ></button>
         </form>
@@ -48,6 +53,11 @@
 
     const usuario = ref('')
     const senha = ref('')
+    const mostrarSenha = ref(false) // New state: false = hidden, true = visible
+
+    const togglePassword = () => {
+    mostrarSenha.value = !mostrarSenha.value
+    }
     const error = ref('')
 
     const login = async () => {
@@ -72,6 +82,9 @@
             error.value = 'Falha no login'
         }
     }
+
+    // Adicionando botao de "olho" na senha
+    
 </script>
 
 <style scoped>
@@ -133,6 +146,45 @@
         outline: none; 
         transition: border-color 0.2s, 
         background-color 0.2s; 
+    }
+
+    .password-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 14px;
+    /* We ensure this is a block container so the input fills it */
+    display: block; 
+}
+
+.password-wrapper input {
+    width: 100%;
+    /* Standardized with your other input */
+    margin-bottom: 0 !important; 
+    padding: 8px 10px 8px 10px; /* Right padding is 40px to hide text under eye */
+    display: block;
+    /* REMOVE the fixed height: 38px; let padding decide the height */
+}
+
+.toggle-btn {
+    position: absolute;
+    right: -11px;
+    top: 50%;
+    /* -45% is visually more 'centered' than -50% for eye icons */
+    transform: translateY(-45%); 
+    
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 2;
+}
+
+    .toggle-btn:hover {
+        color: #1a5276; 
     }
 
     /* ===================== BOTÃO ===================== */ 
