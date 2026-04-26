@@ -5,7 +5,7 @@ import (
 	"net/http"
 	database "trabalho/BD"
 	"trabalho/api-matriculas/routes"
-  "github.com/joho/godotenv"
+  //"github.com/joho/godotenv"
 )
 
 func main() {
