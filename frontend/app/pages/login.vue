@@ -46,9 +46,15 @@
 </template>
 
 <script setup>
+    
+    useHead({
+        title: 'Login - SIGAA UnB'
+    })
+
     //mudança no nuxt.config.ts
     //import Header from '~/components/layout/Header.vue'
     //import Footer from '~/components/layout/Footer.vue';
+    
     import { ref } from 'vue'
 
     const usuario = ref('')
