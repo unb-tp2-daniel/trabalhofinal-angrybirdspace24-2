@@ -46,7 +46,7 @@ func SeedBaseData() {
 	}
 
 	// 2. Montando o documento do aluno
-	alunoTeste := table_aluno.CreateAluno(hash)
+	alunoTeste := table_aluno.CreateAluno(hash,"unC","20260001","Guilherme Silva Cavalcante",[]string{"MAT00131"})
 
 	// 3. Salvando no Firestore com um ID Composto (Instituicao + Matricula)
 	docID := "Unb_20260001"

@@ -14,13 +14,13 @@ var (
 	Ctx    context.Context
 )
 
-func CreateAluno(hash []byte) map[string]interface{} {
+func CreateAluno(hash []byte, instituicao string, matricula string,nome string, disciplinas []string) map[string]interface{} {
 	alunoTeste := map[string]interface{}{
-		"instituicao_id":        "Unb", // Tem que bater com o seu FindInstitutionByID
-		"matricula":             "20260001",
-		"nome":                  "Guilherme Silva Cavalcantessss",
+		"instituicao_id":        instituicao, // Tem que bater com o seu FindInstitutionByID
+		"matricula":             matricula,
+		"nome":                  nome,
 		"senha_hash":            string(hash), // Nunca salve a senha plana!
-		"disciplinas_aprovadas": []string{"MAT0011"},
+		"disciplinas_aprovadas": disciplinas,
 		"created":               time.Now(),
 	}
 	return alunoTeste
