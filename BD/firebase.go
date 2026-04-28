@@ -5,6 +5,8 @@ import (
 	"log"
 	"time"
 
+	table_aluno "trabalho/BD/tables"
+
 	"cloud.google.com/go/firestore"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/api/option"
@@ -44,14 +46,7 @@ func SeedBaseData() {
 	}
 
 	// 2. Montando o documento do aluno
-	alunoTeste := map[string]interface{}{
-		"instituicao_id":        "Unb", // Tem que bater com o seu FindInstitutionByID
-		"matricula":             "20260001",
-		"nome":                  "Guilherme Silva Cavalcante",
-		"senha_hash":            string(hash), // Nunca salve a senha plana!
-		"disciplinas_aprovadas": []string{"MAT0011"},
-		"created":               time.Now(),
-	}
+	alunoTeste := table_aluno.CreateAluno(hash)
 
 	// 3. Salvando no Firestore com um ID Composto (Instituicao + Matricula)
 	docID := "Unb_20260001"
