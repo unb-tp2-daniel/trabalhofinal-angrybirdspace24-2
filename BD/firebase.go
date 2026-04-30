@@ -5,11 +5,6 @@ import (
 	"log"
 
 	tables "trabalho/BD/tables"
-<<<<<<< Updated upstream
-
-	
-=======
->>>>>>> Stashed changes
 
 	"cloud.google.com/go/firestore"
 	"golang.org/x/crypto/bcrypt"
@@ -51,16 +46,10 @@ func SeedBaseData() {
 
 	// 2. Montando o documento do aluno
 	tables.CreateAluno(Ctx, Client, hash, "unC", "20260001", "Guilherme Silva Cavalcante", []string{"MAT00131"})
-<<<<<<< Updated upstream
 
-
-=======
 	tables.CreateTurma(Ctx, Client, hash, "T2026-1-MAT101-01", "MAT101", "Cálculo I", "2026.1", 40, 0, 40, true)
->>>>>>> Stashed changes
-	// criar um curso
 
-	tables.CreateCurso(Ctx,Client,"CCO", "Ciencia da computação","Darcy Ribeiro",true)
-
+	tables.CreateCurso(Ctx, Client, "CCO", "Ciencia da computação", "Darcy Ribeiro", true)
 
 	// criar matéria
 	_, err = Client.Collection("materias").Doc("MAT101").Set(Ctx, map[string]interface{}{
