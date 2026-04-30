@@ -46,17 +46,8 @@ func SeedBaseData() {
 	}
 
 	// 2. Montando o documento do aluno
-	alunoTeste := table_aluno.CreateAluno(hash,"unC","20260001","Guilherme Silva Cavalcante",[]string{"MAT00131"})
+	table_aluno.CreateAluno(Ctx, Client, hash, "unC", "20260001", "Guilherme Silva Cavalcante", []string{"MAT00131"})
 
-	// 3. Salvando no Firestore com um ID Composto (Instituicao + Matricula)
-	docID := "Unb_20260001"
-	_, err = Client.Collection("alunos").Doc(docID).Set(Ctx, alunoTeste)
-
-	if err != nil {
-		log.Println("Erro ao criar aluno de teste:", err)
-	} else {
-		log.Printf("Aluno de teste criado com sucesso! Documento: %s\n", docID)
-	}
 	// criar um curso
 	_, err = Client.Collection("cursos").Doc("CCO").Set(Ctx, map[string]interface{}{
 		"codigo":  "CCO",
