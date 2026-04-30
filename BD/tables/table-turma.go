@@ -23,7 +23,7 @@ func CreateTurma(Ctx context.Context, Client *firestore.Client, hash []byte, cod
 	}
 	// 3. Salvando no Firestore com um ID Composto (Instituicao + Matricula)
 	docID := "Unb_20260001"
-	_, err := Client.Collection("turmas_UnB").Doc("T2026-1-MAT101-01").Set(Ctx, turmaTeste)
+	_, err := Client.Collection("turmas_UnB").Doc(codigoTurma).Set(Ctx, turmaTeste)
 
 	if err != nil {
 		log.Println("Erro ao criar turma", err)

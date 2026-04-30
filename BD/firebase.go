@@ -66,20 +66,7 @@ func SeedBaseData() {
 		log.Println("erro ao criar matéria:", err)
 	}
 
-	// criar turma
-	_, err = Client.Collection("turmas").Doc("T2026-1-MAT101-01").Set(Ctx, map[string]interface{}{
-		"codigoTurma":    "T2026-1-MAT101-01",
-		"materiaId":      "MAT101",
-		"nomeMateria":    "Cálculo I",
-		"semestre":       "2026.1",
-		"capacidade":     40,
-		"ocupadas":       0,
-		"vagasRestantes": 40,
-		"status":         "aberta",
-	})
-	if err != nil {
-		log.Println("erro ao criar turma:", err)
-	}
+
 
 	log.Println(" Seed finalizado")
 }
