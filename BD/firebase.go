@@ -3,9 +3,10 @@ package database
 import (
 	"context"
 	"log"
-	"time"
 
-	table_aluno "trabalho/BD/tables"
+	tables "trabalho/BD/tables"
+
+	
 
 	"cloud.google.com/go/firestore"
 	"golang.org/x/crypto/bcrypt"
@@ -46,19 +47,13 @@ func SeedBaseData() {
 	}
 
 	// 2. Montando o documento do aluno
-	table_aluno.CreateAluno(Ctx, Client, hash, "unC", "20260001", "Guilherme Silva Cavalcante", []string{"MAT00131"})
+	tables.CreateAluno(Ctx, Client, hash, "unC", "20260001", "Guilherme Silva Cavalcante", []string{"MAT00131"})
+
 
 	// criar um curso
-	_, err = Client.Collection("cursos").Doc("CCO").Set(Ctx, map[string]interface{}{
-		"codigo":  "CCO",
-		"nome":    "Ciência da Computação",
-		"campus":  "Darcy Ribeiro",
-		"ativo":   true,
-		"created": time.Now(),
-	})
-	if err != nil {
-		log.Println("erro ao criar curso:", err)
-	}
+
+	tables.CreateCurso(Ctx,Client,"CCO", "Ciencia da computação","Darcy Ribeiro",true)
+
 
 	// criar matéria
 	_, err = Client.Collection("materias").Doc("MAT101").Set(Ctx, map[string]interface{}{
