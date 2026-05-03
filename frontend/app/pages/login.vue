@@ -66,7 +66,7 @@
     }
     const error = ref('')
 
-    const login = async () => {
+    const login = async () => { //Autenticacao com API
         try {
             const response = await $fetch('/api/login', {
                 method: 'POST',
@@ -76,12 +76,12 @@
                 }
             })
 
-            localStorage.setItem(
+            localStorage.setItem( //Salva token em localStorage (Mudar pra cookies no backend)
                 'token',
                 response.token
             )
 
-            await navigateTo('/login')
+            await navigateTo('/login') //Mudaria pra pagina de inicio (provisorio)
         } 
 
         catch (err) {
