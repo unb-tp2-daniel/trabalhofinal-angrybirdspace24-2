@@ -60,35 +60,6 @@ func SeedBaseData() {
 
 	tables.CreateCurso(Ctx, Client, "CCO", "Ciencia da computação", "Darcy Ribeiro", true)
 
-	// criar matéria
-	_, err = Client.Collection("materias").Doc("MAT101").Set(Ctx, map[string]interface{}{
-		"codigo":           "MAT101",
-		"nome":             "Cálculo I",
-		"creditos":         4,
-		"cargaHoraria":     60,
-		"preRequisitosIds": []string{},
-		"coRequisitosIds":  []string{},
-		"equivalenciasIds": []string{},
-		"ativa":            true,
-	})
-	if err != nil {
-		log.Println("erro ao criar matéria:", err)
-	}
+	tables.CreateMateria(Ctx, Client, "Mat11", "matematica", 6, 60, []string{}, []string{}, []string{}, true)
 
-	// criar turma
-	_, err = Client.Collection("turmas").Doc("T2026-1-MAT101-01").Set(Ctx, map[string]interface{}{
-		"codigoTurma":    "T2026-1-MAT101-01",
-		"materiaId":      "MAT101",
-		"nomeMateria":    "Cálculo I",
-		"semestre":       "2026.1",
-		"capacidade":     40,
-		"ocupadas":       0,
-		"vagasRestantes": 40,
-		"status":         "aberta",
-	})
-	if err != nil {
-		log.Println("erro ao criar turma:", err)
-	}
-
-	log.Println(" Seed finalizado")
 }
