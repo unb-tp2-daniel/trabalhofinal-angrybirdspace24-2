@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 	"net/http"
-	database "trabalho/BD"
-	"trabalho/api-matriculas/routes"
-  //"github.com/joho/godotenv"
+
+	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/routes"
+	//"github.com/joho/godotenv"
 )
 
 func main() {

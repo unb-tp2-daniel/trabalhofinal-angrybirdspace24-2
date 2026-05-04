@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	tables "trabalho/BD/tables"
+	tables "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/tables"
 
 	"cloud.google.com/go/firestore"
 	"golang.org/x/crypto/bcrypt"
@@ -49,6 +49,8 @@ func SeedBaseData() {
 
 	tables.CreateTurma(Ctx, Client, hash, "T2026-1-MAT101-01", "MAT101", "Cálculo I", "2026.1", 40, 0, 40, true)
 
+	// criar um curso
+
 	tables.CreateCurso(Ctx, Client, "CCO", "Ciencia da computação", "Darcy Ribeiro", true)
 
 	// criar matéria
@@ -66,7 +68,20 @@ func SeedBaseData() {
 		log.Println("erro ao criar matéria:", err)
 	}
 
-
+	// criar turma
+	_, err = Client.Collection("turmas").Doc("T2026-1-MAT101-01").Set(Ctx, map[string]interface{}{
+		"codigoTurma":    "T2026-1-MAT101-01",
+		"materiaId":      "MAT101",
+		"nomeMateria":    "Cálculo I",
+		"semestre":       "2026.1",
+		"capacidade":     40,
+		"ocupadas":       0,
+		"vagasRestantes": 40,
+		"status":         "aberta",
+	})
+	if err != nil {
+		log.Println("erro ao criar turma:", err)
+	}
 
 	log.Println(" Seed finalizado")
 }

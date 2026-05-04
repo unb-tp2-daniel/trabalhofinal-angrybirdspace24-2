@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
-	"trabalho/api-matriculas/models"
-	"trabalho/api-matriculas/repository"
-	"trabalho/api-matriculas/services"
+
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/models"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/repository"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/services"
 )
 
 func GenerateTokenHandler(w http.ResponseWriter, r *http.Request) {

@@ -2,7 +2,8 @@ package middleware
 
 import (
 	"net/http"
-	"trabalho/api-matriculas/repository"
+
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/repository"
 )
 
 func RequireInstitutionKey(next http.HandlerFunc) http.HandlerFunc {

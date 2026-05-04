@@ -3,7 +3,8 @@ package repository
 import (
 	"context"
 	"fmt"
-	database "trabalho/BD"
+
+	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD"
 
 	"google.golang.org/api/iterator"
 )

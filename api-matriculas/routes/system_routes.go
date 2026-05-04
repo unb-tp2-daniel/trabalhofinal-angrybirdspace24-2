@@ -2,8 +2,9 @@ package routes
 
 import (
 	"net/http"
-	"trabalho/api-matriculas/handlers"
-	"trabalho/api-matriculas/middleware"
+
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/handlers"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/middleware"
 )
 
 func AuthRoutes() {

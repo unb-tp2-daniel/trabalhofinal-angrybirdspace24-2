@@ -3,9 +3,10 @@ package services
 import (
 	"crypto/rand"
 	"time"
-	"trabalho/api-matriculas/auth"
-	"trabalho/api-matriculas/models"
-	"trabalho/api-matriculas/repository"
+
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/auth"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/models"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/repository"
 )
 
 var secretKey = []byte("minha-chave-secreta-super-forte")
