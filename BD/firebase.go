@@ -4,9 +4,10 @@ import (
 	"context"
 	"log"
 
-	tables "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/tables"
+	"os"
 
 	"cloud.google.com/go/firestore"
+	tables "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/tables"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/api/option"
 )
@@ -19,18 +20,24 @@ var (
 
 func InitDB() {
 	Ctx = context.Background()
-
-	opt := option.WithAuthCredentialsFile(option.ServiceAccount, "../serviceAccountKey.json")
-
-	//Conecta diretamente no banco matriculas242
 	var err error
-	Client, err = firestore.NewClientWithDatabase(Ctx, "matriculas242", "matriculas242", opt)
+
+	// A nuvem injeta a variável K_SERVICE automaticamente.
+	// Se ela existir, estamos no Cloud Functions!
+	if os.Getenv("K_SERVICE") != "" {
+		log.Println("Conectando ao Firestore pelo ambiente Cloud (IAM automático)...")
+		Client, err = firestore.NewClientWithDatabase(Ctx, "matriculas242", "matriculas242")
+	} else {
+		log.Println("Conectando ao Firestore pelo ambiente Local (serviceAccountKey)...")
+		opt := option.WithAuthCredentialsFile(option.ServiceAccount, "../serviceAccountKey.json")
+		Client, err = firestore.NewClientWithDatabase(Ctx, "matriculas242", "matriculas242", opt)
+	}
 
 	if err != nil {
 		log.Fatalf("Erro ao conectar no Firestore: %v", err)
 	}
 
-	log.Println(" BD online")
+	log.Println("BD online")
 }
 
 // SeedBaseData cria dados iniciais no banco
