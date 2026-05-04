@@ -26,7 +26,9 @@ func CreateMateria(Ctx context.Context, Client *firestore.Client, codigo string,
 	}
 	_, err = Client.Collection("materias").Doc(codigo).Set(Ctx, materia)
 	if err != nil {
-		log.Println("erro ao criar curso:", err)
+		log.Println("erro ao criar materia:", err)
+	}else{
+		log.Println("Materia criada com sucesso!",)
 	}
 	return materia
 

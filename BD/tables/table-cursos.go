@@ -23,9 +23,11 @@ func CreateCurso(Ctx context.Context, Client *firestore.Client, codigo string, n
 		"ativo":   ativo,
 		"created": time.Now(),
 	}
-	_, err = Client.Collection("cursos").Doc("CCO").Set(Ctx, curso)
+	_, err = Client.Collection("cursos").Doc(codigo).Set(Ctx, curso)
 	if err != nil {
 		log.Println("erro ao criar curso:", err)
+	}else{
+		log.Println("curso criado com sucesso!")
 	}
 	return curso
 
