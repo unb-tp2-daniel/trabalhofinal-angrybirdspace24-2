@@ -51,12 +51,10 @@ func SeedBaseData() {
 		log.Fatalf("Erro ao gerar hash da senha: %v", err)
 	}
 
-	// 2. Montando o documento do aluno
+	// 2.criando tabelas
 	tables.CreateAluno(Ctx, Client, hash, "unC", "20260001", "Guilherme Silva Cavalcante", []string{"MAT00131"})
 
 	tables.CreateTurma(Ctx, Client, hash, "T2026-1-MAT101-01", "MAT101", "Cálculo I", "2026.1", 40, 0, 40, true)
-
-	// criar um curso
 
 	tables.CreateCurso(Ctx, Client, "CCO", "Ciencia da computação", "Darcy Ribeiro", true)
 
