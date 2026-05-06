@@ -44,14 +44,14 @@ func InitDB() {
 func SeedBaseData() {
 	log.Println("Iniciando seed do banco...")
 
-	// 1. Criptografando a senha de teste ANTES de salvar no banco
+	// Criptografa
 	senhaPlana := "senha123"
 	hash, err := bcrypt.GenerateFromPassword([]byte(senhaPlana), bcrypt.DefaultCost)
 	if err != nil {
 		log.Fatalf("Erro ao gerar hash da senha: %v", err)
 	}
 
-	// 2.criando tabelas
+	// criando tabelas
 	tables.CreateAluno(Ctx, Client, hash, "unC", "20260001", "Guilherme Silva Cavalcante", []string{"MAT00131"})
 
 	tables.CreateTurma(Ctx, Client, hash, "T2026-1-MAT101-01", "MAT101", "Cálculo I", "2026.1", 40, 0, 40, true)
