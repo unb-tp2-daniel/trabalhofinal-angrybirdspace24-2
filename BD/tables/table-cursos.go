@@ -12,18 +12,20 @@ import (
 
 // Client vai guardar a conexão com o banco para a API usar
 
-func CreateCurso(Ctx context.Context, Client *firestore.Client, codigo string, nome string, campus string, ativo bool) map[string]interface{} {
+func CreateCurso(Ctx context.Context, Client *firestore.Client, cursoid string, nome string, campus string, ativo bool, cargaHorariaMax int, cordenadorid string) map[string]interface{} {
 
 	// criar um curso
 	var err error
 	curso := map[string]interface{}{
-		"codigo":  codigo,
+		"cursoid":  cursoid,
+		"cordenadorid": cordenadorid,
 		"nome":    nome,
 		"campus":  campus,
 		"ativo":   ativo,
+		"cargaHorariaMax": cargaHorariaMax,
 		"created": time.Now(),
 	}
-	_, err = Client.Collection("cursos").Doc(codigo).Set(Ctx, curso)
+	_, err = Client.Collection("cursos").Doc(cursoid).Set(Ctx, curso)
 	if err != nil {
 		log.Println("erro ao criar curso:", err)
 	}else{
