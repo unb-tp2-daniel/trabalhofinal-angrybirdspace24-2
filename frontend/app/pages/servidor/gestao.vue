@@ -1,5 +1,11 @@
 <template>
-    <h1>Tela gestor/professor sla</h1>
+    <div>
+    <Header />
+    <main class="container">
+      
+    </main>
+    <Footer />
+    </div>
 </template>
 
 <script setup>

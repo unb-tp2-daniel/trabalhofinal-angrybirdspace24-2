@@ -1,5 +1,11 @@
 <template>
-    <h1>Tela de matricula</h1>
+    <div>
+    <Header />
+    <main class="container">
+    
+    </main>
+    <Footer />
+    </div>
 </template>
 
 <script setup>

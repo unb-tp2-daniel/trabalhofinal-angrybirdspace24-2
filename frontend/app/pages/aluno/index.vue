@@ -1,5 +1,12 @@
 <template>
-    <h1>Tela inicial do sigaa para alunos</h1>
+    <div>
+        <Header />
+        <main class="container">
+
+            <ProfileSidebar />
+        </main>
+        <Footer />
+    </div>
 </template>
 
 <script setup>

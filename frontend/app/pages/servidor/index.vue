@@ -1,5 +1,11 @@
 <template>
-    <h1>Tela inicial do sigaa para servidores</h1>
+    <div>
+    <Header />
+    <main class="container">
+
+    </main>
+    <Footer />
+    </div>
 </template>
 
 <script setup>
