@@ -3,23 +3,35 @@ package database
 import (
 	"context"
 
-	"time"
+	//"time"
 
 	"log"
 
 	"cloud.google.com/go/firestore"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/enums"
 )
 
 // Client vai guardar a conexão com o banco para a API usar
 
-func CreateAluno(Ctx context.Context, Client *firestore.Client, hash []byte, instituicao string, matricula string, nome string, disciplinas []string) map[string]interface{} {
+func CreateAluno(Ctx context.Context, Client *firestore.Client, hash []byte,
+	matricula string,
+	cursoId string,
+	ativo bool,
+	semestre string,
+	materiasConcluidas map[string]string,
+	ira float64,
+	prioridades map[string]string,
+	nivelAcademico enums.NivelAcademico,
+	nomeAluno string) map[string]interface{} {
 	alunoTeste := map[string]interface{}{
-		// Tem que bater com o seu FindInstitutionByID
-		"matricula":             matricula,
-		"nome":                  nome,
-		"senha_hash":            string(hash), // Nunca salve a senha plana!
-		"disciplinas_aprovadas": disciplinas,
-		"created":               time.Now(),
+		"matricula":          matricula,
+		"cursoId":            cursoId,
+		"ativo":              ativo,
+		"semestre":           semestre,
+		"materiasConcluidas": materiasConcluidas,
+		"ira":                ira,
+		"prioridades":        prioridades,
+		"nivelAcademico":     nivelAcademico,
 	}
 	// 3. Salvando no Firestore com um ID Composto (Instituicao + Matricula)
 	docID := "Unb_20260001"
