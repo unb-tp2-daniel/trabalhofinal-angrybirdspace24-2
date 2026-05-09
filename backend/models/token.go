@@ -7,7 +7,6 @@ import (
 type Auth struct {
 	InstitutionalKey string `json:"institutional_key"`
 	Id               string `json:"id"`
-	Password         string `json:"password"` //TESTE
 }
 type TokenData struct {
 	ID            string

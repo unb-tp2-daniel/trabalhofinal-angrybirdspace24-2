@@ -45,33 +45,37 @@
     //import Header from '~/components/layout/Header.vue'
     //import Footer from '~/components/layout/Footer.vue';
     import { ref } from 'vue'
+    import {signInWithEmailAndPassword } from "firebase/auth"
+    import { getFirebaseAuth } from "../../plugins/firebase.client"
 
     const usuario = ref('')
     const senha = ref('')
     const error = ref('')
 
     const login = async () => {
-        try {
-            const response = await $fetch('/api/login', {
-                method: 'POST',
-                body: {
-                    email: usuario.value,
-                    password: senha.value
-                }
-            })
+        console.log("foi")
+       try {
+            const auth = getFirebaseAuth()
+
+            const userCredential = await signInWithEmailAndPassword(auth, usuario.value, senha.value)
+            const token = await userCredential.user.getIdToken()
+
+            console.log("deu certo")
 
             localStorage.setItem(
                 'token',
-                response.token
+                token
             )
 
-            await navigateTo('/login')
+            await navigateTo('/matricula') // ou pra outra 
         } 
 
         catch (err) {
+            console.log(err)
             error.value = 'Falha no login'
         }
     }
+
 </script>
 
 <style scoped>

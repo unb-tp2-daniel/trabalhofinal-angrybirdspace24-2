@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"cloud.google.com/go/firestore"
-	tables "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/tables"
-	"golang.org/x/crypto/bcrypt"
+	//tables "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/tables"
+	//"golang.org/x/crypto/bcrypt"
 	"google.golang.org/api/option"
 )
 
@@ -41,7 +41,7 @@ func InitDB() {
 }
 
 // SeedBaseData cria dados iniciais no banco
-func SeedBaseData() {
+/*func SeedBaseData() {
 	log.Println("Iniciando seed do banco...")
 
 	// Criptografa
@@ -61,3 +61,4 @@ func SeedBaseData() {
 	tables.CreateMateria(Ctx, Client, "Mat11", "matematica", 6, 60, []string{}, []string{}, []string{}, true)
 
 }
+*/

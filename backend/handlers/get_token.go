@@ -4,12 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/api-matriculas/models"
-
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 	// Imports de debug
-	"fmt"
-	"io"
+	//"fmt"
+	//"io"
 )
 
 func TestHandler(w http.ResponseWriter, r *http.Request) {
@@ -24,8 +22,7 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 	// Simulação de pegar os dados de login do front
 	authtest := models.Auth{
 		InstitutionalKey: "ChaveInstitucional123",
-		Id:               "20260001",
-		Password:         "senha123", //TESTE
+		Id:               "id",
 	}
 
 	// Transforma o modelo Auth em json
@@ -56,7 +53,7 @@ func TokenHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Para Debug
 
-	body, _ := io.ReadAll(resp.Body)
-	fmt.Println(string(body))
-	w.Write([]byte("Token = " + string(body)))
+	//body, _ := io.ReadAll(resp.Body)
+	//fmt.Println(string(body))
+	//w.Write([]byte("Token = " + string(body)))
 }
