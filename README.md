@@ -16,3 +16,4 @@ Aqui estão os contribuidores do projeto Angry Birds 24.2 e seus respectivos con
 - Daniel de Oliveira Morais - [repositório Daniel](https://github.com/danielolimorais)
 - Filipe Nobre Nunes - [repositório Filipe](https://github.com/NunesFilipeNobre)
 - Kaio Santos Araújo - [repositório Kaio](https://github.com/Kisrym)
+- Rafael Mileo Moreira Krauss Guimarães - [repositório Rafael](https://github.com/RafaelMkrauss)
