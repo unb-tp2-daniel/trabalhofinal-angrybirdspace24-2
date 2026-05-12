@@ -1,6 +1,6 @@
 # Tabalho Final da Matéria "Técnicas de Programação 2" da Universidade de Brasília Semestre 2026.1
 
-Este repositório visa cria um projeto de desenvolvimento web de um sistema/API de matrícula que aceite uma alta quantidade de usuários simultâneos
+Este repositório visa cria um projeto de desenvolvimento web de um sistema/API de matrícula que aceite uma alta quantidade de usuários simultâneos.
 
 ## Contribuidores
 
@@ -15,3 +15,4 @@ Aqui estão os contribuidores do projeto Angry Birds 24.2 e seus respectivos con
 - Caio Dias Fleury - [repositório do Caio](https://github.com/CaiodFleury)
 - Daniel de Oliveira Morais - [repositório Daniel](https://github.com/danielolimorais)
 - Filipe Nobre Nunes - [repositório Filipe](https://github.com/NunesFilipeNobre)
+- Kaio Santos Araújo - [repositório Kaio](https://github.com/Kisrym)

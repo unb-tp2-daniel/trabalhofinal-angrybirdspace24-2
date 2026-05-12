@@ -12,6 +12,10 @@
         border-top: 1px solid #dddddd; 
         padding: 12px 24px; 
         text-align: center; 
+
+        position: fixed;
+        bottom: 0;
+        width: 100%;
     } 
     
     footer p { 

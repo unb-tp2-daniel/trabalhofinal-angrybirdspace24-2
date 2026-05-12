@@ -1,3 +1,5 @@
+//Exporta logica de requisiçao de token a API
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
@@ -6,7 +8,7 @@ export default defineEventHandler(async (event) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'institutional_key': 'ChaveInstitucional123'
+        'institutional_key': 'ChaveInstitucional123' //Chave muda a depender da instituicao
       },
       body: {
         usuario: body.usuario,
@@ -14,14 +16,12 @@ export default defineEventHandler(async (event) => {
       }
     })
 
-    console.log('Resposta da API:', response)
-
-    return response
+    return response //Retorna token
   } 
 
   catch (error) {
     throw createError({
-      statusCode: 401,
+      statusCode: 401, //Unauthorized
       statusMessage: 'Login invalido'
     })
   }
