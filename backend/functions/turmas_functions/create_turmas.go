@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/create" // aaqui salva
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/models"
+	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/create" // aaqui salva
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
 func CreateTurmaHandler(w http.ResponseWriter, r *http.Request) {

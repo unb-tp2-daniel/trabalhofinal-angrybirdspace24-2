@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/read"
+	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read"
 )
 
 // ListTurmasHandler atende a requisição da internet (apenas recebe e devolve)

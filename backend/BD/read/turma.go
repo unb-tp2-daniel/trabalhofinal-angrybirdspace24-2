@@ -6,7 +6,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"google.golang.org/api/iterator"
 
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/models"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
 // GetAllTurmas faz a busca diretamente no Firestore e retorna uma lista de turmas.

@@ -1,4 +1,4 @@
-// functions/matriculate_functions/matriculate_aluno.go
+// functions/alunos_functions/matriculate_aluno.go
 package alunos_functions
 
 import (

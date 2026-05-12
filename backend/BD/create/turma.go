@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"cloud.google.com/go/firestore"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/models"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
 func CreateTurma(Ctx context.Context, Client *firestore.Client, novaTurma models.Turma) error {

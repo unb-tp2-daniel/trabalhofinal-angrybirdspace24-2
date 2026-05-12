@@ -3,7 +3,7 @@ package functions
 
 import (
 	"github.com/GoogleCloudPlatform/functions-framework-go/functions"
-	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD"
+	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
 
 	// Aqui você importaria os seus arquivos onde estão os códigos dos Handlers
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/turmas_functions"

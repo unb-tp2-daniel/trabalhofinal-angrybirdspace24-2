@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"cloud.google.com/go/firestore"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/models"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
 // CreateAluno recebe a struct pronta e a envia diretamente para o Firestore

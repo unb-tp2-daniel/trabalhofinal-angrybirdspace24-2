@@ -2,7 +2,7 @@
 package models
 
 import (
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/enums"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/enums"
 )
 
 // Aluno representa o perfil de um estudante matriculado.
