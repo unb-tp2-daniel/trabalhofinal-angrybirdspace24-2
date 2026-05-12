@@ -7,8 +7,8 @@
         <h1 class="titulo">AUTENTICAÇÃO INTEGRADA</h1>
         <div class="linha"></div>
 
-        <form @submit.prevent="login">
-          <label for="usuario">Nome de usuário:</label>
+        <form @submit.prevent="cadastrar">
+          <label for="usuario">Definir nome de usuário:</label>
           <input 
             v-model="usuario"
             type="text"
@@ -16,7 +16,7 @@
             placeholder="Digite seu usuário"
           >
 
-          <label for="senha">Senha:</label>
+          <label for="senha">Definir senha:</label>
           <div class="password-wrapper">
             <input 
                 v-model="senha"
@@ -29,14 +29,26 @@
             </button>
             </div>
 
-          <button type="submit" class="botao">ENTRAR ></button>
+            <label for="confirmarSenha">Confirmar senha:</label>
+            <div class="password-wrapper">
+                <input 
+                    v-model="confirmarSenha" 
+                    :type="mostrarConfirmarSenha ? 'text' : 'password'" 
+                    id="confirmarSenha"
+                    placeholder="Confirme sua senha"
+                >
+                <button type="button" class="toggle-btn" @click="toggleConfirmarPassword">
+                    <Icon :name="mostrarConfirmarSenha ? 'uil:eye-slash' : 'uil:eye'" size="20px" />
+                </button>
+            </div>
+
+            <p v-if="error" class="mensagem-erro">{{ error }}</p>
+
+          <button type="submit" class="botao">Cadastrar ></button>
         </form>
 
         <div class="links">
-          <p><strong>Aluno</strong>, <a href="cadastroAluno">cadastre-se aqui</a></p>
-          <p><strong>Servidor</strong>, <a href="cadastroServidor">cadastre-se aqui</a></p>
-          <p><a href="recuperarSenha">Esqueceu a senha?</a></p>
-          <p><a href="#">Esqueceu o login?</a></p>
+          <p><a href="login">Voltar</a></p>
         </div>
 
       </div>
@@ -56,42 +68,53 @@
     //import Footer from '~/components/layout/Footer.vue';
     
     import { ref } from 'vue'
-    import {signInWithEmailAndPassword } from "firebase/auth"
-    import { getFirebaseAuth } from "../../plugins/firebase.client"
 
     const usuario = ref('')
     const senha = ref('')
+    const confirmarSenha = ref('') // 1. New variable for the second input
     const mostrarSenha = ref(false) // New state: false = hidden, true = visible
+    const mostrarConfirmarSenha = ref(false) // 2. Separate visibility state
 
-    const togglePassword = () => {
-    mostrarSenha.value = !mostrarSenha.value
-    }
     const error = ref('')
 
-    const login = async () => {
-        console.log("foi")
-       try {
-            const auth = getFirebaseAuth()
-
-            const userCredential = await signInWithEmailAndPassword(auth, usuario.value, senha.value)
-            const token = await userCredential.user.getIdToken()
-
-            console.log("deu certo")
-
-            localStorage.setItem( //Salva token em localStorage (Mudar pra cookies no backend)
-                'token',
-                token
-            )
-
-            await navigateTo('/matricula') // ou pra outra 
-        } 
-
-        catch (err) {
-            console.log(err)
-            error.value = 'Falha no login'
-        }
+    const togglePassword = () => {
+        mostrarSenha.value = !mostrarSenha.value
     }
 
+    const toggleConfirmarPassword = () => {
+        mostrarConfirmarSenha.value = !mostrarConfirmarSenha.value
+    }
+
+    const cadastrar = async () => {
+        error.value = '' // Reset error message
+
+        // 5. Check if passwords match before sending to API!
+        if (senha.value !== confirmarSenha.value) {
+            error.value = 'As senhas não coincidem.'
+            return // Stops the function here
+        }
+
+        // try {
+        //     // Note: You might need to change '/api/login' to '/api/register' in the backend later
+        //     const response = await $fetch('/api/cadastro', { 
+        //         method: 'POST',
+        //         body: {
+        //             email: usuario.value,
+        //             password: senha.value
+        //         }
+        //     })
+
+        //     localStorage.setItem('token', response.token)
+        //     await navigateTo('/login') 
+        // } catch (err) {
+        //     error.value = 'Falha no cadastro. Tente novamente.'
+        // }
+
+        await navigateTo('/aluno')
+    }
+
+    // Adicionando botao de "olho" na senha
+    
 </script>
 
 <style scoped>
@@ -156,42 +179,50 @@
     }
 
     .password-wrapper {
-    position: relative;
-    width: 100%;
-    margin-bottom: 14px;
-    /* We ensure this is a block container so the input fills it */
-    display: block; 
-}
+        position: relative;
+        width: 100%;
+        margin-bottom: 14px;
+        /* We ensure this is a block container so the input fills it */
+        display: block; 
+    }
 
-.password-wrapper input {
-    width: 100%;
-    /* Standardized with your other input */
-    margin-bottom: 0 !important; 
-    padding: 8px 10px 8px 10px; /* Right padding is 40px to hide text under eye */
-    display: block;
-    /* REMOVE the fixed height: 38px; let padding decide the height */
-}
+    .password-wrapper input {
+        width: 100%;
+        /* Standardized with your other input */
+        margin-bottom: 0 !important; 
+        padding: 8px 10px 8px 10px; /* Right padding is 40px to hide text under eye */
+        display: block;
+        /* REMOVE the fixed height: 38px; let padding decide the height */
+    }
 
-.toggle-btn {
-    position: absolute;
-    right: -11px;
-    top: 50%;
-    /* -45% is visually more 'centered' than -50% for eye icons */
-    transform: translateY(-45%); 
-    
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #666;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    z-index: 2;
-}
+    .toggle-btn {
+        position: absolute;
+        right: -11px;
+        top: 50%;
+        /* -45% is visually more 'centered' than -50% for eye icons */
+        transform: translateY(-45%); 
+        
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        z-index: 2;
+    }
 
     .toggle-btn:hover {
         color: #1a5276; 
+    }
+
+    .mensagem-erro {
+        color: #d32f2f;
+        font-size: 13px;
+        text-align: center;
+        margin-bottom: 12px;
+        font-weight: bold;
     }
 
     /* ===================== BOTÃO ===================== */ 
