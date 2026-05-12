@@ -3,9 +3,12 @@ package database
 import (
 	"context"
 	"log"
-	"time"
+
+	"os"
 
 	"cloud.google.com/go/firestore"
+	//tables "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/tables"
+	//"golang.org/x/crypto/bcrypt"
 	"google.golang.org/api/option"
 )
 
@@ -17,65 +20,45 @@ var (
 
 func InitDB() {
 	Ctx = context.Background()
-
-	opt := option.WithAuthCredentialsFile(option.ServiceAccount, "../serviceAccountKey.json")
-
-	//Conecta diretamente no banco matriculas242
 	var err error
-	Client, err = firestore.NewClientWithDatabase(Ctx, "matriculas242", "matriculas242", opt)
+
+	// A nuvem injeta a variável K_SERVICE automaticamente.
+	// Se ela existir, estamos no Cloud Functions!
+	if os.Getenv("K_SERVICE") != "" {
+		log.Println("Conectando ao Firestore pelo ambiente Cloud (IAM automático)...")
+		Client, err = firestore.NewClientWithDatabase(Ctx, "matriculas242", "matriculas242")
+	} else {
+		log.Println("Conectando ao Firestore pelo ambiente Local (serviceAccountKey)...")
+		opt := option.WithAuthCredentialsFile(option.ServiceAccount, "../serviceAccountKey.json")
+		Client, err = firestore.NewClientWithDatabase(Ctx, "matriculas242", "matriculas242", opt)
+	}
 
 	if err != nil {
 		log.Fatalf("Erro ao conectar no Firestore: %v", err)
 	}
 
-	log.Println(" BD online")
+	log.Println("BD online")
 }
 
 // SeedBaseData cria dados iniciais no banco
-func SeedBaseData() {
+/*func SeedBaseData() {
 	log.Println("Iniciando seed do banco...")
 
-	// criar um curso
-	_, err := Client.Collection("cursos").Doc("CCO").Set(Ctx, map[string]interface{}{
-		"codigo":  "CCO",
-		"nome":    "Ciência da Computação",
-		"campus":  "Darcy Ribeiro",
-		"ativo":   true,
-		"created": time.Now(),
-	})
+	// Criptografa
+	senhaPlana := "senha123"
+	hash, err := bcrypt.GenerateFromPassword([]byte(senhaPlana), bcrypt.DefaultCost)
 	if err != nil {
-		log.Println("erro ao criar curso:", err)
+		log.Fatalf("Erro ao gerar hash da senha: %v", err)
 	}
 
-	// criar matéria
-	_, err = Client.Collection("materias").Doc("MAT101").Set(Ctx, map[string]interface{}{
-		"codigo":           "MAT101",
-		"nome":             "Cálculo I",
-		"creditos":         4,
-		"cargaHoraria":     60,
-		"preRequisitosIds": []string{},
-		"coRequisitosIds":  []string{},
-		"equivalenciasIds": []string{},
-		"ativa":            true,
-	})
-	if err != nil {
-		log.Println("erro ao criar matéria:", err)
-	}
+	// criando tabelas
+	tables.CreateAluno(Ctx, Client, hash, "unC", "20260001", "Guilherme Silva Cavalcante", []string{"MAT00131"})
 
-	// criar turma
-	_, err = Client.Collection("turmas").Doc("T2026-1-MAT101-01").Set(Ctx, map[string]interface{}{
-		"codigoTurma":    "T2026-1-MAT101-01",
-		"materiaId":      "MAT101",
-		"nomeMateria":    "Cálculo I",
-		"semestre":       "2026.1",
-		"capacidade":     40,
-		"ocupadas":       0,
-		"vagasRestantes": 40,
-		"status":         "aberta",
-	})
-	if err != nil {
-		log.Println("erro ao criar turma:", err)
-	}
+	tables.CreateTurma(Ctx, Client, hash, "T2026-1-MAT101-01", "MAT101", "Cálculo I", "2026.1", 40, 0, 40, true)
 
-	log.Println(" Seed finalizado")
+	tables.CreateCurso(Ctx, Client, "CCO", "Ciencia da computação", "Darcy Ribeiro", true)
+
+	tables.CreateMateria(Ctx, Client, "Mat11", "matematica", 6, 60, []string{}, []string{}, []string{}, true)
+
 }
+*/

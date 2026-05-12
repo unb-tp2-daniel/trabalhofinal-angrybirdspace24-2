@@ -56,6 +56,8 @@
     //import Footer from '~/components/layout/Footer.vue';
     
     import { ref } from 'vue'
+    import {signInWithEmailAndPassword } from "firebase/auth"
+    import { getFirebaseAuth } from "../../plugins/firebase.client"
 
     const usuario = ref('')
     const senha = ref('')
@@ -66,31 +68,30 @@
     }
     const error = ref('')
 
-    const login = async () => { //Autenticacao com API
-        try {
-            const response = await $fetch('/api/login', {
-                method: 'POST',
-                body: {
-                    email: usuario.value,
-                    password: senha.value
-                }
-            })
+    const login = async () => {
+        console.log("foi")
+       try {
+            const auth = getFirebaseAuth()
+
+            const userCredential = await signInWithEmailAndPassword(auth, usuario.value, senha.value)
+            const token = await userCredential.user.getIdToken()
+
+            console.log("deu certo")
 
             localStorage.setItem( //Salva token em localStorage (Mudar pra cookies no backend)
                 'token',
-                response.token
+                token
             )
 
-            await navigateTo('/login') //Mudaria pra pagina de inicio (provisorio)
+            await navigateTo('/matricula') // ou pra outra 
         } 
 
         catch (err) {
+            console.log(err)
             error.value = 'Falha no login'
         }
     }
 
-    // Adicionando botao de "olho" na senha
-    
 </script>
 
 <style scoped>

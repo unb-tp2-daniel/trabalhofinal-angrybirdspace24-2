@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	database "trabalho/BD"
+
+	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD"
 )
 
 func DatabaseRoutes() {

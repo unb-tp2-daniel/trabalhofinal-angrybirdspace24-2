@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-	"trabalho/api-matriculas/models"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 	// Imports de debug
 	//"fmt"
 	//"io"
