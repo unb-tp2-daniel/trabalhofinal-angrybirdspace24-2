@@ -5,14 +5,23 @@ import (
 	"net/http"
 	// Importando as nossas pastas isoladas
 )
-
+/*
+type Matricula struct {
+	AlunoId         string            `json:"alunoId" firestore:"alunoId"`
+	TurmaId         string            `json:"turmaId" firestore:"turmaId"`
+	Status          bool              `json:"status" firestore:"status"`
+	DataSolicitacao time.Time         `json:"dataSolicitacao" firestore:"dataSolicitacao"`
+	Prioridades     map[string]string `json:"prioridades" firestore:"prioridades"`
+	Semestre        string            `json:"semestre" firestore:"semestre"`
+}
+*/
 // MatriculateAlunoHandler lida exclusivamente com a requisição da internet
 func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Método não permitido.", http.StatusMethodNotAllowed)
 		return
 	}
-	/*var matricula models.Matricula
+	var matricula models.Matricula
 	if err := json.NewDecoder(r.Body).Decode(&matricula); err != nil {
 		log.Printf("Erro ao decodificar JSON da matrícula: %v", err)
 		http.Error(w, "Formato de dados inválido", http.StatusBadRequest)
