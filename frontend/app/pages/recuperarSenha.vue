@@ -8,35 +8,19 @@
         <div class="linha"></div>
 
         <form @submit.prevent="login">
-          <label for="usuario">Nome de usuário:</label>
+          <label for="usuario">Digite e-mail de recuperação:</label>
           <input 
             v-model="usuario"
             type="text"
-            id="usuario"
-            placeholder="Digite seu usuário"
+            id="email"
+            placeholder="Digite seu e-mail"
           >
-
-          <label for="senha">Senha:</label>
-          <div class="password-wrapper">
-            <input 
-                v-model="senha"
-                :type="mostrarSenha ? 'text' : 'password'" 
-                id="senha"
-                placeholder="Digite sua senha"
-            >
-            <button type="button" class="toggle-btn" @click="togglePassword">
-                <Icon :name="mostrarSenha ? 'uil:eye-slash' : 'uil:eye'" size="20px" />
-            </button>
-            </div>
-
-          <button type="submit" class="botao">ENTRAR ></button>
+          
+          <button type="submit" class="botao">ENVIAR EMAIL DE RECUPERAÇÂO</button>
         </form>
 
         <div class="links">
-          <p><strong>Aluno</strong>, <a href="cadastroAluno">cadastre-se aqui</a></p>
-          <p><strong>Servidor</strong>, <a href="cadastroServidor">cadastre-se aqui</a></p>
-          <p><a href="recuperarSenha">Esqueceu a senha?</a></p>
-          <p><a href="#">Esqueceu o login?</a></p>
+          <p><a href="login">Voltar</a></p>
         </div>
 
       </div>
@@ -56,42 +40,36 @@
     //import Footer from '~/components/layout/Footer.vue';
     
     import { ref } from 'vue'
-    import {signInWithEmailAndPassword } from "firebase/auth"
-    import { getFirebaseAuth } from "../../plugins/firebase.client"
 
-    const usuario = ref('')
-    const senha = ref('')
-    const mostrarSenha = ref(false) // New state: false = hidden, true = visible
-
-    const togglePassword = () => {
-    mostrarSenha.value = !mostrarSenha.value
-    }
+    const email = ref('')
+    
     const error = ref('')
 
     const login = async () => {
-        console.log("foi")
-       try {
-            const auth = getFirebaseAuth()
+        try {
+            const response = await $fetch('/api/login', {
+                method: 'POST',
+                body: {
+                    email: usuario.value,
+                    password: senha.value
+                }
+            })
 
-            const userCredential = await signInWithEmailAndPassword(auth, usuario.value, senha.value)
-            const token = await userCredential.user.getIdToken()
-
-            console.log("deu certo")
-
-            localStorage.setItem( //Salva token em localStorage (Mudar pra cookies no backend)
+            localStorage.setItem(
                 'token',
-                token
+                response.token
             )
 
-            await navigateTo('/matricula') // ou pra outra 
+            await navigateTo('/login')
         } 
 
         catch (err) {
-            console.log(err)
             error.value = 'Falha no login'
         }
     }
 
+    // Adicionando botao de "olho" na senha
+    
 </script>
 
 <style scoped>
@@ -155,44 +133,7 @@
         background-color 0.2s; 
     }
 
-    .password-wrapper {
-    position: relative;
-    width: 100%;
-    margin-bottom: 14px;
-    /* We ensure this is a block container so the input fills it */
-    display: block; 
-}
-
-.password-wrapper input {
-    width: 100%;
-    /* Standardized with your other input */
-    margin-bottom: 0 !important; 
-    padding: 8px 10px 8px 10px; /* Right padding is 40px to hide text under eye */
-    display: block;
-    /* REMOVE the fixed height: 38px; let padding decide the height */
-}
-
-.toggle-btn {
-    position: absolute;
-    right: -11px;
-    top: 50%;
-    /* -45% is visually more 'centered' than -50% for eye icons */
-    transform: translateY(-45%); 
     
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #666;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    z-index: 2;
-}
-
-    .toggle-btn:hover {
-        color: #1a5276; 
-    }
 
     /* ===================== BOTÃO ===================== */ 
     .botao { 
