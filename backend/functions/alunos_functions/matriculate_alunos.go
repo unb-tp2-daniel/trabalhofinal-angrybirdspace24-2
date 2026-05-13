@@ -2,19 +2,16 @@
 package alunos_functions
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
+
 	// Importando as nossas pastas isoladas
+	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/create"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
-/*
-type Matricula struct {
-	AlunoId         string            `json:"alunoId" firestore:"alunoId"`
-	TurmaId         string            `json:"turmaId" firestore:"turmaId"`
-	Status          bool              `json:"status" firestore:"status"`
-	DataSolicitacao time.Time         `json:"dataSolicitacao" firestore:"dataSolicitacao"`
-	Prioridades     map[string]string `json:"prioridades" firestore:"prioridades"`
-	Semestre        string            `json:"semestre" firestore:"semestre"`
-}
-*/
+
 // MatriculateAlunoHandler lida exclusivamente com a requisição da internet
 func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -32,7 +29,7 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Erro ao salvar matrícula no banco: %v", err)
 		http.Error(w, "Erro interno ao salvar a matrícula", http.StatusInternalServerError)
 		return
-	}*/
+	}
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Matrícula cadastrada com sucesso no banco de dados!"))
 }
