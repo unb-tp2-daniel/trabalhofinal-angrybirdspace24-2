@@ -17,7 +17,7 @@
 
             <div class="profile__row">
                 <span class="profile__rowLabel">Curso</span>
-                <span class="profile__rowValue profile__rowValue--text">Engenharia de Computação</span>
+                <span class="profile__rowValue profile__rowValue--text">Ciência da Computação</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">Período</span>
@@ -25,7 +25,7 @@
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">Ingresso</span>
-                <span class="profile__rowValue">2022.1</span>
+                <span class="profile__rowValue">2024.1</span>
             </div>
         </section>
 
