@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"cloud.google.com/go/firestore"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/BD/enums"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/enums"
 )
 
 // Client vai guardar a conexão com o banco para a API usar

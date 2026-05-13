@@ -2,6 +2,10 @@
   <div>
     <h1>Teste de API</h1>
 
+    <button @click="loginGoogle">
+      Entrar com Google
+    </button>
+    
     <p v-if="pending">
       Carregando...
     </p>
@@ -19,5 +23,41 @@
 
 <script setup>
 //Usa proxy pra evitar problema de conexão
-  const { data, pending, error } = await useFetch('/api/pong')
+  import {
+  GoogleAuthProvider,
+  signInWithPopup
+} from "firebase/auth"
+
+import { getFirebaseAuth } from "../../plugins/firebase.client"
+
+  const loginGoogle = async () => {
+
+    try {
+
+        const auth = getFirebaseAuth()
+
+        const provider = new GoogleAuthProvider()
+
+        const result =
+            await signInWithPopup(auth, provider)
+
+        const token =
+            await result.user.getIdToken()
+
+        localStorage.setItem(
+            "token",
+            token
+        )
+
+        console.log(result.user)
+
+        await navigateTo("/matricula")
+
+    } catch (err) {
+
+        console.log(err)
+
+        error.value = "Erro no login Google"
+    }
+  }
 </script>
