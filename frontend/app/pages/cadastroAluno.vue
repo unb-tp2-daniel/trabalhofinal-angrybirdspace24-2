@@ -68,6 +68,8 @@
     //import Footer from '~/components/layout/Footer.vue';
     
     import { ref } from 'vue'
+    import { createUserWithEmailAndPassword } from "firebase/auth"
+    import { auth } from "~/plugins/firebase.client"
 
     const usuario = ref('')
     const senha = ref('')
@@ -94,22 +96,20 @@
             return // Stops the function here
         }
 
-        // try {
-        //     // Note: You might need to change '/api/login' to '/api/register' in the backend later
-        //     const response = await $fetch('/api/cadastro', { 
-        //         method: 'POST',
-        //         body: {
-        //             email: usuario.value,
-        //             password: senha.value
-        //         }
-        //     })
+        try {
 
-        //     localStorage.setItem('token', response.token)
-        //     await navigateTo('/login') 
-        // } catch (err) {
-        //     error.value = 'Falha no cadastro. Tente novamente.'
-        // }
+            const userCredential =
+            await createUserWithEmailAndPassword(
+                auth,
+                usuario.value,
+                senha.value
+            )
 
+            console.log(userCredential.user)
+
+        } catch (error) {
+            console.log(error.message)
+        }
         await navigateTo('/aluno')
     }
 
