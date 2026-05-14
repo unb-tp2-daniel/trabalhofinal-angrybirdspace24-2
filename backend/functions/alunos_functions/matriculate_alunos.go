@@ -25,8 +25,14 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Formato de dados inválido", http.StatusBadRequest)
 		return
 	}
-	if err := available_turmas.TurmaIsAvailable(w, r); err != nil {
+
+	if err := available_turmas.TurmaIsAvailable(matricula, r); err != nil {
 		http.Error(w, "Erro ao verificar disponibilidade da turma", http.StatusInternalServerError)
+		return
+	}
+
+	if !available_turmas.IsTurmaAvailable {
+		http.Error(w, "Turma sem vagas disponíveis", http.StatusConflict)
 		return
 	}
 
