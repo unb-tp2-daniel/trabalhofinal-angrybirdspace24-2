@@ -11,6 +11,9 @@ import (
 
 // ListTurmasHandler atende a requisição da internet (apenas recebe e devolve)
 func ListTurmasHandler(w http.ResponseWriter, r *http.Request) {
+	//Tornando o acesso visível para o front
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	// verifica se é GET
 	if r.Method != http.MethodGet {
 		http.Error(w, "Método não permitido. Use GET.", http.StatusMethodNotAllowed)
