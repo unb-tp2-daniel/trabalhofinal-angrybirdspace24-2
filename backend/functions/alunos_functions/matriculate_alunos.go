@@ -9,6 +9,7 @@ import (
 	// Importando as nossas pastas isoladas
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/create"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/turmas_functions/available_turmas"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
@@ -24,6 +25,11 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Formato de dados inválido", http.StatusBadRequest)
 		return
 	}
+	if err := available_turmas.TurmaIsAvailable(w, r); err != nil {
+		http.Error(w, "Erro ao verificar disponibilidade da turma", http.StatusInternalServerError)
+		return
+	}
+
 	err := create.CreateMatricula(database.Ctx, database.Client, matricula)
 	if err != nil {
 		log.Printf("Erro ao salvar matrícula no banco: %v", err)
