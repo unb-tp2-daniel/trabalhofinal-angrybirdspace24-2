@@ -37,3 +37,23 @@ func GetAllTurmas(Ctx context.Context, Client *firestore.Client) ([]models.Turma
 
 	return turmas, nil
 }
+func TurmaIsAvailable(Ctx context.Context, Client *firestore.Client, id string) (bool, error) {
+
+	doc, err := Client.Collection("turmas_UnB").Doc(id).Get(Ctx)
+
+	if err != nil {
+		return false, err
+	}
+
+	var turma models.Turma
+
+	err = doc.DataTo(&turma)
+
+	if err != nil {
+		return false, err
+	}
+
+	disponivel := turma.VagasOcupadas < turma.VagasTotais
+
+	return disponivel, nil
+}
