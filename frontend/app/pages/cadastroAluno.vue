@@ -69,8 +69,8 @@
     
     import { ref } from 'vue'
     import { createUserWithEmailAndPassword } from "firebase/auth"
-    import { auth } from "~/plugins/firebase.client"
-
+    import { getFirebaseAuth } from "../../plugins/firebase.client"
+    const auth = getFirebaseAuth()
     const usuario = ref('')
     const senha = ref('')
     const confirmarSenha = ref('') // 1. New variable for the second input
