@@ -9,8 +9,9 @@ import (
 	// Importando as nossas pastas isoladas
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/create"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/turmas_functions/available_turmas"
+	turma "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
+
 )
 
 // MatriculateAlunoHandler lida exclusivamente com a requisição da internet
@@ -26,13 +27,8 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := available_turmas.TurmaIsAvailable(matricula, r); err != nil {
+	if err := turma.TurmaIsAvailable(database.Ctx, database.Client, matricula.TurmaId); err != nil {
 		http.Error(w, "Erro ao verificar disponibilidade da turma", http.StatusInternalServerError)
-		return
-	}
-
-	if !available_turmas.IsTurmaAvailable {
-		http.Error(w, "Turma sem vagas disponíveis", http.StatusConflict)
 		return
 	}
 
