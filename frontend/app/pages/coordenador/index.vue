@@ -4,32 +4,31 @@
         <aside class="sidebar">
             <h2>Sistema</h2>
 
-            <button>Matérias</button>
-            <button>Nova Matéria</button>
-            <button>Matrículas</button>
-            <button>Relatórios</button>
-            <button>Configurações</button>
+            <button @click="turmas">Turmas</button>
+            <button @click="matriculas">Matrículas</button>
+            <button @click="alerta()">Relatórios</button>
+            <button @click="alerta()">Regras</button>
         </aside>
 
         <main class="content">
             <header class="topbar">
-            <h1>Bem-vindo, Servidor</h1>
+            <h1>Bem-vindo, Coordenador</h1>
             </header>
 
             <section class="cards">
 
             <div class="card">
-                <h3>124</h3>
-                <p>Matérias</p>
+                <h3>167 </h3>
+                <p>Turmas</p>
             </div>
 
             <div class="card">
-                <h3>2430</h3>
+                <h3>2467</h3>
                 <p>Matrículas</p>
             </div>
 
             <div class="card">
-                <h3>18</h3>
+                <h3>67</h3>
                 <p>Solicitações</p>
             </div>
 
@@ -40,7 +39,7 @@
 
             <ul>
                 <li>Matéria "Cálculo I" atualizada</li>
-                <li>15 novas matrículas</li>
+                <li>67 novas matrículas</li>
                 <li>Nova disciplina criada</li>
             </ul>
             </section>
@@ -48,6 +47,18 @@
     </div>
     <Footer/>
 </template>
+
+<script setup>
+    function turmas() {
+    navigateTo('/coordenador/turmas')
+    }
+    function matriculas() {
+    navigateTo('/coordenador/matriculas')
+    }
+    function alerta(){
+        alert("🤸\n\n\n\n\n\n\n\nNão tem nada aqui 🦽🏌️")
+    }
+</script>
 
 <style scoped>
     .dashboard{
