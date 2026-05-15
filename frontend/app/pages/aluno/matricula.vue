@@ -28,9 +28,9 @@ const fetchTurmas = async () => {
 }
 
 //Para testar o GET de turmas, descomentar isso aqui:
-//onMounted(() =>{
-//    fetchTurmas()
-//})
+onMounted(() =>{
+    fetchTurmas()
+})
 </script>
 
 <style scoped>
