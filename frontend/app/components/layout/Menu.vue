@@ -4,7 +4,7 @@
         <li class="menu_item">
           <span>Ensino</span>
           <ul class="menu_contexto">
-            <li>Realizar Matrícula</li>
+            <li><NuxtLink to="aluno/matricula" class="link_menu">Realizar Matrícula</NuxtLink></li>
             <li>Retirar Matrícula</li>
             <li>Trancamento de Matrícula</li>
             <li>Consultar Minhas Notas</li>
@@ -31,6 +31,11 @@
 </template>
 
 <style scoped>
+
+.link_menu{
+  text-decoration: none;
+  color: inherit;
+}
 
 .menu_bar{
   background-color: #e7e6df;

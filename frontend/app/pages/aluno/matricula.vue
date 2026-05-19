@@ -2,6 +2,7 @@
     <div>
     <Header />
     <main class="container">
+      <TabelaBuscas/>
         <div v-for="turma in turmas">
             <p>Turma: {{ turma.nomeMateria }}</p>
         </div>
@@ -34,5 +35,8 @@ onMounted(() =>{
 </script>
 
 <style scoped>
-
+ main{
+  width: 80%;
+  margin: 0 auto;
+ }
 </style>
