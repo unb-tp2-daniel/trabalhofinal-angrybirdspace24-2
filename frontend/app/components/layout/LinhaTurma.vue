@@ -3,10 +3,10 @@
 defineProps<{
   turma: {
     codigoTurma: string
-    docente: string
+    professorNome: string
     horario: string
     local: string
-    capacidade: number
+    vagasTotais: number
   }
 }>()
 </script>
@@ -14,10 +14,10 @@ defineProps<{
 <template>
     <tr>
         <td class="turma">{{ turma.codigoTurma }}</td>
-        <td class="turma">{{ turma.docente }}</td>
+        <td class="turma">{{ turma.professorNome }}</td>
         <td class="turma">{{ turma.horario }}</td>
         <td class="turma">{{ turma.local }}</td>
-        <td class="turma">{{ turma.capacidade }}</td>
+        <td class="turma">{{ turma.vagasTotais }}</td>
     </tr>
 </template>
 

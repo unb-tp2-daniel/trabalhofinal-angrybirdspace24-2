@@ -1,8 +1,29 @@
 <script setup lang="ts">
-
+  import {ref , onMounted} from 'vue'
   defineProps<{
-  turmasAbertas: any[]
-}>()
+    turmasAbertas: any[]
+  }>()
+
+
+const turmas = ref<any[]>([])
+const error = ref<string | null>(null)
+
+const fetchTurmas = async () => {
+  try {
+
+    const response = await $fetch<any[]>('https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas')
+    turmas.value = response
+
+  } catch (err: any) {
+    console.error('Erro ao buscar turmas:', err)
+    error.value = err.message || 'Erro desconhecido'
+  }
+}
+
+//Para testar o GET de turmas, descomentar isso aqui:
+onMounted(() =>{
+    fetchTurmas()
+}) 
 
 </script>
 
@@ -22,7 +43,7 @@
       </thead>
 
       <tbody>
-        <LinhaTurma v-for="turma in turmasAbertas"
+        <LinhaTurma v-for="turma in turmas"
         :key="turma.codigoTurma" 
         :turma="turma"
         />

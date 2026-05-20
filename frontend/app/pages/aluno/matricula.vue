@@ -3,9 +3,9 @@
     <Header />
     <main class="container">
       <TabelaBuscas/>
-        <!-- <div v-for="turma in turmas">
+         <!-- <div v-for="turma in turmas">
             <p>Turma: {{ turma.nomeMateria }}</p>
-        </div> -->
+        </div> --> 
         <TabelaTurmasAbertas :turmasAbertas="turma"/>
     </main>
     <Footer />
@@ -13,28 +13,9 @@
 </template>
 
 <script setup>
-/* import {ref , onMounted} from 'vue'
 
-const turmas = ref([])
 
-const fetchTurmas = async () => {
-  try {
-
-    const response = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas')
-    turmas.value = response
-
-  } catch (err) {
-    console.error('Erro ao buscar turmas:', err)
-    error.value = err.message || 'Erro desconhecido'
-  }
-}
-
-//Para testar o GET de turmas, descomentar isso aqui:
-onMounted(() =>{
-    fetchTurmas()
-}) */
-
-const turma = ref([
+/* const turma = ref([
   {
     codigoTurma: 'CIC0229',
     docente: 'Marcelo Mandelli',
@@ -74,7 +55,7 @@ const turma = ref([
     local: 'PAT BT 20',
     capacidade: 30
   }
-])
+]) */
 </script>
 
 <style scoped>
