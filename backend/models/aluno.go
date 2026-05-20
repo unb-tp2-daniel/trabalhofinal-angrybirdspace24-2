@@ -16,4 +16,6 @@ type Aluno struct {
 	Ira                float64              `json:"ira" firestore:"ira"`
 	Prioridades        map[string]string    `json:"prioridades" firestore:"prioridades"`
 	NivelAcademico     enums.NivelAcademico `json:"nivelAcademico" firestore:"nivelAcademico"`
+	Horas         int                     `json:"horas" firestore:"horas"`
+
 }

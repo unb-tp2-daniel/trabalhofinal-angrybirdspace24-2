@@ -12,4 +12,5 @@ type Curso struct {
 	Ativo           bool      `json:"ativo" firestore:"ativo"`
 	CargaHorariaMax int       `json:"cargaHorariaMax" firestore:"cargaHorariaMax"`
 	Created         time.Time `json:"created" firestore:"created"` // Guarda a data/hora exata da criação
+	TotalHoras      int       `json:"totalHoras" firestore:"totalHoras"`
 }
