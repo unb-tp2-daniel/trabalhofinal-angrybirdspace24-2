@@ -13,8 +13,8 @@
         padding: 12px 24px; 
         text-align: center; 
 
-        position: fixed;
-        bottom: 0;
+        /* position: fixed;
+        bottom: 0; */
         width: 100%;
     } 
     
