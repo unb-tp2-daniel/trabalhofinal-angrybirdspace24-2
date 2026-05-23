@@ -4,7 +4,7 @@
         <li class="menu_item">
           <span>Ensino</span>
           <ul class="menu_contexto">
-            <li><NuxtLink to="aluno/matricula" class="link_menu">Realizar Matrícula</NuxtLink></li>
+            <li><NuxtLink to="aluno/matricula" class="link_menu">Realizar Matrícula Extraordinária</NuxtLink></li>
             <li>Retirar Matrícula</li>
             <li>Trancamento de Matrícula</li>
             <li>Consultar Minhas Notas</li>
@@ -56,11 +56,12 @@
   cursor: pointer;
   font-size: 15px;
   font-weight: normal;
-  color: #222
+  color: #222;
 }
 
-.menu_item :hover{
-  padding: 3px;
+.menu_item:hover{
+  background-color: #d8d8d8;
+  border-radius: 10px;
 }
 
 .menu_item:hover .menu_contexto{
@@ -79,7 +80,7 @@
   left: 0;
   background: white;
   width: auto;
-  width: 100vw;
+  width: 300px;
   border: 1px solid #dcdfe4;
   list-style: none;
   padding: 0;

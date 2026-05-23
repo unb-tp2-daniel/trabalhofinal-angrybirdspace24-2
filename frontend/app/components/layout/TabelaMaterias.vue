@@ -10,11 +10,11 @@
         <span class="link">ÁLGEBRA 1</span>
       </p>
 
-      <p>Novo tópico: Oportunidade de Estágio</p>
+      <p >Novo tópico: Oportunidade de Estágio</p>
       <p>Aviso: Cancelamento da aula de amanhã 13/05/2026</p>
     </div>
     
-    <table>
+    <table class="turmas_table">
       <thead>
         <tr>
           <th>Componente Curricular</th>
@@ -41,6 +41,18 @@
 </script>
 
 <style scoped>
+
+.turmas_table thead th{
+  color: rgba(24, 24, 24, 0.85);
+  text-align: left;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  padding: 11px 16px;
+  font-weight: 500;
+  /* text-transform: uppercase; */
+  font-weight: bold;
+}
+
   .turmas container{
     margin-top: 20px;
     background-color: #fff;
@@ -57,6 +69,11 @@
     border: 2px solid #d0d8e4;
     padding: 12px;
     margin-bottom: 20px;
+    border-radius: 10px 0px 10px 0px;
+  }
+
+  .atualizacao > p{
+    color: #2c2c2c;
   }
 
   .link{
@@ -73,6 +90,7 @@
   table{
     width: 100%;
     border-collapse: collapse;
+    color: #333;
   }
 
   thead{
@@ -80,7 +98,7 @@
   }
 
   th{
-    color: #222;
+    color: #333;
     text-align: left;
     font-size: 18px;
     padding: 10px;
