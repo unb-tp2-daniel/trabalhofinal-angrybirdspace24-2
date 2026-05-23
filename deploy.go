@@ -15,7 +15,7 @@ func deployFunction(name string) error {
 		"--gen2",
 		"--runtime=go126",
 		"--region=southamerica-east1",
-		"--source=.",
+		"--source=./backend",
 		"--entry-point=" + name,
 		"--trigger-http",
 		"--allow-unauthenticated",

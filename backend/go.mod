@@ -1,4 +1,4 @@
-module github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2
+module github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend
 
 go 1.26.2
 

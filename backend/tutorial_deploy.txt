@@ -1,0 +1,4 @@
+Para fazer o deploy:
+    Na raiz do projeto, escreva no terminal: 
+            go run deploy.go NomeFuncao
+    Sendo NomeFuncao o nome utilizado em init.go
