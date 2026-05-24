@@ -34,7 +34,7 @@
 
         <div class="links">
           <p><strong>Aluno</strong>, <a href="cadastroAluno">cadastre-se aqui</a></p>
-          <p><strong>Servidor</strong>, <a href="cadastroServidor">cadastre-se aqui</a></p>
+          <p><strong>Coordenador</strong>, <a href="cadastroServidor">cadastre-se aqui</a></p>
           <p><a href="recuperarSenha">Esqueceu a senha?</a></p>
           <p><a href="#">Esqueceu o login?</a></p>
         </div>

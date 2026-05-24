@@ -110,7 +110,7 @@
         //     error.value = 'Falha no cadastro. Tente novamente.'
         // }
 
-        await navigateTo('/telaBranca')
+        await navigateTo('/coordenador')
     }
 
     // Adicionando botao de "olho" na senha
