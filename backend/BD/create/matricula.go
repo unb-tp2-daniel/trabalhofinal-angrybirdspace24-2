@@ -13,7 +13,11 @@ import (
 // CreateAluno recebe a struct pronta e a envia diretamente para o Firestore
 func CreateMatricula(Ctx context.Context, Client *firestore.Client, novaMatricula models.Matricula) error {
 	// Gera um ID dinâmico ("Unb_20260001", "Unb_20260002")
-	docID := fmt.Sprintf("Unb_%s", novaMatricula.AlunoId)
+	
+	/* imagino que um id do tipo alunoId_turmaId seja mais descritivo e melhor posteriormente (por exemplo, para resgatar a posição atual de um único aluno na turma)*/
+	//docID := fmt.Sprintf("Unb_%s", novaMatricula.AlunoId)
+	docID := fmt.Sprintf("%s_%s", novaMatricula.AlunoId, novaMatricula.TurmaId)
+
 	// O Firestore lê as tags da struct e faz o mapeamento sozinho
 	_, err := Client.Collection("matriculas").Doc(docID).Set(Ctx, novaMatricula)
 	if err != nil {
