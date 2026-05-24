@@ -11,4 +11,5 @@ type Matricula struct {
 	DataSolicitacao time.Time         `json:"dataSolicitacao" firestore:"dataSolicitacao"`
 	Prioridades     map[string]string `json:"prioridades" firestore:"prioridades"`
 	Semestre        string            `json:"semestre" firestore:"semestre"`
+	PrioridadeNota  float64			  `json:"prioridadenota" firestore:"prioridadenota"`
 }

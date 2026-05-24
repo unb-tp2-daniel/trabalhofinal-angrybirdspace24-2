@@ -34,6 +34,9 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// esboço para matricula normal
+	//matricula.PrioridadeNota = ApplyRules(matricula.AlunoId, matricula.TurmaId->MateriaId, matricula.AlunoId->CursoId)
+
 	err := create.CreateMatricula(database.Ctx, database.Client, matricula)
 	if err != nil {
 		log.Printf("Erro ao salvar matrícula no banco: %v", err)
