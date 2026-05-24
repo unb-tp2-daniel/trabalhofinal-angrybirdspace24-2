@@ -24,5 +24,7 @@ export default defineNuxtConfig({
       path: '~/components',
       pathPrefix: false
     }
-  ]
+  ],
+
+  css: ['@tabler/icons-webfont/dist/tabler-icons.min.css']
 })

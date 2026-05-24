@@ -81,11 +81,9 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-
     width: 340px;
     max-width: 100%;
-
-    background-color: #ffffff;
+    background-color: #eaf0f5;
     padding: 16px 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
