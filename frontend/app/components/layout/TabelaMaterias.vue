@@ -26,8 +26,8 @@
       <tbody>
         <tr v-for="materias in materias" :key="materias.nome">
           <td class="materia">{{ materias.nome }}</td>
-          <td>{{ materias.local }}</td>
-          <td>{{ materias.horario }}</td>
+          <td class="local">{{ materias.local }}</td>
+          <td><span class="horario">{{ materias.horario }}</span></td>
         </tr>
       </tbody>
     </table>
@@ -43,19 +43,21 @@
 <style scoped>
 
 .turmas_table thead th{
-  color: rgba(24, 24, 24, 0.85);
   text-align: left;
   font-size: 15px;
   letter-spacing: 0.06em;
   padding: 11px 16px;
-  font-weight: 500;
-  /* text-transform: uppercase; */
   font-weight: bold;
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-  .turmas container{
+  .turmas_container{
     margin-top: 20px;
-    background-color: #fff;
+
   }
 
   .titulo{
@@ -90,30 +92,52 @@
   table{
     width: 100%;
     border-collapse: collapse;
-    color: #333;
   }
 
-  thead{
-    background-color: #dfe7f3;
+  .turmas_table thead{
+    background-color: #1a3a7a;
   }
 
-  th{
-    color: #333;
-    text-align: left;
-    font-size: 18px;
-    padding: 10px;
+  .turmas_table thead th{
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 12px;
+    padding: 11px 16px;
+    text-transform: uppercase;
+  }
+
+  .turmas_table tbody tr{
+  border-bottom: 1px solid #e8eef5;
+  transition: background 0.12s;
   }
 
   td{
     padding: 14px 12px;
     border-bottom: 1px solid #dcdcdc;
-    background-color: #f8fbff;
+    background-color: #fff;
+    font-size: 13px;
+    color: #333;
   }
 
   .materia{
     color: #003399;
     font-weight: bold;
     font-size: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  .local{
+    font-size: 13px;
+    color: #555;
+  }
+
+  .horario{
+    font-family: 'DM Mono', 'Courier New', monospace;
+    font-size: 12px;
+    background: #f0f5fa;
+    color: #1a3a7a;
+    padding: 3px 8px;
+    border-radius: 5px;
+    border: 1px solid #c5d8f0;
   }
 
   tr:nth-child(even) td{

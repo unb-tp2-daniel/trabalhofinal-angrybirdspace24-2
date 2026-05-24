@@ -29,6 +29,10 @@ onMounted(() =>{
     fetchTurmas()
 }) 
 
+const emit = defineEmits([
+  'selecionar'
+])
+
 </script>
 
 <template>
@@ -67,6 +71,7 @@ onMounted(() =>{
         <LinhaTurma v-for="turma in turmas"
         :key="turma.codigoTurma" 
         :turma="turma"
+        @selecionar="emit('selecionar', $event)"
         />
       </tbody>
     </table>

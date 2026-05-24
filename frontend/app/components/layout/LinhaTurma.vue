@@ -40,6 +40,10 @@ defineProps<{
   }
 }>()
 
+const emite = defineEmits([ 
+  'selecionar'
+])
+
 /* function capacidadeClass(vagas: number): string {
   if (vagas === 0) return 'cap-zero'
   if (vagas <= 10) return 'cap-full'
@@ -54,7 +58,7 @@ function capacidadeLabel(vagas: number): string {
 </script>
 
 <template>
-    <tr class="linha_turma">
+    <tr class="linha_turma" @click="emite('selecionar', turma)">
         <td class="code_badge">{{ turma.codigoTurma }}</td>
         <td class="docente">{{ turma.professorNome }}</td>
         <td class="horario_badge">{{ turma.horario }}</td>

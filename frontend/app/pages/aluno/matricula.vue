@@ -6,56 +6,68 @@
          <!-- <div v-for="turma in turmas">
             <p>Turma: {{ turma.nomeMateria }}</p>
         </div> --> 
-        <TabelaTurmasAbertas :turmasAbertas="turma"/>
+      <TabelaTurmasAbertas :turmasAbertas="turma" @selecionar="abrirModal"/>
+
+      <ModalConfirmacao 
+      :visivel="modalAberto"
+      :turma="turmaSelecionada"
+      @fechar="modalAberto = false"
+      @confirmar="confirmarMatricula"/>
+
+      <ToastResultado
+      :visivel="toastVisivel"
+      :mensagem="toastMensagem"
+      :tipo="toastTipo" />
+
     </main>
     <Footer />
     </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
+    const toastVisivel = ref(false)
+    const toastMensagem = ref('')
+    const toastTipo = ref('')
+
+const modalAberto = ref(false)
+const turmaSelecionada = ref(null)
+
+function abrirModal(turma) {
+  turmaSelecionada.value = turma
+  modalAberto.value = true
+}
+
+function mostrarToast(tipo, mensagem){
+  toastTipo.value = tipo
+  toastMensagem.value = mensagem
+  toastVisivel.value = true
+
+  setTimeout(() => {
+    toastVisivel.value = false
+  }, 3000)
+}
 
 
-/* const turma = ref([
-  {
-    codigoTurma: 'CIC0229',
-    docente: 'Marcelo Mandelli',
-    horario: '24T34',
-    local: 'PJC 085',
-    capacidade: 40
-  },
+function confirmarMatricula(turma){
+  const vagasRestantes = turma.vagasTotais - turma.vagasOcupadas
+  if(vagasRestantes > 0){
+    turma.vagasOcupadas++
 
-  {
-    codigoTurma: 'CIC0002',
-    docente: 'Vinicius Ruela',
-    horario: '35M12',
-    local: 'PJC 012',
-    capacidade: 35
-  },
+    mostrarToast(
+      'success',
+      'Matrícula realizada com sucesso!'
+    )
 
-  {
-    codigoTurma: 'MAT0026',
-    docente: 'Henrique Reis',
-    horario: '24M34',
-    local: 'BSAS 101',
-    capacidade: 60
-  },
-
-  {
-    codigoTurma: 'EST0023',
-    docente: 'Esqueci o nome',
-    horario: '46T23',
-    local: 'ICC Sul Anf 7',
-    capacidade: 45
-  },
-
-  {
-    codigoTurma: 'CIC0198',
-    docente: 'Daniel Porto',
-    horario: '24M12',
-    local: 'PAT BT 20',
-    capacidade: 30
+  } else {
+    mostrarToast(
+      'error',
+      'Não há mais vagas disponíveis.'
+    )
   }
-]) */
+  modalAberto.value = false
+}
 </script>
 
 <style scoped>
