@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import {ref , onMounted} from 'vue'
-  defineProps<{
-    turmasAbertas: any[]
-  }>()
+  import {ref , onMounted, watch} from 'vue'
+  const props = defineProps<{
+  turmasAbertas: any[]
+}>()
 
 
 const turmas = ref<any[]>([])
@@ -32,6 +32,10 @@ onMounted(() =>{
 const emit = defineEmits([
   'selecionar'
 ])
+
+watch(() => props.turmasAbertas, (novas) => {
+  turmas.value = novas
+})
 
 </script>
 

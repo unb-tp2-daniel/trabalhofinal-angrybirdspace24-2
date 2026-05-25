@@ -1,12 +1,13 @@
 <template>
     <div>
     <Header />
+    <!-- <Menu/> -->
     <main class="container">
-      <TabelaBuscas/>
+      <TabelaBuscas  @resultados="turmas = $event" />
          <!-- <div v-for="turma in turmas">
             <p>Turma: {{ turma.nomeMateria }}</p>
         </div> --> 
-      <TabelaTurmasAbertas :turmasAbertas="turma" @selecionar="abrirModal"/>
+      <TabelaTurmasAbertas :turmasAbertas="turmas" @selecionar="abrirModal"/>
 
       <ModalConfirmacao 
       :visivel="modalAberto"
@@ -26,11 +27,10 @@
 
 <script setup>
 import { ref } from 'vue'
-
-    const toastVisivel = ref(false)
-    const toastMensagem = ref('')
-    const toastTipo = ref('')
-
+const turmas = ref([])
+const toastVisivel = ref(false)
+const toastMensagem = ref('')
+const toastTipo = ref('')
 const modalAberto = ref(false)
 const turmaSelecionada = ref(null)
 

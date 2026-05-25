@@ -5,34 +5,34 @@
     <div class="formulario">
 
       <div class="campo">
-        <input type="checkbox" class="caixinha" />
+        <input type="checkbox" class="caixinha" v-model="ativos.codigoTurma"/>
         <label>Código do Componente:</label>
-        <input v-model="filtro.codigo" type="text" class="entrada" />
+        <input v-model="filtro.codigoTurma" type="text" class="entrada" />
       </div>
 
       <div class="campo">
-        <input type="checkbox" class="caixinha" />
+        <input type="checkbox" class="caixinha" v-model="ativos.nome"/>
         <label>Nome do Componente:</label>
         <input v-model="filtro.nome" type="text" class="entrada" />
       </div>
 
       <div class="campo">
-        <input type="checkbox" class="caixinha" />
+        <input type="checkbox" class="caixinha" v-model="ativos.horario"/>
         <label>Horário:</label>
         <input v-model="filtro.horario" type="text" class="entrada" />
       </div>
 
       <div class="campo">
-        <input type="checkbox" class="caixinha" />
+        <input type="checkbox" class="caixinha" v-model="ativos.docente"/>
         <label>Nome do Docente:</label>
         <input v-model="filtro.docente" type="text" class="entrada" />
       </div>
 
       <div class="campo">
-        <input type="checkbox" class="caixinha" />
+        <input type="checkbox" class="caixinha" v-model="ativos.unidade"/>
         <label>Unidade Responsável:</label>
         <select v-model="filtro.unidade" class="entrada">
-          <option value="">Selecione...</option>
+          <option value="">Selecione...</option> <!-- tenho que dar um jeitinho de puxar isso aq tb -->
           <option>FACULDADE DE TECNOLOGIA</option>
           <option>FACULDADE DE SAÚDE</option>
           <option>FACULDADE DE AGRONOMIA</option>
@@ -41,7 +41,10 @@
       </div>
 
       <div class="rodape">
-        <button @click="buscarTurmas">Buscar</button>
+        <button @click="buscarTurmas" :disabled="carregando">
+          {{ carregando ? 'Buscando...' : 'Buscar' }}
+        </button>
+        <span v-if="erro" class="erro">{{ erro }}</span>
       </div>
 
     </div>
@@ -49,22 +52,83 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, ref, watch } from 'vue'
+
+const emit = defineEmits<{
+  (e: 'resultados', turmas: any[]): void
+}>()
 
 const filtro = reactive({
-  codigo: '',
+  codigoTurma: '',
   nome: '',
   horario: '',
   docente: '',
   unidade: ''
 })
 
+//checkbox
+const ativos = reactive({
+  codigoTurma: false,
+  nome: false,
+  horario: false,
+  docente: false,
+  unidade: false
+})
+
+//se tem algo marca se nn xoxo
+watch(filtro, (val) =>{
+  ativos.codigoTurma = !!val.codigoTurma
+  ativos.nome = !!val.nome
+  ativos.horario = !!val.horario
+  ativos.docente = !!val.docente
+  ativos.unidade = !!val.unidade
+})
+
+const carregando =ref(false)
+const erro =ref('')
+/* dsfafeads
 function buscarTurmas() {
   console.log(filtro)
+} */
+
+async function buscarTurmas() {
+  carregando.value = true
+  erro.value = ''
+
+  try {
+    const todos = await $fetch<any[]>(
+      'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas'
+    )
+
+    const dados = todos.filter(turma =>{
+      if (ativos.codigoTurma  && filtro.codigoTurma  && !turma.codigoTurma?.toLowerCase().includes(filtro.codigoTurma.toLowerCase()))  return false
+      if (ativos.nome    && filtro.nome    && !turma.nomeMateria?.toLowerCase().includes(filtro.nome.toLowerCase()))    return false
+      if (ativos.horario && filtro.horario && !turma.horario?.toLowerCase().includes(filtro.horario.toLowerCase()))     return false
+      if (ativos.docente && filtro.docente && !turma.nomeDocente?.toLowerCase().includes(filtro.docente.toLowerCase())) return false
+      if (ativos.unidade && filtro.unidade && turma.unidade !== filtro.unidade) return false
+      return true
+    })
+    emit('resultados', dados)
+  }catch(e){
+    erro.value = 'Não foi possível carregar as turmas.'
+  }finally{
+    carregando.value = false
+  }
 }
 </script>
 
 <style scoped>
+button:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.erro{
+  display: block;
+  margin-top: 6px;
+  color: #e53935;
+  font-size: 0.85rem;
+}
+
 .filtro_container {
   margin-top: 10px;
   border: 1px solid #b8cfe8;
