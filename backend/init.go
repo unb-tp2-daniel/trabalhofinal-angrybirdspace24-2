@@ -5,9 +5,11 @@ import (
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
 
 	// Aqui você importaria os seus arquivos onde estão os códigos dos Handlers
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/materia_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/turmas_functions"
 
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/admin_functions"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/departamento_functions"
 )
 
 func init() {
@@ -31,5 +33,8 @@ func init() {
 	// Rotas de Database/Listagem
 	functions.HTTP("ListarTurmas", turmas_functions.ListTurmasHandler)
 	functions.HTTP("CriarTurma", turmas_functions.CreateTurmaHandler)
+	functions.HTTP("CriarMateria", materia_functions.CreateMateriaHandler)
+	functions.HTTP("CriarDepartamento", departamento_functions.CreateDepartamentoHandler)
+
 	functions.HTTP("GetRules", admin_functions.GetRulesHandler)
 }
