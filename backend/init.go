@@ -12,27 +12,14 @@ import (
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/admin_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/curso_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/departamento_functions"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/professor_functions"
 )
 
 func init() {
-	// 1. Iniciamos o banco de dados (que você configurou perfeitamente no passo anterior)
+
 	database.InitDB()
 
-	// 2. O ROTEAMENTO SERVERLESS:
-	// Aqui nós dizemos ao Google Cloud: "Pegue estas funções em Go e transforme em URLs independentes"
-
-	// Rota de Login (que estava solta no seu código original)
-	//functions.HTTP("Login", TokenHandler) // O Google criará uma URL terminada em /Login
-
-	// Rotas de Admin (o que antes estava dentro de AdminRoutes)
-	//functions.HTTP("CriarTurmaAdmin", CriarTurmaHandler)
-	//functions.HTTP("DeletarTurmaAdmin", DeletarTurmaHandler)
-
-	// Rotas de Student (o que antes estava dentro de StudentRoutes)
-	//functions.HTTP("MatricularAluno", MatricularHandler)
-	//functions.HTTP("RetirarMatricula", RetirarMatriculaHandler)
-
-	// Rotas de Database/Listagem
+	// Rotas de turmas
 	functions.HTTP("ListarTurmas", turmas_functions.ListTurmasHandler)
 	functions.HTTP("CriarTurma", turmas_functions.CreateTurmaHandler)
 
@@ -41,12 +28,16 @@ func init() {
 
 	// Rotas de Departamento
 	functions.HTTP("CriarDepartamento", departamento_functions.CreateDepartamentoHandler)
+	functions.HTTP("ListarDepartamentos", departamento_functions.ListDepartamentosHandler)
 
 	// Rotas de Coordenador
 	functions.HTTP("CriarCoordenador", admin_functions.CreateCoordenadorHandler)
 
 	// Rotas de curso
 	functions.HTTP("CriarCurso", curso_functions.CreateCursoHandler)
+
+	// Rotas de professor
+	functions.HTTP("CriarProfessor", professor_functions.CreateProfessorHandler)
 
 	functions.HTTP("GetRules", admin_functions.GetRulesHandler)
 

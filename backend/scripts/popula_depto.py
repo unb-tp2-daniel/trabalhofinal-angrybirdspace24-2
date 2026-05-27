@@ -4,13 +4,9 @@ from firebase_admin import credentials, firestore
 import datetime
 
 # 1. Autenticação usando o arquivo JSON com caminho dinâmico e seguro
-# Descobre a pasta exata onde este script Python está salvo (backend/script)
 pasta_do_script = os.path.dirname(os.path.abspath(__file__))
-
-# Constrói o caminho: sai de 'script' (..), sai de 'backend' (..), entra em 'json'
 caminho_json = os.path.join(pasta_do_script, "..", "..", "serviceAccountKey.json")
 
-# Passa o caminho calculado para o Firebase
 cred = credentials.Certificate(caminho_json)
 firebase_admin.initialize_app(cred)
 
@@ -18,34 +14,50 @@ firebase_admin.initialize_app(cred)
 db = firestore.client(database_id="matriculas242")
 
 def gerar_id_departamento(nome):
+    # Usa o nome cru (ex: "CIência da Computação") para pescar as maiúsculas
     sigla = "".join([char for char in nome if char.isupper()])
     if not sigla:
         sigla = nome[:2].upper()
     return f"{sigla}01"
 
+def formatar_nome_departamento(nome):
+    # Mantém a letra original se for o índice 0 ou se vier logo após um espaço.
+    # Força todo o resto a ser minúsculo.
+    resultado = ""
+    for i, char in enumerate(nome):
+        if i == 0 or nome[i-1] == ' ':
+            resultado += char
+        else:
+            resultado += char.lower()
+    return resultado
+
 def main():
     print("=== Populando Departamentos UnB (Via Admin SDK) ===")
-    
-    # Imprime o caminho que está usando para você ter certeza que ele achou o arquivo certo
     print(f"Usando chave em: {os.path.normpath(caminho_json)}\n")
     
     coordenador_serial = 1
 
     while True:
-        nome_depto = input("Nome do Departamento (ou 'sair'): ").strip()
+        # Pega a string exatamente como você digitou (o "hack" das maiúsculas)
+        nome_cru = input("Nome do Departamento (ou 'sair'): ").strip()
 
-        if nome_depto.lower() == 'sair':
+        if nome_cru.lower() == 'sair':
             break
-        if not nome_depto:
+        if not nome_cru:
             continue
 
-        depto_id = gerar_id_departamento(nome_depto)
+        # 1º Passo: Gera o ID extraindo as maiúsculas do nome cru -> "CIC01"
+        depto_id = gerar_id_departamento(nome_cru)
+        
+        # 2º Passo: Limpa o nome corrigindo as letras no meio da palavra -> "Ciência da Computação"
+        nome_formatado = formatar_nome_departamento(nome_cru)
+        
         coordenador_id = str(coordenador_serial)
         
-        # O payload continua sendo o que o seu banco espera lá no Go/Nuxt
+        # O payload agora usa a variável nome_formatado
         payload = {
             "departamentoId": depto_id,
-            "departamentoNome": nome_depto,
+            "departamentoNome": nome_formatado,
             "coordenadorId": coordenador_id,
             "created": datetime.datetime.utcnow().isoformat() + "Z"
         }
@@ -54,7 +66,7 @@ def main():
             # 3. Salva DIRETAMENTE na coleção departamentos
             db.collection("departamentos").document(depto_id).set(payload)
             
-            print(f"[SUCESSO] {nome_depto} salvo direto no Firestore! (ID: {depto_id})")
+            print(f"[SUCESSO] '{nome_formatado}' salvo direto no Firestore! (ID: {depto_id})")
             coordenador_serial += 1
             
         except Exception as e:
