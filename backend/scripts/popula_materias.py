@@ -15,26 +15,19 @@ def carregar_dados_existentes(db):
     print("Mapeando departamentos e matérias para garantir integridade...")
     
     deptos_ref = db.collection("departamentos").stream()
-    # Para o batch, guardamos a lista inteira de dicts (já ordenada pelo nome para facilitar)
-    lista_deptos = [doc.to_dict() for doc in deptos_ref]
-    lista_deptos.sort(key=lambda x: x.get("departamentoNome", ""))
+    mapa_deptos = {doc.to_dict()["departamentoId"]: doc.to_dict()["departamentoNome"] for doc in deptos_ref}
     
     materias_ref = db.collection("materias").stream()
     materias_existentes = {doc.id for doc in materias_ref}
     
-    return lista_deptos, materias_existentes
+    return mapa_deptos, materias_existentes
 
 def get_proximo_codigo_materia(depto_id, materias_existentes):
-    """
-    Busca o maior número cadastrado para um depto_id (ex: CIC01) e retorna o próximo (ex: CIC01_0001).
-    """
     max_num = 0
     prefixo_busca = f"{depto_id}_"
     
     for mat in materias_existentes:
-        # Busca matérias que começam com "CIC01_"
         if mat.startswith(prefixo_busca):
-            # Extrai apenas a parte depois do underscore
             num_str = mat.split('_')[1]
             try:
                 num = int(num_str)
@@ -43,7 +36,6 @@ def get_proximo_codigo_materia(depto_id, materias_existentes):
             except (ValueError, IndexError):
                 continue
                 
-    # Retorna o ID do depto + "_" + serial formatado com 4 casas
     return f"{depto_id}_{(max_num + 1):04d}"
 
 def parse_requisitos(entrada_str, materias_existentes):
@@ -58,36 +50,47 @@ def parse_requisitos(entrada_str, materias_existentes):
         for codigo in materias_and:
             if codigo not in materias_existentes:
                 return None, codigo 
-        matriz_requisitos.append(materias_and)
+                
+        # A MÁGICA: Empacota a lista num dicionário para o Firestore aceitar
+        matriz_requisitos.append({"disciplinas": materias_and})
         
     return matriz_requisitos, None
 
 def main():
-    print("=== Cadastro em Batch de Matérias (Graduação) ===")
+    print("=== Cadastro On-Demand de Matérias (Graduação) ===")
     
-    lista_deptos, materias_existentes = carregar_dados_existentes(db)
+    mapa_deptos, materias_existentes = carregar_dados_existentes(db)
     
-    if not lista_deptos:
+    if not mapa_deptos:
         print("Erro crítico: Nenhum departamento no banco!")
         return
 
     print("\nINSTRUÇÕES:")
+    print("- Digite o Código do departamento (ex: CIC01, ENE01).")
     print("- As matérias receberão IDs automáticos (ex: CIC01_0001).")
-    print("- Digite 'ok' no nome da matéria para pular para o próximo departamento.")
-    print("- Digite 'sair' a qualquer momento para encerrar o script de vez.\n")
+    print("- Digite 'ok' no nome da matéria para trocar de departamento.")
+    print("- Digite 'sair' a qualquer momento para encerrar o script.\n")
 
-    # --- Loop Externo: Itera pelos Departamentos ---
-    for depto in lista_deptos:
-        nome_depto = depto["departamentoNome"]
-        depto_id = depto["departamentoId"]
+    while True:
+        print("=" * 60)
+        depto_id = input("🔎 Digite o Código do Departamento (ou 'sair'): ").strip().upper()
         
-        print(f"\n{'='*60}")
-        print(f"🏢 DEPARTAMENTO: {nome_depto} (ID: {depto_id})")
-        print(f"{'='*60}")
+        if depto_id == 'SAIR':
+            print("\nEncerrando o script com segurança...")
+            break
+        if not depto_id:
+            continue
+            
+        if depto_id not in mapa_deptos:
+            print(f"❌ Departamento '{depto_id}' não existe no banco.")
+            continue
+            
+        nome_depto = mapa_deptos[depto_id]
         
-        # --- Loop Interno: Cadastro de Matérias ---
+        print(f"\n📂 DEPARTAMENTO: {nome_depto} (ID: {depto_id})")
+        print("-" * 60)
+        
         while True:
-            # Calcula o serial dinamicamente (ex: CIC01_0001)
             codigo_materia = get_proximo_codigo_materia(depto_id, materias_existentes)
             
             print(f"\n📝 Nova Matéria será: {codigo_materia}")
@@ -97,7 +100,7 @@ def main():
                 print("\nEncerrando o script com segurança...")
                 return
             if nome_materia.lower() == 'ok':
-                print(f">>> Fechando {nome_depto}. Indo para o próximo departamento...")
+                print(f">>> Saindo de {nome_depto}. Voltando à pesquisa de departamentos...")
                 break
             if not nome_materia:
                 continue
@@ -108,7 +111,6 @@ def main():
                 print("❌ Erro: Carga horária deve ser um número. Abortando esta matéria.")
                 continue
 
-            # Validação de Pré-requisitos
             while True:
                 pre_req_input = input("Pré-requisitos (separados por ',' ou 'OU', ex: CIC01_0001): ")
                 matriz_pre, erro = parse_requisitos(pre_req_input, materias_existentes)
@@ -117,7 +119,6 @@ def main():
                 else:
                     break 
 
-            # Validação de Co-requisitos
             while True:
                 co_req_input = input("Co-requisitos (separados por ',' ou 'OU'): ")
                 matriz_co, erro = parse_requisitos(co_req_input, materias_existentes)
@@ -133,6 +134,7 @@ def main():
 
             payload = {
                 "codigo": codigo_materia,
+                "nomeMateria": nome_materia,
                 "departamentoId": depto_id,
                 "preRequisitos": matriz_pre,
                 "coRequisitos": matriz_co,
@@ -145,8 +147,6 @@ def main():
             try:
                 db.collection("materias").document(codigo_materia).set(payload)
                 print(f"✅ [SUCESSO] {codigo_materia} - {nome_materia} salva no banco!")
-                
-                # Adiciona na memória para a próxima iteração achar o próximo número
                 materias_existentes.add(codigo_materia)
                 
             except Exception as e:
