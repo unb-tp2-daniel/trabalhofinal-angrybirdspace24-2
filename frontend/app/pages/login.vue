@@ -83,7 +83,7 @@
                 token
             )
 
-            await navigateTo('/aluno/matricula/')
+            await navigateTo('/aluno/') // adicionar verificação de cargo depois
         } 
 
         catch (err) {
