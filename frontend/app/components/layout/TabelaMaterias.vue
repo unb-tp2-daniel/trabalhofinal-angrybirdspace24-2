@@ -51,7 +51,7 @@
   width: 100%;
   border-collapse: collapse;
   border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 8px 8px 0px 0px;
   overflow: hidden;
 }
 
