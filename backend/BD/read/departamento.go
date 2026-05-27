@@ -11,6 +11,7 @@ import (
 type DepartamentoResumo struct {
 	DepartamentoNome string `json:"departamentoNome" firestore:"departamentoNome"`
 	CoordenadorId    string `json:"coordenadorId" firestore:"coordenadorId"`
+	DepartamentoId   string `json:"departamentoId" firestore:"departamentoId"`
 }
 
 // GetAllDepartamentosResumo busca todos os deptos e retorna só o nome e a ID do coordenador
