@@ -18,7 +18,7 @@ func CreateTurma(Ctx context.Context, Client *firestore.Client, novaTurma models
 	docID := novaTurma.CodigoTurma
 
 	// O Firestore lê as tags da struct e salva no banco
-	_, err := Client.Collection("turmas_UnB").Doc(docID).Set(Ctx, novaTurma)
+	_, err := Client.Collection("turmas").Doc(docID).Set(Ctx, novaTurma)
 
 	// Verificamos se houve erro e avisamos no terminal
 	if err != nil {

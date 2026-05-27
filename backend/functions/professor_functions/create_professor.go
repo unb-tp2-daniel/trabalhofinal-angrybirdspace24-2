@@ -1,4 +1,4 @@
-package admin_functions
+package professor_functions
 
 import (
 	"encoding/json"
@@ -10,31 +10,31 @@ import (
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
-func CreateCoordenadorHandler(w http.ResponseWriter, r *http.Request) {
+func CreateProfessorHandler(w http.ResponseWriter, r *http.Request) {
 	// verifica se o é POST
 	if r.Method != http.MethodPost {
 		http.Error(w, "Método não permitido. Use POST.", http.StatusMethodNotAllowed)
 		return
 	}
 
-	var novoCoordenador models.Coordenador
+	var novoProfessor models.Professor
 
 	// le o json do front e joga no model
-	if err := json.NewDecoder(r.Body).Decode(&novoCoordenador); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&novoProfessor); err != nil {
 		log.Printf("Erro ao decodificar JSON: %v", err)
 		http.Error(w, "Formato de dados inválido", http.StatusBadRequest)
 		return
 	}
 
 	//cria de vdd só na pasta BD
-	err := create.CreateCoordenador(database.Ctx, database.Client, novoCoordenador)
+	err := create.CreateProfessor(database.Ctx, database.Client, novoProfessor)
 
 	if err != nil {
 		log.Printf("Erro ao salvar no banco: %v", err)
-		http.Error(w, "Erro interno ao salvar o coordenador", http.StatusInternalServerError)
+		http.Error(w, "Erro interno ao salvar o professor", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Coordenador criado com sucesso no Firebase!"))
+	w.Write([]byte("Professor criado com sucesso no Firebase!"))
 }

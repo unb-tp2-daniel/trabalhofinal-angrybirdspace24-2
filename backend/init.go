@@ -10,6 +10,7 @@ import (
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/turmas_functions"
 
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/admin_functions"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/curso_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/departamento_functions"
 )
 
@@ -34,8 +35,18 @@ func init() {
 	// Rotas de Database/Listagem
 	functions.HTTP("ListarTurmas", turmas_functions.ListTurmasHandler)
 	functions.HTTP("CriarTurma", turmas_functions.CreateTurmaHandler)
+
+	// Rotas Materias
 	functions.HTTP("CriarMateria", materia_functions.CreateMateriaHandler)
+
+	// Rotas de Departamento
 	functions.HTTP("CriarDepartamento", departamento_functions.CreateDepartamentoHandler)
+
+	// Rotas de Coordenador
+	functions.HTTP("CriarCoordenador", admin_functions.CreateCoordenadorHandler)
+
+	// Rotas de curso
+	functions.HTTP("CriarCurso", curso_functions.CreateCursoHandler)
 
 	functions.HTTP("GetRules", admin_functions.GetRulesHandler)
 

@@ -18,7 +18,7 @@ func CreateDepartamento(Ctx context.Context, Client *firestore.Client, novoDepar
 	docID := novoDepartamento.DepartamentoId
 
 	// O Firestore lê as tags da struct e salva no banco
-	_, err := Client.Collection("turmas_UnB").Doc(docID).Set(Ctx, novoDepartamento)
+	_, err := Client.Collection("departamentos").Doc(docID).Set(Ctx, novoDepartamento)
 
 	// Verificamos se houve erro e avisamos no terminal
 	if err != nil {
