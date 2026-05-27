@@ -4,7 +4,7 @@
         <li class="menu_item">
           <span>Ensino</span>
           <ul class="menu_contexto">
-            <li><NuxtLink to="aluno/matricula" class="link_menu">Realizar Matrícula Extraordinária</NuxtLink></li>
+            <li><NuxtLink to="matricula/" class="link_menu">Realizar Matrícula Extraordinária</NuxtLink></li>
             <li>Retirar Matrícula</li>
             <li>Trancamento de Matrícula</li>
             <li>Consultar Minhas Notas</li>
