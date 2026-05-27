@@ -33,7 +33,7 @@ func GetAllTurmas(Ctx context.Context, Client *firestore.Client) ([]models.Turma
 	var turmas []models.Turma
 
 	// Faz a busca na coleção do Firestore
-	iter := Client.Collection("turmas_UnB").Documents(Ctx)
+	iter := Client.Collection("turmas").Documents(Ctx)
 
 	for {
 		doc, err := iter.Next()

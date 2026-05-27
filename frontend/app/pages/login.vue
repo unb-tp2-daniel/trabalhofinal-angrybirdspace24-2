@@ -83,7 +83,7 @@
                 token
             )
 
-            await navigateTo('/matricula') // ou pra outra 
+            await navigateTo('/aluno/matricula/')
         } 
 
         catch (err) {

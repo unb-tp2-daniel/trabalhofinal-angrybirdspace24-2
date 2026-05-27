@@ -50,24 +50,41 @@ function mostrarToast(tipo, mensagem){
 }
 
 
-function confirmarMatricula(turma){
-  const vagasRestantes = turma.vagasTotais - turma.vagasOcupadas
-  if(vagasRestantes > 0){
-    turma.vagasOcupadas++
+  async function confirmarMatricula(turma) {
+    modalAberto.value = false
 
-    mostrarToast(
-      'success',
-      'Matrícula realizada com sucesso!'
-    )
+    const alunoId = "242009972" // por enquanto, depois resgatar pelo usuario autenticado (n sei como faz)
 
-  } else {
-    mostrarToast(
-      'error',
-      'Não há mais vagas disponíveis.'
-    )
+    try {
+      const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/MatricularExtraordinaria', {
+        method: 'POST',
+        body: {
+          AlunoId: alunoId,
+          TurmaId: turmaSelecionada.value.codigoTurma,
+          Status: false,
+          DataSolicitacao: null,
+          Prioridades: null,
+          Semestre: "20261", // POR ENQUANTO TAMBÉM
+          PrioridadeNota: 0
+        }
+      })
+
+      mostrarToast('success', 'Matrícula extraordinária confirmada com sucesso!')
+
+      turma.vagasOcupadas++ // apenas altera localmente pra ficar bontio
+    }
+
+    catch (error) {
+      console.error("Erro na matrícula:", error)
+      
+      const mensagemErro = error.data || 'Erro interno ao processar matrícula.'
+      
+      mostrarToast(
+        'error',
+        mensagemErro
+      )
+    }
   }
-  modalAberto.value = false
-}
 </script>
 
 <style scoped>

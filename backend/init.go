@@ -5,6 +5,7 @@ import (
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
 
 	// Aqui você importaria os seus arquivos onde estão os códigos dos Handlers
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/alunos_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/materia_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/turmas_functions"
 
@@ -37,4 +38,7 @@ func init() {
 	functions.HTTP("CriarDepartamento", departamento_functions.CreateDepartamentoHandler)
 
 	functions.HTTP("GetRules", admin_functions.GetRulesHandler)
+
+	functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
+	functions.HTTP("Matricular", alunos_functions.NormalMatriculateAlunoHandler)
 }

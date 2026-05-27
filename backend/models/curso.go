@@ -13,4 +13,6 @@ type Curso struct {
 	CargaHorariaMax int       `json:"cargaHorariaMax" firestore:"cargaHorariaMax"`
 	Created         time.Time `json:"created" firestore:"created"` // Guarda a data/hora exata da criação
 	TotalHoras      int       `json:"totalHoras" firestore:"totalHoras"`
+	Obrigatorias	map[string]bool `json:"Obrigatorias" firestore:"Obrigatorias"`
+	Optativas	    map[string]bool `json:"Optativas" firestore:"Optativas"` // armazena id da materia e true. Se a materia não for optativa/obrigatoria, simplesmente, não coloca no map
 }

@@ -59,7 +59,7 @@ function capacidadeLabel(vagas: number): string {
 
 <template>
     <tr class="linha_turma" @click="emite('selecionar', turma)">
-        <td class="code_badge">{{ turma.codigoTurma }}</td>
+        <td class="code_badge">{{ turma.codigoTurma }}</td> <!-- para ser o codigo da materia, basta trocar por turma.materiaId -->
         <td class="docente">{{ turma.professorNome }}</td>
         <td class="horario_badge">{{ turma.horario }}</td>
         <td class="local">{{ turma.local }}</td>
