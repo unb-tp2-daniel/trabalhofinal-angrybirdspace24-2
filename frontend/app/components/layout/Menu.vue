@@ -1,31 +1,36 @@
+<script setup lang="ts">
+
+ interface MenuItem {
+  label: string
+  to?: string
+  children?: MenuItem[]
+}
+
+defineProps<{
+  items: MenuItem[]
+}>()
+
+</script>
+
 <template>
   <nav class="menu_bar">
     <ul class="menu_list">
-        <li class="menu_item">
-          <span>Ensino</span>
-          <ul class="menu_contexto">
-            <li><NuxtLink to="aluno/matricula/" class="link_menu">Realizar Matrícula Extraordinária</NuxtLink></li>
-            <li>Retirar Matrícula</li>
-            <li>Trancamento de Matrícula</li>
-            <li>Consultar Minhas Notas</li>
-          </ul>
-        </li>
+      <li
+        v-for="item in items"
+        :key="item.label"
+        class="menu_item"
+      >
+        <span>{{ item.label }}</span>
 
-        <li class="menu_item">
-          <span>Pesquisa</span>
-        </li>
-
-        <li class="menu_item">
-          <span>Bolsas</span>
-        </li>
-
-        <li class="menu_item">
-          <span>Estágio</span>
-        </li>
-
-        <li class="menu_item">
-          <span>Outros</span>
-        </li>
+        <ul v-if="item.children" class="menu_contexto">
+          <li v-for="child in item.children" :key="child.label">
+            <NuxtLink v-if="child.to" :to="child.to" class="link_menu">
+              {{ child.label }}
+            </NuxtLink>
+            <span v-else>{{ child.label }}</span>
+          </li>
+        </ul>
+      </li>
     </ul>
   </nav>
 </template>
