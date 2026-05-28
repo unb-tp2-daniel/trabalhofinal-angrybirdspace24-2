@@ -1,7 +1,7 @@
 <template>
     <div>
     <Header />
-    <!-- <Menu/> -->
+    <Menu :items="menuItems" />
     <main class="container">
       <TabelaBuscas  @resultados="turmas = $event" />
          <!-- <div v-for="turma in turmas">
@@ -85,6 +85,41 @@ function mostrarToast(tipo, mensagem){
       )
     }
   }
+
+  const menuItems = [
+  {
+    label: 'Matrícula',
+    children: [
+      { label: 'Trancamento de Matrícula'},
+      { label: 'Histórico de Matrículas' },
+    ]
+  },
+  {
+    label: 'Disciplinas',
+    children: [
+      { label: 'Buscar Disciplinas'},
+      { label: 'Grade Curricular'},
+      { label: 'Disciplinas Optativas' },
+      { label: 'Equivalências' },
+    ]
+  },
+  {
+    label: 'Horários',
+    children: [
+      { label: 'Minha Grade de Horários'},
+      { label: 'Choques de Horário'},
+    ]
+  },
+  {
+    label: 'Situação Acadêmica',
+    children: [
+      { label: 'Coeficiente de Rendimento'},
+      { label: 'Pendências Acadêmicas'},
+      { label: 'Prazo de Conclusão'},
+    ]
+  },
+  { label: 'Ajuda'},
+]
 </script>
 
 <style scoped>

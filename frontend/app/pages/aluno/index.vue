@@ -5,7 +5,7 @@
         <div class="container">
           <ProfileSidebar />
           <main class="content">
-            <TabelaMaterias :materias="materias"/>
+            <TabelaMatriculas :materias="materias"/>
           </main>
         </div>
         <Footer/>
@@ -31,6 +31,60 @@
     local: 'BSA N AT 19/41',
     horario: '24M12'
   }
+]
+
+const menuItems = [
+  {
+    label: 'Ensino',
+    children: [
+      { label: 'Realizar Matrícula Extraordinária', to: '/aluno/matricula' },
+      { label: 'Trancamento de Matrícula' },
+      { label: 'Trancamento Geral de Matrícula' },
+      { label: 'Grade Curricular' },
+      { label: 'Coeficiente de Rendimento' },
+    ]
+  },
+  {
+    label: 'Financeiro',
+    children: [
+      { label: 'Extrado do Restaurante' },
+      { label: 'Histórico de Pagamentos' },
+      { label: 'Isenções e Descontos' },
+    ]
+  },
+  {
+    label: 'Documentos',
+    children: [
+      { label: 'Declaração de Matrícula' },
+      { label: 'Atestado de Frequência' },
+      { label: 'Histórico Acadêmico' },
+      { label: 'Diploma Digital' },
+    ]
+  },
+  {
+    label: 'Estágio',
+    children: [
+      { label: 'Cadastrar Estágio' },
+      { label: 'Acompanhar Estágio' },
+      { label: 'Encerrar Estágio' },
+    ]
+  },
+  {
+    label: 'Bolsas',
+    children: [
+      { label: 'Bolsas Disponíveis' },
+      { label: 'Minhas Bolsas' },
+      { label: 'Renovação de Bolsa' },
+    ]
+  },
+  {
+    label: 'Outros',
+    children: [
+      { label: 'Ouvidoria' },
+      { label: 'Calendário Acadêmico' },
+      { label: 'Contato com Coordenação' },
+    ]
+  },
 ]
 
 </script>
