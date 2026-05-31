@@ -151,9 +151,18 @@
                 </tbody>
             </table>
         </section>
+        <button class="new-class-btn" @click="index">
+                Voltar
+            </button>
     </div>
     <Footer />
 </template>
+
+<script setup>
+    function index() {
+        navigateTo('/coordenador')
+        }
+</script>
 
 <style scoped>
 
