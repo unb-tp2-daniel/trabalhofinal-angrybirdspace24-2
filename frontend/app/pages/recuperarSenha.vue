@@ -20,7 +20,7 @@
         </form>
 
         <div class="links">
-          <p><a href="login">Voltar</a></p>
+          <p><a @click="telaLogin">Voltar</a></p>
         </div>
 
       </div>
@@ -30,6 +30,9 @@
 </template>
 
 <script setup>
+    function telaLogin() {
+        navigateTo('/login')
+    }
     
     useHead({
         title: 'Login - SIGAA UnB'
@@ -181,7 +184,8 @@
     } 
     
     .links a:hover { 
-        text-decoration: underline; 
+        text-decoration: underline;
+        cursor: pointer;
     }
 
 </style>

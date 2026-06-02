@@ -48,7 +48,7 @@
         </form>
 
         <div class="links">
-          <p><a href="login">Voltar</a></p>
+          <p><a @click="telaLogin">Voltar</a></p>
         </div>
 
       </div>
@@ -272,6 +272,7 @@
     
     .links a:hover { 
         text-decoration: underline; 
+        cursor: pointer;
     }
 
 </style>

@@ -11,7 +11,7 @@
         </p>
         
         <div class="links">
-          <p><NuxtLink to="/login">Voltar para o Login</NuxtLink></p>
+          <p><a @click="telaLogin">Voltar para o Login</a></p>
         </div>
       </div>
     </main>
@@ -20,6 +20,9 @@
 </template>
 
 <script setup>
+  function telaLogin() {
+      navigateTo('/login')
+  }
   useHead({
     title: 'Tela Branca - SIGAA UnB'
   })
@@ -64,5 +67,6 @@
     } 
     .links a:hover { 
         text-decoration: underline; 
+        cursor: pointer;
     }
 </style>

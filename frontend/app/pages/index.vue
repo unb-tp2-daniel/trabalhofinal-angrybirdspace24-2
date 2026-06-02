@@ -2,11 +2,14 @@
     <div>
         <h1>Index</h1>
 
-        <NuxtLink to ="/ping">Teste a API</NuxtLink>
+        <a @click="telaPing">Teste a API</a>
 
     </div>
 </template>
 
 <script setup>
+    function telaPing() {
+        navigateTo('/ping')
+    }
     navigateTo('/login')
 </script>
