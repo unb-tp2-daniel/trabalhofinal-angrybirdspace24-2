@@ -5,9 +5,27 @@ import (
 	"firebase.google.com/go/v4/auth"
 	"net/http"
 	"context"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
+	"log"
+	"encoding/json"
 )
 
 func CreateUser(w http.ResponseWriter, r *http.Request){
+	//Tornando o acesso visível para o front
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	if r.Method == http.MethodOptions {
+        w.WriteHeader(http.StatusOK)
+        return
+    }
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Método não permitido.", http.StatusMethodNotAllowed)
+		return
+	}
+
 	context := context.Background()
 
 	app, err := firebase.NewApp(context, nil)
@@ -22,9 +40,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	matricula := r.URL.Query().Get("matricula")
-	email := r.URL.Query().Get("email")
-	senha := r.URL.Query().Get("senha")
+	var usuario models.Usuario
+	if err := json.NewDecoder(r.Body).Decode(&usuario); err != nil {
+		log.Printf("Erro ao decodificar JSON do usuário: %v", err)
+		http.Error(w, "Formato de dados inválido", http.StatusBadRequest)
+		return
+	}
+
+	matricula := usuario.Matricula
+	email := usuario.Email
+	senha := usuario.Senha
 
 	if senha == "" || email == "" || matricula == ""{
 		http.Error(w, "Campos incompletos", 400)
