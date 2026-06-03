@@ -18,7 +18,7 @@ export const options = {
 };
 
 export default function () {
-  const urlFrontend = 'http://192.168.0.11:3000/aluno/matricula'; 
+  const urlFrontend = 'http://172.29.56.248:3000/aluno/matricula'; 
   const resFrontend = http.get(urlFrontend);
 
   check(resFrontend, {

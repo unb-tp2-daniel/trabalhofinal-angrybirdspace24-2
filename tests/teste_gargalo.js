@@ -21,7 +21,7 @@ export default function () {
 
   const payload = JSON.stringify({
     AlunoId: raAleatorio,
-    TurmaId: "LET01_0005_01", // turma aleatoria
+    TurmaId: "HIST01_0001_01", // turma aleatoria
     Semestre: "20261"
   });
 

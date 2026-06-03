@@ -104,7 +104,7 @@ async function buscarTurmas() {
       if (ativos.codigoTurma  && filtro.codigoTurma  && !turma.codigoTurma?.toLowerCase().includes(filtro.codigoTurma.toLowerCase()))  return false
       if (ativos.nome    && filtro.nome    && !turma.nomeMateria?.toLowerCase().includes(filtro.nome.toLowerCase()))    return false
       if (ativos.horario && filtro.horario && !turma.horario?.toLowerCase().includes(filtro.horario.toLowerCase()))     return false
-      if (ativos.docente && filtro.docente && !turma.nomeDocente?.toLowerCase().includes(filtro.docente.toLowerCase())) return false
+      if (ativos.docente && filtro.docente && !turma.professorNome?.toLowerCase().includes(filtro.docente.toLowerCase())) return false
       if (ativos.unidade && filtro.unidade && turma.unidade !== filtro.unidade) return false
       return true
     })
