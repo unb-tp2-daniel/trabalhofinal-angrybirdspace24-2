@@ -71,7 +71,8 @@
     import { ref } from 'vue'
     import {signInWithEmailAndPassword } from "firebase/auth"
     import { getFirebaseAuth } from "../../plugins/firebase.client"
-import TelaBranca from './telaBranca.vue'
+    import { setPersistence, browserLocalPersistence } from "firebase/auth"
+    import TelaBranca from './telaBranca.vue'
 
     const usuario = ref('')
     const senha = ref('')
@@ -86,16 +87,8 @@ import TelaBranca from './telaBranca.vue'
         console.log("foi")
        try {
             const auth = getFirebaseAuth()
-
+            await setPersistence(auth, browserLocalPersistence);
             const userCredential = await signInWithEmailAndPassword(auth, usuario.value, senha.value)
-            const token = await userCredential.user.getIdToken()
-
-            console.log("deu certo")
-
-            localStorage.setItem( //Salva token em localStorage (Mudar pra cookies no backend)
-                'token',
-                token
-            )
 
             await navigateTo('/aluno/') // adicionar verificação de cargo depois
         } 

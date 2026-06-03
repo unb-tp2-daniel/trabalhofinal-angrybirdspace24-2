@@ -3,7 +3,7 @@
         <Header />
         <Menu :items="menuItems" />
         <div class="container">
-          <ProfileSidebarTeste :aluno="aluno"/>
+          <ProfileSidebarTeste :aluno="aluno" :email="email"/>
           <main class="content">
             <TabelaMatriculas :materias="materias"/>
           </main>
@@ -14,18 +14,30 @@
 
 <script setup>
   import { ref } from 'vue';
+  import { getFirebaseAuth } from "../../../plugins/firebase.client"
+  import { onMounted } from 'vue'
+
+  const auth = getFirebaseAuth()
+
   const aluno = ref(null);
+  const email = ref(null);
   onMounted(async () => {
-    try {
-      const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/GetAlunoPorId?id=123456')
-      aluno.value = res
-      console.log("Aluno encontrado:", aluno.value)
+    
+    auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      email.value = user.email;
+      try {
+        const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/GetAlunoPorId?id=123456')
+        aluno.value = res
+        console.log("Aluno encontrado:", aluno.value)
+      } catch (error) {
+        console.error("Erro ao encontrar aluno:", error)
+      }
     }
-    catch (error) {
-      console.error("Erro ao encontrar aluno:", error)
-    }
+    })
   })
   
+
 
   const materias = [
     {

@@ -10,7 +10,7 @@
                 <p class="profile__detail"><strong>Matrícula:</strong> {{aluno.matricula}}</p>
                 <p v-if="aluno.ativo" class="profile__detail"><strong>Status:</strong> ATIVO</p>
                 <p v-else class="profile__detail"><strong>Status:</strong> INATIVO</p>
-                <p class="profile__detail"><strong>Email:</strong> email@email.com</p>
+                <p class="profile__detail"><strong>Email:</strong> {{email}}</p>
                 <button type="button" class="profile__editButton">Editar perfil</button>
             </div>
         </div>
@@ -92,6 +92,12 @@ const props = defineProps({
         type: Object,
         required: true,
         default: null
+    },
+
+    email:{
+        type: String,
+        required: true,
+        default: 'email@email.com'
     }
 })
 
