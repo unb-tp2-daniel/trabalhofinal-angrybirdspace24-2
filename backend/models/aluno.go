@@ -13,9 +13,9 @@ type Aluno struct {
 	Ativo              bool                 `json:"ativo" firestore:"ativo"`
 	Semestre           string               `json:"semestre" firestore:"semestre"`
 	MateriasConcluidas map[string]string    `json:"materiasConcluidas" firestore:"materiasConcluidas"`
+	MateriasReprovadas map[string]int       `json:"materiasReprovadas" firestore:"materiasReprovadas"`
 	Ira                float64              `json:"ira" firestore:"ira"`
 	Prioridades        map[string]string    `json:"prioridades" firestore:"prioridades"`
 	NivelAcademico     enums.NivelAcademico `json:"nivelAcademico" firestore:"nivelAcademico"`
-	Horas         int                     `json:"horas" firestore:"horas"`
-
+	Horas              int                  `json:"horas" firestore:"horas"`
 }
