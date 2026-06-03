@@ -30,9 +30,11 @@
             </div>
 
           <button type="submit" class="botao">ENTRAR ></button>
+          
         </form>
 
         <div class="links">
+          <p><a @click="loginMicrosoft">ENTRAR COM MICROSOFT</a></p> 
           <p><strong>Aluno</strong>, <a @click="cadastroAluno">cadastre-se aqui</a></p>
           <p><strong>Coordenador</strong>, <a @click="cadastroCoordenador">cadastre-se aqui</a></p>
           <p><a @click="recuperarSenha">Esqueceu a senha?</a></p>
@@ -59,6 +61,21 @@
     function telaBranca() {
         navigateTo('/telaBranca')
     }
+    function loginMicrosoft() {
+        //Não tá funcionando
+        const provider = new OAuthProvider('microsoft.com');
+        const auth = getFirebaseAuth();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const credential = OAuthProvider.credentialFromResult(result);
+                const accessToken = credential.accessToken;
+                const idToken = credential.idToken;
+                navigateTo('/aluno/')
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }
     
     useHead({
         title: 'Login - SIGAA UnB'
@@ -69,9 +86,9 @@
     //import Footer from '~/components/layout/Footer.vue';
     
     import { ref } from 'vue'
-    import {signInWithEmailAndPassword } from "firebase/auth"
+    import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
     import { getFirebaseAuth } from "../../plugins/firebase.client"
-    import { setPersistence, browserLocalPersistence } from "firebase/auth"
+    import { setPersistence, browserLocalPersistence, OAuthProvider } from "firebase/auth"
     import TelaBranca from './telaBranca.vue'
 
     const usuario = ref('')
