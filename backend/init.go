@@ -7,6 +7,7 @@ import (
 	// Aqui você importaria os seus arquivos onde estão os códigos dos Handlers
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/admin_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/alunos_functions"
+	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/auth_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/curso_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/departamento_functions"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/functions/materia_functions"
@@ -17,6 +18,10 @@ import (
 func init() {
 
 	database.InitDB()
+
+	// Rotas de alunos
+	functions.HTTP("GetAlunoPorId", alunos_functions.GetAlunoByIdHandler)
+	functions.HTTP("CriarAluno", alunos_functions.CreateAlunoHandler)
 
 	// Rotas de turmas
 	functions.HTTP("ListarTurmas", turmas_functions.ListTurmasHandler)
@@ -41,6 +46,9 @@ func init() {
 	functions.HTTP("ListarProfessores", professor_functions.ListProfessoresHandler)
 
 	functions.HTTP("GetRules", admin_functions.GetRulesHandler)
+
+	//Criando usuário personalizado
+	functions.HTTP("CriarUsuario", auth_functions.CreateUser)
 
 	functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
 	functions.HTTP("Matricular", alunos_functions.NormalMatriculateAlunoHandler)

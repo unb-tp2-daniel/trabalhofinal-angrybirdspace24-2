@@ -8,12 +8,20 @@
         <div class="linha"></div>
 
         <form @submit.prevent="cadastrar">
-          <label for="usuario">Definir nome de usuário:</label>
+          <label for="usuario">Escreva seu email:</label>
           <input 
             v-model="usuario"
             type="text"
             id="usuario"
-            placeholder="Digite seu usuário"
+            placeholder="Digite seu email"
+          >
+
+          <label for="matricula">Escreva a sua matrícula:</label>
+          <input 
+            v-model="matricula"
+            type="text"
+            id="matricula"
+            placeholder="Digite sua matrícula"
           >
 
           <label for="senha">Definir senha:</label>
@@ -73,6 +81,7 @@
     const auth = getFirebaseAuth()
     const usuario = ref('')
     const senha = ref('')
+    const matricula = ref('')
     const confirmarSenha = ref('') // 1. New variable for the second input
     const mostrarSenha = ref(false) // New state: false = hidden, true = visible
     const mostrarConfirmarSenha = ref(false) // 2. Separate visibility state
@@ -97,20 +106,25 @@
         }
 
         try {
-
-            const userCredential =
-            await createUserWithEmailAndPassword(
-                auth,
-                usuario.value,
-                senha.value
-            )
-
-            console.log(userCredential.user)
-
+            const userCredential = await $fetch("https://southamerica-east1-matriculas242.cloudfunctions.net/CriarUsuario",{
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    matricula: matricula.value,
+                    email: usuario.value,
+                    senha: senha.value
+                })
+            }
+        )
+            console.log(userCredential)
+            if (userCredential){
+                await navigateTo('/aluno')
+            }
         } catch (error) {
             console.log(error.message)
         }
-        await navigateTo('/aluno')
     }
 
     // Adicionando botao de "olho" na senha
