@@ -33,10 +33,10 @@
         </form>
 
         <div class="links">
-          <p><strong>Aluno</strong>, <a href="cadastroAluno">cadastre-se aqui</a></p>
-          <p><strong>Coordenador</strong>, <a href="cadastroServidor">cadastre-se aqui</a></p>
-          <p><a href="recuperarSenha">Esqueceu a senha?</a></p>
-          <p><a href="#">Esqueceu o login?</a></p>
+          <p><strong>Aluno</strong>, <a @click="cadastroAluno">cadastre-se aqui</a></p>
+          <p><strong>Coordenador</strong>, <a @click="cadastroCoordenador">cadastre-se aqui</a></p>
+          <p><a @click="recuperarSenha">Esqueceu a senha?</a></p>
+          <p><a @click="telaBranca">Esqueceu o login?</a></p>
         </div>
 
       </div>
@@ -46,6 +46,19 @@
 </template>
 
 <script setup>
+
+    function cadastroAluno() {
+        navigateTo('/cadastroAluno')
+    }
+    function cadastroCoordenador() {
+        navigateTo('/cadastroServidor')
+    }
+    function recuperarSenha() {
+        navigateTo('/recuperarSenha')
+    }
+    function telaBranca() {
+        navigateTo('/telaBranca')
+    }
     
     useHead({
         title: 'Login - SIGAA UnB'
@@ -58,6 +71,7 @@
     import { ref } from 'vue'
     import {signInWithEmailAndPassword } from "firebase/auth"
     import { getFirebaseAuth } from "../../plugins/firebase.client"
+import TelaBranca from './telaBranca.vue'
 
     const usuario = ref('')
     const senha = ref('')
@@ -240,7 +254,8 @@
     } 
     
     .links a:hover { 
-        text-decoration: underline; 
+        text-decoration: underline;
+        cursor: pointer;
     }
 
 </style>
