@@ -1,7 +1,17 @@
+<script setup lang="ts">
+const router = useRouter()
+
+</script>
+
 <template>
     <header>
       <div class="header-conteudo">
-        <span class="logo-unb">UnB</span>
+        <img 
+          src="/images/logo.png" 
+          alt="Logo UnB" 
+          class="logo-unb" 
+          @click="router.back()" 
+        />
         <span class="separador">|</span>
         <span class="nome-universidade">Universidade de Brasília</span>
       </div>
@@ -25,6 +35,10 @@
         font-size: 22px; 
         font-weight: 700; 
         color: #1a5276; 
+        height: 25px;    
+        width: auto;
+        cursor: pointer;
+        margin-left: -23px;
     } 
     
     .separador { 
