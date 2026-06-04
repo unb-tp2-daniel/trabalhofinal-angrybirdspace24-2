@@ -1,40 +1,35 @@
 <template>
     <section class="profile">
         
-        <section v-if="aluno" class="profile">
+        <section  class="profile">
         <div class="profile__header">
             <img src="../../assets/images/perfil.png" alt="foto de perfil" class="profile__avatar" />
 
             <div class="profile__info">
-                <h3 class="profile__name">{{ aluno.nomeAluno }}</h3>
-                <p class="profile__detail"><strong>Matrícula:</strong> {{aluno.matricula}}</p>
-                <p v-if="aluno.ativo" class="profile__detail"><strong>Status:</strong> ATIVO</p>
-                <p v-else class="profile__detail"><strong>Status:</strong> INATIVO</p>
-                <p class="profile__detail"><strong>Email:</strong> {{email}}</p>
+                <h3 class="profile__name">-</h3>
+                <p class="profile__detail"><strong>Matrícula:</strong> -</p>
+                <p  class="profile__detail"><strong>Status:</strong>-</p>
+                <p class="profile__detail"><strong>Email:</strong>-</p>
                 <button type="button" class="profile__editButton">Editar perfil</button>
             </div>
         </div>
 
         </section>
-    
-    <div v-else class="profile-loading">
-        Carregando dados do aluno...
-    </div>
 
         <section class="profile__section">
             <h4 class="profile__sectionTitle">Dados acadêmicos</h4>
 
             <div class="profile__row">
                 <span class="profile__rowLabel">Curso</span>
-                <span class="profile__rowValue profile__rowValue--text">Ciência da Computação</span>
+                <span class="profile__rowValue profile__rowValue--text">-</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">Período</span>
-                <span class="profile__rowValue">5º</span>
+                <span class="profile__rowValue">-</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">Ingresso</span>
-                <span class="profile__rowValue">2024.1</span>
+                <span class="profile__rowValue">-</span>
             </div>
         </section>
 
@@ -43,11 +38,11 @@
 
             <div class="profile__row">
                 <span class="profile__rowLabel">IRA</span>
-                <span class="profile__rowValue">2.304903</span>
+                <span class="profile__rowValue">-</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">MP</span>
-                <span class="profile__rowValue">4.554</span>
+                <span class="profile__rowValue">-</span>
             </div>
         </section>
 
@@ -71,10 +66,10 @@
                 <span class="profile__rowValue">—</span>
             </div>
 
-            <div class="profile__progress" style="--pct: 49">
+            <div class="profile__progress" style="--pct: 0">
                 <div class="profile__progressHeader">
                     <span class="profile__progressLabel">Conclusão</span>
-                    <span class="profile__progressValue">49%</span>
+                    <span class="profile__progressValue">0%</span>
                 </div>
                 <div class="profile__progressTrack" aria-label="Percentual de conclusão">
                     <div class="profile__progressFill" />
@@ -82,26 +77,7 @@
             </div>
         </section>
     </section>
-
 </template>
-
-<script setup>
-
-const props = defineProps({
-    aluno: {
-        type: Object,
-        required: true,
-        default: null
-    },
-
-    email:{
-        type: String,
-        required: true,
-        default: 'email@email.com'
-    }
-})
-
-</script>
 
 <style scoped>
 .profile {

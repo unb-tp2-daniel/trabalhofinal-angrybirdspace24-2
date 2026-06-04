@@ -120,6 +120,8 @@
         )
             console.log(userCredential)
             if (userCredential){
+                await setPersistence(auth, browserLocalPersistence);
+                await signInWithEmailAndPassword(auth, usuario.value, senha.value)
                 await navigateTo('/aluno')
             }
         } catch (error) {

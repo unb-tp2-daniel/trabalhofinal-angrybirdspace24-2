@@ -3,7 +3,7 @@
         <Header />
         <Menu :items="menuItems" />
         <div class="container">
-          <ProfileSidebarTeste :aluno="aluno" :email="email"/>
+          <ProfileSidebarReal :aluno="aluno" :email="email"/>
           <main class="content">
             <TabelaMatriculas :materias="materias"/>
           </main>
@@ -27,7 +27,7 @@
     if (user) {
       email.value = user.email;
       try {
-        const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/GetAlunoPorId?id=123456')
+        const res = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/GetAlunoPorId?id=${user.uid}`)
         aluno.value = res
         console.log("Aluno encontrado:", aluno.value)
       } catch (error) {

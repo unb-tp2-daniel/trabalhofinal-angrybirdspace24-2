@@ -39,6 +39,7 @@
           <p><strong>Coordenador</strong>, <a @click="cadastroCoordenador">cadastre-se aqui</a></p>
           <p><a @click="recuperarSenha">Esqueceu a senha?</a></p>
           <p><a @click="telaBranca">Esqueceu o login?</a></p>
+          <p><a @click="passa">Não clique aqui</a></p>
         </div>
 
       </div>
@@ -75,6 +76,10 @@
             .catch((error) => {
                 console.log(error)
             });
+    }
+
+    function passa() {
+        navigateTo('/aluno/')
     }
     
     useHead({
