@@ -1,52 +1,55 @@
+// functions/alunos_functions/apply_rules.go
 package alunos_functions
 
 import (
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/enums"
+	"strconv"
+
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
+// ApplyRules calcula a nota de prioridade do aluno para a matrícula normal.
+//
+// Fórmula: 60% do peso vem do percentual do curso concluído + 40% do IRA normalizado.
+// Resultado final: float64 no intervalo [0, 100].
+//
+// Exemplos:
+//   integralizado=80%, IRA=5.0 → 0.6*80 + 0.4*(5/5*100) = 48 + 40 = 88.0
+//   integralizado=30%, IRA=4.0 → 0.6*30 + 0.4*(4/5*100) = 18 + 32 = 50.0
+//   integralizado=50%, IRA=2.5 → 0.6*50 + 0.4*(2.5/5*100) = 30 + 20 = 50.0
+//
+// Os pesos PESO_INTEGRALIZADO e PESO_IRA devem sempre somar 1.0.
+
+const (
+	PESO_INTEGRALIZADO = 0.6
+	PESO_IRA           = 0.4
+	IRA_MAXIMO         = 5.0 // IRA máximo possível na UnB
+)
+
 func ApplyRules(aluno models.Aluno, materia models.Materia, curso models.Curso) float64 {
-	var pontuacao float64 = 0
-	var semestreAtual = "261"
-
-	if aluno.Semestre == semestreAtual && aluno.NivelAcademico == enums.Graduacao { // calouros: prioridade máxima
-		return 100_000_000 + aluno.Ira
+	// --- 1. Percentual do curso concluído (0–100) ---
+	// Lido do campo prioridades["integralizado"], que vem como string (ex: "94")
+	integralizadoStr := aluno.Prioridades["integralizado"]
+	integralizado, err := strconv.ParseFloat(integralizadoStr, 64)
+	if err != nil {
+		integralizado = 0
 	}
+	integralizado = clamp(integralizado, 0, 100)
 
-	if curso.Obrigatorias[materia.CodigoMateria] { // materia obrigatoria
-		pontuacao += 10_000_000
+	// --- 2. IRA normalizado para escala 0–100 ---
+	iraNormalizado := (aluno.Ira / IRA_MAXIMO) * 100
+	iraNormalizado = clamp(iraNormalizado, 0, 100)
 
-		// desempate 1: daces
-		if aluno.Prioridades["Daces"] == "sim" {
-			pontuacao += 1_000_000
-		}
+	// --- 3. Nota final ponderada ---
+	return (PESO_INTEGRALIZADO * integralizado) + (PESO_IRA * iraNormalizado)
+}
 
-		// desempate 2: provavel formando
-		if (aluno.Horas + materia.CargaHoraria) >= curso.TotalHoras {
-			pontuacao += 100_000
-		}
-
-		// desempate 3: falta pouco pra formar
-		pontuacao += (float64(aluno.Horas) / float64(curso.TotalHoras)) * 10_000 // nota de 0 a 10_000
-
-		// desempate 4: aderencia ao curso
-		// pontuacao += buscarPontosFluxo(aluno, materia)
-
-		// ultimo criterio: ira
-		pontuacao += aluno.Ira
-		return pontuacao
-	} else if curso.Optativas[materia.CodigoMateria] {
-		pontuacao += 100_000
-
-		// segundo o SAA, optativas entram em critérios gerais de desempate
-		pontuacao += (float64(aluno.Horas) / float64(curso.TotalHoras)) * 100
-		pontuacao += aluno.Ira
-	} else { // modulo livre
-		pontuacao += 10_000
-
-		pontuacao += (float64(aluno.Horas) / float64(curso.TotalHoras)) * 100
-		pontuacao += aluno.Ira
+// clamp garante que v está entre min e max.
+func clamp(v, min, max float64) float64 {
+	if v < min {
+		return min
 	}
-
-	return pontuacao
+	if v > max {
+		return max
+	}
+	return v
 }

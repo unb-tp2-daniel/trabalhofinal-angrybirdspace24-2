@@ -52,4 +52,5 @@ func init() {
 
 	functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
 	functions.HTTP("Matricular", alunos_functions.NormalMatriculateAlunoHandler)
+	functions.HTTP("ProcessarFila", alunos_functions.ProcessarFilaMatriculaHandler)
 }
