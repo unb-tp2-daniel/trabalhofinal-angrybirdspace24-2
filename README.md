@@ -2,7 +2,7 @@
 
 Este repositório visa cria um projeto de desenvolvimento web de um sistema/API de matrícula que aceite uma alta quantidade de usuários simultâneos.
 
-## Contribuidores
+## Contribuidores:
 
 Aqui estão os contribuidores do projeto Angry Birds 24.2 e seus respectivos contatos:
 
