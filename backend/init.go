@@ -20,6 +20,7 @@ func init() {
 	database.InitDB()
 
 	// Rotas de alunos
+	functions.HTTP("ListarAlunos", alunos_functions.ListAlunosHandler)
 	functions.HTTP("GetAlunoPorId", alunos_functions.GetAlunoByIdHandler)
 	functions.HTTP("CriarAluno", alunos_functions.CreateAlunoHandler)
 
