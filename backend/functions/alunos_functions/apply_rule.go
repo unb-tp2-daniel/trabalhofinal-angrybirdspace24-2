@@ -7,46 +7,55 @@ import (
 
 func ApplyRules(aluno models.Aluno, materia models.Materia, curso models.Curso) float64 {
 	var pontuacao float64 = 0
-	var semestreAtual = "261"
 
-	if aluno.Semestre == semestreAtual && aluno.NivelAcademico == enums.Graduacao { // calouros: prioridade máxima
+	if isCalouro(aluno) { // calouros: prioridade máxima
 		return 100_000_000 + aluno.Ira
 	}
 
-	if curso.Obrigatorias[materia.CodigoMateria] { // materia obrigatoria
-		pontuacao += 10_000_000
-
-		// desempate 1: daces
-		if aluno.Prioridades["Daces"] == "sim" {
-			pontuacao += 1_000_000
-		}
-
-		// desempate 2: provavel formando
-		if (aluno.Horas + materia.CargaHoraria) >= curso.TotalHoras {
-			pontuacao += 100_000
-		}
-
-		// desempate 3: falta pouco pra formar
-		pontuacao += (float64(aluno.Horas) / float64(curso.TotalHoras)) * 10_000 // nota de 0 a 10_000
-
-		// desempate 4: aderencia ao curso
-		// pontuacao += buscarPontosFluxo(aluno, materia)
-
-		// ultimo criterio: ira
-		pontuacao += aluno.Ira
-		return pontuacao
-	} else if curso.Optativas[materia.CodigoMateria] {
-		pontuacao += 100_000
-
-		// segundo o SAA, optativas entram em critérios gerais de desempate
-		pontuacao += (float64(aluno.Horas) / float64(curso.TotalHoras)) * 100
-		pontuacao += aluno.Ira
-	} else { // modulo livre
-		pontuacao += 10_000
-
-		pontuacao += (float64(aluno.Horas) / float64(curso.TotalHoras)) * 100
-		pontuacao += aluno.Ira
-	}
+	pontuacao += calcularPontosBase(materia.CodigoMateria, curso)
+	pontuacao += calcularProgresso(aluno, curso, materia)
+	pontuacao += aluno.Ira
 
 	return pontuacao
+}
+
+
+func isCalouro(aluno models.Aluno) bool {
+	var semestreAtual = "261" // modificar
+	return aluno.Semestre == semestreAtual && aluno.NivelAcademico == enums.Graduacao
+}
+
+func calcularPontosBase(materiaId string, curso models.Curso) float64 {
+	if (curso.Obrigatorias[materiaId]) {
+		return 10_000_000
+	}
+
+	if (curso.Optativas[materiaId]) {
+		return 100_000
+	}
+
+	return 10_000
+}
+
+func calcularProgresso(aluno models.Aluno, curso models.Curso, materia models.Materia) float64 {
+	if !(curso.Obrigatorias[materia.CodigoMateria]) {
+		// segundo o SAA, optativas entram em critérios gerais de desempate
+		return ((float64(aluno.Horas) / float64(curso.TotalHoras)) * 100)
+	}
+
+	var bonus float64
+	if (aluno.Prioridades["Daces"] == "sim") {
+		bonus += 1_000_000
+	}
+
+	//provavel formando
+	if (aluno.Horas + materia.CargaHoraria) >= curso.TotalHoras {
+		bonus += 100_000
+	}
+
+	// desempate por fluxo
+	// pontuacao += buscarPontosFluxo(aluno, materia)
+
+	bonus += (float64(aluno.Horas) / float64(curso.TotalHoras)) * 10_000 // nota de 0 a 10_000
+	return bonus
 }

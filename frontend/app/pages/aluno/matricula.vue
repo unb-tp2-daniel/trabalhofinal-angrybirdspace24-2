@@ -53,7 +53,8 @@ function mostrarToast(tipo, mensagem){
   async function confirmarMatricula(turma) {
     modalAberto.value = false
 
-    const alunoId = "242009972" // por enquanto, depois resgatar pelo usuario autenticado (n sei como faz)
+    /* ELE RECEBE O ID COMO "Unb_MATRICULA" */
+    const alunoId = "Unb_" + "211010057" // por enquanto, depois resgatar pelo usuario autenticado (n sei como faz)
 
     try {
       const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/MatricularExtraordinaria', {
@@ -78,7 +79,7 @@ function mostrarToast(tipo, mensagem){
       console.error("Erro na matrícula:", error)
       
       const mensagemErro = error.data || 'Erro interno ao processar matrícula.'
-      
+      console.log(mensagemErro)
       mostrarToast(
         'error',
         mensagemErro

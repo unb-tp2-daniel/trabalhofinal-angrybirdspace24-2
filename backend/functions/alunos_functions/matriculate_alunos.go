@@ -17,7 +17,6 @@ import (
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
-// MatriculateAlunoHandler lida exclusivamente com a requisição da internet
 func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 	// permite que qualquer origem chegue aqui (ALTERAR DEPOIS; CORS)
     w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -52,7 +51,6 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 	// tratando as race conditions
 
 	err := database.Client.RunTransaction(ctx, func(ctx context.Context, t *firestore.Transaction) error {
-		// verifica se ja esta matriculado
 		matDoc, err := t.Get(matriculaRef)
 		if err == nil && matDoc.Exists() {
 			return fmt.Errorf("aluno_ja_matriculado")
@@ -69,12 +67,63 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 			return err
 		}
 
-		// verifica se ainda há vagas
+		/* Validação de pré-requisitos */
+		alunoRef := database.Client.Collection("alunos").Doc(matricula.AlunoId)
+		alunoDoc, err := t.Get(alunoRef)
+
+		if (err != nil) {return err}
+
+		var aluno models.Aluno
+		err = alunoDoc.DataTo(&aluno)
+
+		if (err != nil) {return err}
+
+		materiaRef := database.Client.Collection("materias").Doc(turma.MateriaId)
+		materiaDoc, err := t.Get(materiaRef)
+
+		if (err != nil) {return err}
+
+		var materia models.Materia
+		err = materiaDoc.DataTo(&materia)
+
+		if (err != nil) {return err}
+
+		_, concluiu := aluno.MateriasConcluidas[materia.CodigoMateria]
+		if (concluiu) {
+			return fmt.Errorf("materia_ja_concluida")
+		}
+
+		if (len(materia.PreRequisitos) > 0) {
+			satisfazUm := false
+
+			for _, req := range materia.PreRequisitos {
+				concluiuTodasDoAnd := true
+
+				for _, codigo := range req.Disciplinas {
+					_, concluiu := aluno.MateriasConcluidas[codigo]
+					
+					if (!concluiu) {
+						concluiuTodasDoAnd = false
+						break // analisa próximo bloco direto
+					}
+				}
+
+				if (concluiuTodasDoAnd) {
+					satisfazUm = true
+					break
+				}
+			}
+
+			if (!satisfazUm) {
+				return fmt.Errorf("pre_requisitos_nao_atendidos")
+			}			
+		}
+
+		/* validação de vagas e update */
 		if turma.VagasOcupadas >= turma.VagasTotais {
 			return fmt.Errorf("vagas_esgotadas")
 		}
 
-		// senão, realiza a matricula
 		t.Update(turmaRef, []firestore.Update{
 			{Path: "vagasOcupadas", Value: turma.VagasOcupadas + 1},
 		})
@@ -94,6 +143,14 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		if err.Error() == "vagas_esgotadas" {
 			http.Error(w, "Vagas esgotadas.", http.StatusConflict)
+			return
+		}
+		if err.Error() == "pre_requisitos_nao_atendidos" {
+			http.Error(w, "Aluno não possui os pré-requisitos necessários.", http.StatusConflict)
+			return
+		}
+		if err.Error() == "materia_ja_concluida" {
+			http.Error(w, "Aluno já realizou a matéria.", http.StatusConflict)
 			return
 		}
 
