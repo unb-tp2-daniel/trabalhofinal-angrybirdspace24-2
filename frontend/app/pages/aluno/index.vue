@@ -13,6 +13,9 @@
 </template>
 
 <script setup>
+
+  useHead({ title: 'Aluno - UnB' })
+
   const materias = [
     {
     nome: 'ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES',

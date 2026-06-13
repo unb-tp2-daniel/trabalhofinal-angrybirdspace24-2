@@ -13,6 +13,8 @@
 </template>
 
 <script setup>
+
+  useHead({ title: 'Aluno - UnB' })
   import { ref } from 'vue';
   import { getFirebaseAuth } from "../../../plugins/firebase.client"
   import { onMounted } from 'vue'

@@ -3,10 +3,7 @@
     <Header />
     <Menu :items="menuItems" />
     <main class="container">
-      <TabelaBuscas  @resultados="turmas = $event" />
-         <!-- <div v-for="turma in turmas">
-            <p>Turma: {{ turma.nomeMateria }}</p>
-        </div> --> 
+      <TabelaBuscas  @resultados="turmas = $event" /> 
       <TabelaTurmasAbertas :turmasAbertas="turmas" @selecionar="abrirModal"/>
 
       <ModalConfirmacao 
@@ -26,6 +23,9 @@
 </template>
 
 <script setup>
+
+useHead({ title: 'Matrícula Extraordinária - UnB' })
+
 import { ref } from 'vue'
 const turmas = ref([])
 const toastVisivel = ref(false)

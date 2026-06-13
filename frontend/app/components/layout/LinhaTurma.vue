@@ -1,28 +1,8 @@
 <script setup lang="ts">
-
-/* "codigoTurma": "CIC001",
-    "materiaId": "MAT123",
-    "nomeMateria": "Arquitetura de Computadores",
-    "semestre": "2026.1",
-    "vagasTotais": 40,
-    "vagasOcupadas": 10,
-    "ativo": true,
-    "local": "PCDT - Sala A1",
-    "horario": "24M34",
-    "vagasExclusivas": {
-      "CienciaDaComputacao": 10,
-      "Engenharia": 5
-    },
-    "professorId": "PROF999",
-    "professorNome": "Nome do Professor",
-    "prioridades": {
-      "1": "Formandos",
-      "2": "Veteranos" */
-
 defineProps<{
   turma: {
     codigoTurma: string
-    materiaId: string
+    materiaId: string //??
     nomeMateria: string
     semestre: string
     vagasTotais: number

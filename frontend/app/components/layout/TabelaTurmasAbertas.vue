@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import {ref , onMounted, watch} from 'vue'
+  import {ref , onMounted, watch, computed} from 'vue'
   const props = defineProps<{
   turmasAbertas: any[]
 }>()
@@ -8,6 +8,9 @@
 const turmas = ref<any[]>([])
 const error = ref<string | null>(null)
 const loading = ref(false)
+const turmasDisponiveis = computed(() => 
+  turmas.value.filter(t => t.vagasOcupadas < t.vagasTotais)
+)
 
 const fetchTurmas = async () => {
   loading.value = true
@@ -44,7 +47,7 @@ watch(() => props.turmasAbertas, (novas) => {
     <!-- <h2 class="titulo">Turmas Encontradas</h2> -->
     <div class="results-meta">
       <span class="results-label">Resultados</span>
-      <span class="results-count">{{ turmas.length }} turmas encontradas</span>
+      <span class="results-count">{{ turmasDisponiveis.length }} turmas encontradas</span>
     </div>
 
     <div v-if="loading" class="state-msg">
@@ -55,7 +58,7 @@ watch(() => props.turmasAbertas, (novas) => {
       Erro ao carregar: {{ error }}
     </div>
 
-    <div v-else-if="turmas.length === 0" class="state-msg">
+    <div v-else-if="turmasDisponiveis.length === 0" class="state-msg">
       Nenhuma turma encontrada.
     </div>
     
@@ -72,7 +75,7 @@ watch(() => props.turmasAbertas, (novas) => {
       </thead>
 
       <tbody>
-        <LinhaTurma v-for="turma in turmas"
+        <LinhaTurma v-for="turma in turmasDisponiveis"
         :key="turma.codigoTurma" 
         :turma="turma"
         @selecionar="emit('selecionar', $event)"
