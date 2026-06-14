@@ -77,7 +77,7 @@
     
     import { ref } from 'vue'
     import { createUserWithEmailAndPassword } from "firebase/auth"
-    import { getFirebaseAuth } from "../../plugins/firebase.client"
+    import { getFirebaseAuth } from "../../plugins/firebase"
     const auth = getFirebaseAuth()
     const usuario = ref('')
     const senha = ref('')

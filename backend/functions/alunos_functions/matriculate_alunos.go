@@ -67,26 +67,41 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 			return err
 		}
 
-		/* Validação de pré-requisitos */
-		alunoRef := database.Client.Collection("alunos").Doc(matricula.AlunoId)
-		alunoDoc, err := t.Get(alunoRef)
-
-		if (err != nil) {return err}
-
-		var aluno models.Aluno
-		err = alunoDoc.DataTo(&aluno)
-
-		if (err != nil) {return err}
-
 		materiaRef := database.Client.Collection("materias").Doc(turma.MateriaId)
 		materiaDoc, err := t.Get(materiaRef)
-
 		if (err != nil) {return err}
 
 		var materia models.Materia
 		err = materiaDoc.DataTo(&materia)
-
 		if (err != nil) {return err}
+
+		// busca todas as matrículas ativas do aluno
+        query := database.Client.Collection("matriculas").Where("alunoId", "==", matricula.AlunoId)
+        existingMatriculasIter := t.Documents(query)
+        existingMatriculas, err := existingMatriculasIter.GetAll()
+        if err != nil {return err}
+
+		for _, docSnap := range existingMatriculas {
+            var m models.Matricula
+            if err := docSnap.DataTo(&m); err == nil {
+                if m.MateriaId == turma.MateriaId {
+                    return fmt.Errorf("ja_matriculado_em_outra_turma_da_mesma_materia")
+                }
+            }
+        }
+
+		/* Validação de pré-requisitos */
+		alunoRef := database.Client.Collection("alunos").Doc(matricula.AlunoId)
+		alunoDoc, err := t.Get(alunoRef)
+		if (err != nil) {return err}
+
+		var aluno models.Aluno
+		err = alunoDoc.DataTo(&aluno)
+		if (err != nil) {return err}
+
+		if aluno.MateriasConcluidas == nil {
+            aluno.MateriasConcluidas = make(map[string]string)
+        }
 
 		_, concluiu := aluno.MateriasConcluidas[materia.CodigoMateria]
 		if (concluiu) {
@@ -137,27 +152,28 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 	})
 
 	if err != nil {
-		if err.Error() == "aluno_ja_matriculado" {
-			http.Error(w, "Você já possui uma matrícula ou solicitação ativa nesta turma.", http.StatusConflict)
-			return
-		}
-		if err.Error() == "vagas_esgotadas" {
-			http.Error(w, "Vagas esgotadas.", http.StatusConflict)
-			return
-		}
-		if err.Error() == "pre_requisitos_nao_atendidos" {
-			http.Error(w, "Aluno não possui os pré-requisitos necessários.", http.StatusConflict)
-			return
-		}
-		if err.Error() == "materia_ja_concluida" {
-			http.Error(w, "Aluno já realizou a matéria.", http.StatusConflict)
-			return
-		}
+        switch err.Error() {
+        case "aluno_ja_matriculado":
+            http.Error(w, "Você já possui uma matrícula ou solicitação ativa nesta turma.", http.StatusConflict)
 
-		log.Printf("Erro na transação de matrícula: %v", err)
-		http.Error(w, "Erro interno ao processar a matrícula", http.StatusInternalServerError)
-		return
-	}
+        case "ja_matriculado_em_outra_turma_da_mesma_materia":
+            http.Error(w, "Você já está matriculado em outra turma desta mesma disciplina.", http.StatusConflict)
+
+        case "vagas_esgotadas":
+            http.Error(w, "Vagas esgotadas.", http.StatusConflict)
+
+        case "pre_requisitos_nao_atendidos":
+            http.Error(w, "Aluno não possui os pré-requisitos necessários.", http.StatusConflict)
+
+        case "materia_ja_concluida":
+            http.Error(w, "Aluno já realizou a matéria.", http.StatusConflict)
+
+        default:
+            log.Printf("Erro na transação de matrícula: %v", err)
+            http.Error(w, "Erro interno ao processar a matrícula", http.StatusInternalServerError)
+        }
+        return
+    }
 
     w.WriteHeader(http.StatusCreated)
     w.Write([]byte("Matrícula extraordinária realizada com sucesso!"))

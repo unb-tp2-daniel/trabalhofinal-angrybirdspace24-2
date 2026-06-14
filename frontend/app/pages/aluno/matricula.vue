@@ -26,7 +26,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useAuth } from '~/composables/useAuth'
+
+const { matriculaUsuario } = useAuth() 
+
 const turmas = ref([])
 const toastVisivel = ref(false)
 const toastMensagem = ref('')
@@ -54,14 +58,15 @@ function mostrarToast(tipo, mensagem){
     modalAberto.value = false
 
     /* ELE RECEBE O ID COMO "Unb_MATRICULA" */
-    const alunoId = "Unb_" + "211010057" // por enquanto, depois resgatar pelo usuario autenticado (n sei como faz)
-
+    const alunoId = "Unb_" + matriculaUsuario.value // por enquanto, depois resgatar pelo usuario autenticado (n sei como faz)
+    console.log(alunoId)
     try {
       const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/MatricularExtraordinaria', {
         method: 'POST',
         body: {
           AlunoId: alunoId,
           TurmaId: turmaSelecionada.value.codigoTurma,
+          MateriaId: turmaSelecionada.value.codigoTurma.split("_", 2).join("_"), // pega so o id da materia
           Status: false,
           DataSolicitacao: null,
           Prioridades: null,

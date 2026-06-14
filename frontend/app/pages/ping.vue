@@ -28,7 +28,7 @@
   signInWithPopup
 } from "firebase/auth"
 
-import { getFirebaseAuth } from "../../plugins/firebase.client"
+import { getFirebaseAuth } from "../../plugins/firebase"
 
   const loginGoogle = async () => {
 

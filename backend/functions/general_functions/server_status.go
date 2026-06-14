@@ -1,4 +1,3 @@
-// functions/general_functions/server_status.go
 package general_functions
 
 import (

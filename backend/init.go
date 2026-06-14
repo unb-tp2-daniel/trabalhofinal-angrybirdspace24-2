@@ -53,4 +53,8 @@ func init() {
 
 	functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
 	functions.HTTP("Matricular", alunos_functions.NormalMatriculateAlunoHandler)
+
+	functions.HTTP("LimparColecao", admin_functions.ClearCollectionHandler)
+
+	functions.HTTP("ListarTurmasMatriculadas", alunos_functions.GetSubjectsAlunoHandler)
 }

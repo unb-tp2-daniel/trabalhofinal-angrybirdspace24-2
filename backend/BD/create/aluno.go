@@ -13,7 +13,8 @@ import (
 // CreateAluno recebe a struct pronta e a envia diretamente para o Firestore
 func CreateAluno(Ctx context.Context, Client *firestore.Client, novoAluno models.Aluno) error {
 	// Gera um ID dinâmico ("Unb_20260001", "Unb_20260002")
-	docID := fmt.Sprintf("Unb_%s", novoAluno.Matricula)
+	// MELHOR SÓ A MATRICULA DO QUE ESSE ID DINAMICO
+	docID := fmt.Sprintf("%s", novoAluno.Matricula)
 	// O Firestore lê as tags da struct e faz o mapeamento sozinho
 	_, err := Client.Collection("alunos").Doc(docID).Set(Ctx, novoAluno)
 	if err != nil {
