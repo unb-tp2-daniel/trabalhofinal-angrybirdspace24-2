@@ -18,6 +18,8 @@
 
   const { user, matriculaUsuario } = useAuth()
 
+  useHead({ title: 'Aluno - UnB' })
+
   const aluno = ref(null)
   const email = ref(null)
   const materias = ref([])

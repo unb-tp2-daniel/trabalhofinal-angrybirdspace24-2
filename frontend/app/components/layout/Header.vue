@@ -40,6 +40,11 @@ const router = useRouter()
         cursor: pointer;
         margin-left: -23px;
     } 
+
+    .logo-unb:hover {
+        opacity: 0.7;
+    }
+
     
     .separador { 
         color: #cccccc; 
