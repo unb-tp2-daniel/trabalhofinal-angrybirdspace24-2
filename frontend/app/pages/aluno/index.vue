@@ -26,7 +26,7 @@
 
   const buscarDadosDoAluno = async (uid) => {
     try {
-      const res = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/GetAlunoPorId?id=${uid}`)
+      const res = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/GetAlunoComCurso?id=${uid}`)
       aluno.value = res
       console.log("Aluno encontrado:", aluno.value)
     } catch (error) {

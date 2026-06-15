@@ -22,11 +22,11 @@
 
             <div class="profile__row">
                 <span class="profile__rowLabel">Curso</span>
-                <span class="profile__rowValue profile__rowValue--text">-</span>
+                <span class="profile__rowValue profile__rowValue--text">{{ aluno.curso.nome }}</span>
             </div>
             <div class="profile__row">
-                <span class="profile__rowLabel">Período</span>
-                <span class="profile__rowValue">-</span>
+                <span class="profile__rowLabel">Turno</span>
+                <span class="profile__rowValue">{{ aluno.prioridades.turno }}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">Ingresso</span>
@@ -52,7 +52,7 @@
 
             <div class="profile__row">
                 <span class="profile__rowLabel">CH obrigatória pendente</span>
-                <span class="profile__rowValue">—</span>
+                <span class="profile__rowValue"></span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">CH obrigatória concluída</span>
@@ -60,17 +60,17 @@
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">CH total do currículo</span>
-                <span class="profile__rowValue">—</span>
+                <span class="profile__rowValue">{{ aluno.curso.totalHoras }}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">CH complementar pendente</span>
                 <span class="profile__rowValue">—</span>
             </div>
 
-            <div class="profile__progress" style="--pct: 0">
+            <div class="profile__progress" style="--pct: {{aluno.prioridades.integralizado}}">
                 <div class="profile__progressHeader">
                     <span class="profile__progressLabel">Conclusão</span>
-                    <span class="profile__progressValue">0%</span>
+                    <span class="profile__progressValue">{{aluno.prioridades.integralizado}}%</span>
                 </div>
                 <div class="profile__progressTrack" aria-label="Percentual de conclusão">
                     <div class="profile__progressFill" />
