@@ -13,155 +13,142 @@
         </div>
 
         <div class="filters">
-            <input type="text" placeholder="Buscar turma, professor ou código..."/>
+            <input
+                type="text"
+                placeholder="Buscar turma, professor ou código..."
+            />
+
             <select>
                 <option>Todas as matérias</option>
-                <option>Cálculo I</option>
-                <option>Estrutura de Dados</option>
-                <option>Banco de Dados</option>
             </select>
         </div>
 
-        <section class="subject-section">
-            <div class="subject-header">
-                <h2>Cálculo I</h2>
-                <span>3 turmas</span>
-            </div>
+        <div v-if="loading">
+            Carregando turmas...
+        </div>
 
-            <table class="classes-table">
-                <thead>
-                    <tr>
-                        <th>Turma</th>
-                        <th>Código</th>
-                        <th>Professor</th>
-                        <th>Alunos</th>
-                        <th>Período</th>
-                        <th>Horário</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
+        <div v-else-if="error">
+            {{ error }}
+        </div>
 
-                <tbody>
-                    <tr>
-                        <td>Turma A</td>
-                        <td>MAT607</td>
-                        <td>Potchi O. Nopotushi</td>
-                        <td>42</td>
-                        <td>2026.1</td>
-                        <td>08:00 - 10:00</td>
-                        <td>
-                            <span class="status warning">
-                                Lotando
-                            </span>
-                        </td>
+        <div v-else>
+            <section class="subject-section">
+                <div class="subject-header">
+                    <h2>Todas as Turmas</h2>
+                    <span>{{ turmas.length }} turmas</span>
+                </div>
 
-                        <td class="actions">
-                            <button class="edit">
-                                Editar
-                            </button>
-                            <button class="students">
-                                Alunos
-                            </button>
-                            <button class="delete">
-                                Excluir
-                            </button>
-                        </td>
-                    </tr>
+                <table class="classes-table">
+                    <thead>
+                        <tr>
+                            <th>Matéria</th>
+                            <th>Código</th>
+                            <th>Professor</th>
+                            <th>Horário</th>
+                            <th>Local</th>
+                            <th>Semestre</th>
+                            <th>Vagas</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
 
-                    <tr>
-                        <td>Turma B</td>
-                        <td>MAT067</td>
-                        <td>Wolfgang Amadeus Mozart</td>
-                        <td>37</td>
-                        <td>2026.1</td>
-                        <td>10:00 - 12:00</td>
+                    <tbody>
+                        <tr
+                            v-for="turma in turmas"
+                            :key="turma.codigoTurma"
+                        >
+                            <td>{{ turma.nomeMateria }}</td>
 
-                        <td>
-                            <span class="status active">
-                                Ativa
-                            </span>
-                        </td>
+                            <td>{{ turma.codigoTurma }}</td>
 
-                        <td class="actions">
-                            <button class="edit">
-                                Editar
-                            </button>
-                            <button class="students">
-                                Alunos
-                            </button>
-                            <button class="delete">
-                                Excluir
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+                            <td>
+                                {{
+                                    turma.professorNome &&
+                                    turma.professorNome.trim()
+                                        ? turma.professorNome
+                                        : 'Não informado'
+                                }}
+                            </td>
 
-        <section class="subject-section">
-            <div class="subject-header">
-                <h2>Estrutura de Dados</h2>
-                <span>2 turmas</span>
-            </div>
+                            <td>{{ turma.horario }}</td>
 
-            <table class="classes-table">
-                <thead>
-                    <tr>
-                        <th>Turma</th>
-                        <th>Código</th>
-                        <th>Professor</th>
-                        <th>Alunos</th>
-                        <th>Período</th>
-                        <th>Horário</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
+                            <td>{{ turma.local }}</td>
 
-                <tbody>
-                    <tr>
-                        <td>Turma A</td>
-                        <td>CIC167</td>
-                        <td>Frisquila</td>
-                        <td>50</td>
-                        <td>2026.1</td>
-                        <td>14:00 - 16:00</td>
+                            <td>{{ turma.semestre }}</td>
 
-                        <td>
-                            <span class="status full">
-                                Lotada
-                            </span>
-                        </td>
+                            <td>
+                                {{ turma.vagasOcupadas }}/{{ turma.vagasTotais }}
+                            </td>
 
-                        <td class="actions">
-                            <button class="edit">
-                                Editar
-                            </button>
+                            <td>
+                                <span
+                                    class="status"
+                                    :class="{
+                                        active: turma.vagasOcupadas < turma.vagasTotais,
+                                        full: turma.vagasOcupadas >= turma.vagasTotais
+                                    }"
+                                >
+                                    {{
+                                        turma.vagasOcupadas >= turma.vagasTotais
+                                            ? 'Lotada'
+                                            : 'Disponível'
+                                    }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
 
-                            <button class="students">
-                                Alunos
-                            </button>
-
-                            <button class="delete">
-                                Excluir
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-        <button class="new-class-btn" @click="index">
-                Voltar
-            </button>
+        <button
+            class="new-class-btn"
+            @click="index"
+        >
+            Voltar
+        </button>
     </div>
+
     <Footer />
 </template>
 
 <script setup>
+    import { ref, computed, onMounted } from 'vue'
+
+    const turmas = ref([])
+    const loading = ref(false)
+    const error = ref(null)
+
+    async function carregarTurmas() {
+        loading.value = true
+
+        try {
+            const response = await $fetch(
+                'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas'
+            )
+
+            turmas.value = response
+            console.log(response)
+            console.log(JSON.stringify(response, null, 2))
+        } catch (err) {
+            console.error(err)
+            error.value = err.message
+        } finally {
+            loading.value = false
+        }
+    }
+
+    const turmasDisponiveis = computed(() =>
+        turmas.value
+    )
+
     function index() {
         navigateTo('/coordenador')
-        }
+    }
+
+    onMounted(() => {
+        carregarTurmas()
+    })
 </script>
 
 <style scoped>

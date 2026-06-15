@@ -5,9 +5,9 @@
             <h2>Sistema</h2>
 
             <button @click="turmas">Turmas</button>
-            <button @click="matriculas">Matrículas</button>
-            <button @click="alerta()">Relatórios</button>
-            <button @click="alerta()">Regras</button>
+            <button>Matrículas</button>
+            <button>Relatórios</button>
+            <button>Regras</button>
         </aside>
 
         <main class="content">
@@ -51,12 +51,6 @@
 <script setup>
     function turmas() {
     navigateTo('/coordenador/turmas')
-    }
-    function matriculas() {
-    navigateTo('/coordenador/matriculas')
-    }
-    function alerta(){
-        alert("🤸\n\n\n\n\n\n\n\nNão tem nada aqui 🦽🏌️")
     }
 </script>
 
