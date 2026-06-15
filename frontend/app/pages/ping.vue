@@ -28,13 +28,15 @@
   signInWithPopup
 } from "firebase/auth"
 
-import { getFirebaseAuth } from "../../plugins/firebase"
+// import { getFirebaseAuth } from "../../plugins/firebase"
 
   const loginGoogle = async () => {
 
     try {
 
-        const auth = getFirebaseAuth()
+        // const auth = getFirebaseAuth()
+        const { auth: authRef } = useAuth()
+        const auth = authRef.value
 
         const provider = new GoogleAuthProvider()
 

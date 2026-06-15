@@ -3,7 +3,7 @@
         
         <section  class="profile">
         <div class="profile__header">
-            <img src="../../assets/images/perfil.png" alt="foto de perfil" class="profile__avatar" />
+            <img src="~/assets/images/perfil.png" alt="foto de perfil" class="profile__avatar" />
 
             <div class="profile__info">
                 <h3 class="profile__name">-</h3>
