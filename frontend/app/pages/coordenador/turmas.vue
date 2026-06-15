@@ -49,6 +49,7 @@
                             <th>Semestre</th>
                             <th>Vagas</th>
                             <th>Status</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
 
@@ -95,6 +96,20 @@
                                     }}
                                 </span>
                             </td>
+
+                            <td class="actions">
+                                <button class="edit" @click="editarTurma(turma)">
+                                    Editar
+                                </button>
+
+                                <button class="students" @click="verAlunos(turma)">
+                                    Alunos
+                                </button>
+
+                                <button class="delete" @click="deletarTurma(turma)">
+                                    Excluir
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -113,7 +128,7 @@
 </template>
 
 <script setup>
-    import { ref, computed, onMounted } from 'vue'
+    import { ref, onMounted } from 'vue'
 
     const turmas = ref([])
     const loading = ref(false)
@@ -137,10 +152,6 @@
             loading.value = false
         }
     }
-
-    const turmasDisponiveis = computed(() =>
-        turmas.value
-    )
 
     function index() {
         navigateTo('/coordenador')
@@ -302,6 +313,32 @@
 .full{
     background:#fee2e2;
     color:#991b1b;
+}
+
+.actions button{
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    transition:all 0.2s ease;
+}
+
+.actions button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 10px rgba(0,0,0,0.12);
+}
+
+.edit:hover{
+    background:#bfdbfe;
+}
+
+.students:hover{
+    background:#bbf7d0;
+}
+
+.delete:hover{
+    background:#fecaca;
 }
 
 </style>
