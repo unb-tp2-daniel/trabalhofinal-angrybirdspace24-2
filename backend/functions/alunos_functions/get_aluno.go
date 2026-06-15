@@ -36,48 +36,68 @@ func GetAlunoByIdHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetAlunoComCursoHandler(w http.ResponseWriter, r *http.Request) {
+func GetCHHandler(w http.ResponseWriter, r *http.Request){
+	//Tornando o acesso visível para o front
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
+	// verifica se é GET
 	if r.Method != http.MethodGet {
-		http.Error(w, "Método não permitido.", http.StatusMethodNotAllowed)
+		http.Error(w, "Método não permitido. Use GET.", http.StatusMethodNotAllowed)
 		return
 	}
 
-	id := r.URL.Query().Get("id")
+	idAluno := r.URL.Query().Get("idAluno")
+	aluno, err := read.GetAlunoById(database.Ctx, database.Client, idAluno)
+	curso, err := read.GetCursoById(database.Ctx, database.Client, aluno.CursoId)
 
-	aluno, err := read.GetAlunoById(
-		database.Ctx,
-		database.Client,
-		id,
-	)
+	var materiasObrigatorias []*models.Materia
+	var materiasOptativas []*models.Materia
 
-	if err != nil {
-		log.Printf("Erro ao buscar aluno: %v", err)
-		http.Error(w, "Aluno não encontrado", http.StatusInternalServerError)
-		return
+	var chObrigatorias int
+	var chOptativas int
+
+	for id_materia, _ := range curso.Obrigatorias {	
+		materia,_ := read.GetMateriaById(database.Ctx, database.Client, id_materia)
+		materiasObrigatorias = append(materiasObrigatorias, materia)
+		chObrigatorias += materia.CargaHoraria
+	}
+	for id_materia, _ := range curso.Optativas {	
+		materia,_ := read.GetMateriaById(database.Ctx, database.Client, id_materia)
+		materiasOptativas = append(materiasOptativas, materia)
+		chOptativas += materia.CargaHoraria
 	}
 
-	curso, err := read.GetCursoById(
-		database.Ctx,
-		database.Client,
-		aluno.CursoId,
-	)
-
-	if err != nil {
-		log.Printf("Erro ao buscar curso: %v", err)
-		http.Error(w, "Curso não encontrado", http.StatusInternalServerError)
-		return
+	var chObrigatoriaPendente int
+	var chOptativaPendente int
+	
+	for _, m := range materiasObrigatorias {
+		_,existe := aluno.MateriasConcluidas[m.CodigoMateria]
+		if !existe {
+			chObrigatoriaPendente += m.CargaHoraria
+		}
 	}
-
-	resposta := models.AlunoDetalhado{
-		Aluno: aluno,
-		Curso: curso,
+	for _, m := range materiasOptativas {
+		_,existe := aluno.MateriasConcluidas[m.CodigoMateria]
+		if !existe {
+			chOptativaPendente += m.CargaHoraria
+		}
 	}
 	
+	if err != nil {
+		log.Printf("Erro ao buscar materias no banco: %v", err)
+		http.Error(w, "Erro interno ao ler materias", http.StatusInternalServerError)
+		return
+	}
+
+	//json pro front
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(resposta); err != nil {
-		log.Printf("Erro ao serializar resposta: %v", err)
-		http.Error(w, "Erro interno", http.StatusInternalServerError)
+	if err := json.NewEncoder(w).Encode(map[string]any{
+		"chObrigatorias": chObrigatorias,
+		"chOptativas": chOptativas,
+		"chObrigatoriasPendente": chObrigatoriaPendente,
+		"chOptativasPendente": chOptativaPendente,
+	}); err != nil {
+		log.Printf("Erro ao retornar JSON: %v", err)
+		http.Error(w, "Erro na resposta", http.StatusInternalServerError)
 	}
 }

@@ -23,7 +23,7 @@ func init() {
 	functions.HTTP("ListarAlunos", alunos_functions.ListAlunosHandler)
 	functions.HTTP("GetAlunoPorId", alunos_functions.GetAlunoByIdHandler)
 	functions.HTTP("CriarAluno", alunos_functions.CreateAlunoHandler)
-	functions.HTTP("GetAlunoComCurso", alunos_functions.GetAlunoComCursoHandler)
+	functions.HTTP("CalcularCH", alunos_functions.GetCHHandler)
 
 	// Rotas de turmas
 	functions.HTTP("ListarTurmas", turmas_functions.ListTurmasHandler)

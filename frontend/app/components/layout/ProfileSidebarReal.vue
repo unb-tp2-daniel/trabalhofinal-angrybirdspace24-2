@@ -22,7 +22,7 @@
 
             <div class="profile__row">
                 <span class="profile__rowLabel">Curso</span>
-                <span class="profile__rowValue profile__rowValue--text">{{ aluno.curso.nome }}</span>
+                <span class="profile__rowValue profile__rowValue--text">{{ curso.nome }}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">Turno</span>
@@ -43,7 +43,7 @@
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">MP</span>
-                <span class="profile__rowValue">-</span>
+                <span class="profile__rowValue">{{ aluno.ira }}</span>
             </div>
         </section>
 
@@ -52,22 +52,22 @@
 
             <div class="profile__row">
                 <span class="profile__rowLabel">CH obrigatória pendente</span>
-                <span class="profile__rowValue"></span>
+                <span class="profile__rowValue">{{ch.chObrigatoriasPendente}}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">CH obrigatória concluída</span>
-                <span class="profile__rowValue">—</span>
+                <span class="profile__rowValue">{{ch.chObrigatorias - ch.chObrigatoriasPendente}}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">CH total do currículo</span>
-                <span class="profile__rowValue">{{ aluno.curso.totalHoras }}</span>
+                <span class="profile__rowValue">{{ch.chObrigatorias + ch.chOptativas}}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">CH complementar pendente</span>
-                <span class="profile__rowValue">—</span>
+                <span class="profile__rowValue">{{ ch.chOptativasPendente }}</span>
             </div>
 
-            <div class="profile__progress" style="--pct: {{aluno.prioridades.integralizado}}">
+            <div class="profile__progress" :style="{ '--pct': aluno.prioridades.integralizado }">
                 <div class="profile__progressHeader">
                     <span class="profile__progressLabel">Conclusão</span>
                     <span class="profile__progressValue">{{aluno.prioridades.integralizado}}%</span>
@@ -95,8 +95,20 @@ const props = defineProps({
         type: String,
         required: true,
         default: 'email@email.com'
+    },
+
+    curso: {
+        type: Object,
+        required: true,
+        default: null
+    },
+    ch: {
+        type: Object,
+        required: true,
+        default: null
     }
 })
+
 
 </script>
 
