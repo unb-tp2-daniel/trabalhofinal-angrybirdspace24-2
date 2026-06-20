@@ -1,50 +1,50 @@
 <script setup lang="ts">
-  import {ref , onMounted, watch} from 'vue'
+  import { ref, onMounted, watch, computed } from 'vue'
   const props = defineProps<{
-  turmasAbertas: any[]
-}>()
+    turmasAbertas: any[]
+  }>()
 
+  const turmas = ref<any[]>([])
+  const error = ref<string | null>(null)
+  const loading = ref(false)
+  
+  const turmasDisponiveis = computed(() => 
+    turmas.value.filter(t => t.vagasOcupadas < t.vagasTotais)
+  )
 
-const turmas = ref<any[]>([])
-const error = ref<string | null>(null)
-const loading = ref(false)
-
-const fetchTurmas = async () => {
-  loading.value = true
-  try {
-
-    const response = await $fetch<any[]>('https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas')
-    turmas.value = response
-
-  } catch (err: any) {
-    console.error('Erro ao buscar turmas:', err)
-    error.value = err.message || 'Erro desconhecido'
-  }finally {
-    loading.value = false
+  const fetchTurmas = async () => {
+    loading.value = true
+    try {
+      const response = await $fetch<any[]>('https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas')
+      turmas.value = response
+    } catch (err: any) {
+      console.error('Erro ao buscar turmas:', err)
+      error.value = err.message || 'Erro desconhecido'
+    } finally {
+      loading.value = false
+    }
   }
-}
 
-//Para testar o GET de turmas, descomentar isso aqui:
-onMounted(() =>{
+  onMounted(() => {
     fetchTurmas()
-}) 
+  }) 
 
-const emit = defineEmits([
-  'selecionar'
-])
+  const emit = defineEmits([
+    'selecionar',
+    'detalhes'
+  ])
 
-watch(() => props.turmasAbertas, (novas) => {
-  turmas.value = novas
-})
-
+  watch(() => props.turmasAbertas, (novas) => {
+    turmas.value = novas
+  })
 </script>
 
 <template>
   <div class="turmas_container">
-    <!-- <h2 class="titulo">Turmas Encontradas</h2> -->
+    <!-- Os textos ficam fora da área de scroll e permanecem fixos -->
     <div class="results-meta">
       <span class="results-label">Resultados</span>
-      <span class="results-count">{{ turmas.length }} turmas encontradas</span>
+      <span class="results-count">{{ turmasDisponiveis.length }} turmas encontradas</span>
     </div>
 
     <div v-if="loading" class="state-msg">
@@ -55,109 +55,110 @@ watch(() => props.turmasAbertas, (novas) => {
       Erro ao carregar: {{ error }}
     </div>
 
-    <div v-else-if="turmas.length === 0" class="state-msg">
+    <div v-else-if="turmasDisponiveis.length === 0" class="state-msg">
       Nenhuma turma encontrada.
     </div>
     
-    <table v-else class="turmas_table">
-      <thead>
-        <tr>
-          <th>Turma</th>
-          <th>Docente</th>
-          <th>Horário</th>
-          <th>Local</th>
-          <th>Capacidade</th>
-          <th>Ocupadas</th>
-        </tr>
-      </thead>
+    <!-- Nova div envelopando apenas a tabela para isolar o scroll horizontal -->
+    <div v-else class="table_responsive_wrapper">
+      <table class="turmas_table">
+        <thead>
+          <tr>
+            <th>Turma</th>
+            <th>Docente</th>
+            <th>Horário</th>
+            <th>Local</th>
+            <th>Capacidade</th>
+            <th>Ocupadas</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <LinhaTurma v-for="turma in turmas"
-        :key="turma.codigoTurma" 
-        :turma="turma"
-        @selecionar="emit('selecionar', $event)"
-        />
-      </tbody>
-    </table>
+        <tbody>
+          <LinhaTurma v-for="turma in turmasDisponiveis"
+            :key="turma.codigoTurma" 
+            :turma="turma"
+            @selecionar="emit('selecionar', $event)"
+            @detalhes="emit('detalhes', $event)"
+          />
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <style scoped>
-  .turmas_container{
+  .turmas_container {
     margin-top: 24px;
     background-color: #fff;
     width: 100%;
+    /* Removemos o overflow-x daqui para os textos não scrollarem */
+  }
+
+  /* Esta nova classe controla o scroll somente da tabela */
+  .table_responsive_wrapper {
+    width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
-.state-msg {
-  padding: 32px;
-  text-align: center;
-  color: #888;
-  font-size: 14px;
-  border: 1px solid #e5e5e5;
-  border-radius: 10px;
-}
-
-.state-error {
-  color: #a32d2d;
-  background: #fcebeb;
-}
-
-  .titulo{
-    
-    color: #ffffff;
-    width: 30% fit-content;
-    white-space: nowrap;
-    font-size: 20px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+  .state-msg {
+    padding: 32px;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
   }
 
-  .turmas_table{
+  .state-error {
+    color: #a32d2d;
+    background: #fcebeb;
+  }
+
+  .turmas_table {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid #e2e8f0;
-    /* border-radius: 10px; */
     overflow: hidden;
     margin: auto;
     border-radius: 10px 10px 0px 0px;
     white-space: nowrap;
   }
 
-  .turmas_table thead tr{
+  .turmas_table thead tr {
     background: #1a3a7a;
   }
 
-  .turmas_table thead th{
-  color: rgba(255, 255, 255, 0.85);
-  text-align: left;
-  font-size: 15px;
-  letter-spacing: 0.06em;
-  padding: 11px 16px;
-  font-weight: 500;
-  text-transform: uppercase;
-}
+  .turmas_table thead th {
+    color: rgba(255, 255, 255, 0.85);
+    text-align: left;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    padding: 11px 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
 
-.results-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
+  .results-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
 
-.results-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: #555;
-}
+  .results-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+  }
 
-.results-count {
-  font-size: 12px;
-  color: #888;
-  background: #f4f4f4;
-  padding: 3px 10px;
-  border-radius: 20px;
-  border: 1px solid #e5e5e5;
-}
+  .results-count {
+    font-size: 12px;
+    color: #888;
+    background: #f4f4f4;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid #e5e5e5;
+  }
 </style>

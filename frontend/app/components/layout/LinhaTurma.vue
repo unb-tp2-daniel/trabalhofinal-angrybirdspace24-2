@@ -1,28 +1,8 @@
 <script setup lang="ts">
-
-/* "codigoTurma": "CIC001",
-    "materiaId": "MAT123",
-    "nomeMateria": "Arquitetura de Computadores",
-    "semestre": "2026.1",
-    "vagasTotais": 40,
-    "vagasOcupadas": 10,
-    "ativo": true,
-    "local": "PCDT - Sala A1",
-    "horario": "24M34",
-    "vagasExclusivas": {
-      "CienciaDaComputacao": 10,
-      "Engenharia": 5
-    },
-    "professorId": "PROF999",
-    "professorNome": "Nome do Professor",
-    "prioridades": {
-      "1": "Formandos",
-      "2": "Veteranos" */
-
 defineProps<{
   turma: {
     codigoTurma: string
-    materiaId: string
+    materiaId: string //??
     nomeMateria: string
     semestre: string
     vagasTotais: number
@@ -41,7 +21,8 @@ defineProps<{
 }>()
 
 const emite = defineEmits([ 
-  'selecionar'
+  'selecionar',
+  'detalhes'
 ])
 
 /* function capacidadeClass(vagas: number): string {
@@ -58,13 +39,18 @@ function capacidadeLabel(vagas: number): string {
 </script>
 
 <template>
-    <tr class="linha_turma" @click="emite('selecionar', turma)">
-        <td class="code_badge">{{ turma.codigoTurma }}</td> <!-- para ser o codigo da materia, basta trocar por turma.materiaId -->
-        <td class="docente">{{ turma.professorNome }}</td>
-        <td class="horario_badge">{{ turma.horario }}</td>
-        <td class="local">{{ turma.local }}</td>
-        <td class="cap_badge">{{ turma.vagasTotais }}</td>
-        <td class="cap_badge">{{ turma.vagasOcupadas }}</td>
+    <tr class="linha_turma">
+        <td class="code_badge" @click="emite('selecionar', turma)">{{ turma.codigoTurma }}</td> <!-- para ser o codigo da materia, basta trocar por turma.materiaId -->
+        <td class="docente" @click="emite('selecionar', turma)">{{ turma.professorNome }}</td>
+        <td class="horario_badge" @click="emite('selecionar', turma)">{{ turma.horario }}</td>
+        <td class="local" @click="emite('selecionar', turma)">{{ turma.local }}</td>
+        <td class="cap_badge" @click="emite('selecionar', turma)">{{ turma.vagasTotais }}</td>
+        <td class="cap_badge" @click="emite('selecionar', turma)">{{ turma.vagasOcupadas }}</td>
+        <td class="acoes">
+            <button class="detalhes-btn" @click="emite('detalhes', turma)">
+                Detalhes
+            </button>
+        </td>
     </tr>
 </template>
 
@@ -87,6 +73,7 @@ td{
   padding: 13px 16px;
   border-bottom: 1px solid #dcdcdc;
   background-color: #f8fbff;
+  cursor: pointer
 }
 
 .docente { 
@@ -128,5 +115,40 @@ td{
 .linha_turma:nth-child(even) td{
   background-color: #f8fafc;
 }
+.acoes{
+  display:flex;
+  gap:8px;
+}
 
+.matricular-btn{
+  border:none;
+  background:#dcfce7;
+  color:#166534;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  transition:all .2s;
+}
+
+.matricular-btn:hover{
+  background:#bbf7d0;
+  transform:translateY(-2px);
+}
+
+.detalhes-btn{
+  border:none;
+  background:#dbeafe;
+  color:#1d4ed8;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  transition:all .2s;
+}
+
+.detalhes-btn:hover{
+  background:#bfdbfe;
+  transform:translateY(-2px);
+}
 </style>

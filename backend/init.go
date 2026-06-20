@@ -20,8 +20,10 @@ func init() {
 	database.InitDB()
 
 	// Rotas de alunos
+	functions.HTTP("ListarAlunos", alunos_functions.ListAlunosHandler)
 	functions.HTTP("GetAlunoPorId", alunos_functions.GetAlunoByIdHandler)
 	functions.HTTP("CriarAluno", alunos_functions.CreateAlunoHandler)
+	functions.HTTP("CalcularCH", alunos_functions.GetCHHandler)
 
 	// Rotas de turmas
 	functions.HTTP("ListarTurmas", turmas_functions.ListTurmasHandler)
@@ -41,6 +43,7 @@ func init() {
 
 	// Rotas de curso
 	functions.HTTP("CriarCurso", curso_functions.CreateCursoHandler)
+	functions.HTTP("GetCursoPorId", curso_functions.GetCursoByIdHandler)
 
 	// Rotas de professor
 	functions.HTTP("CriarProfessor", professor_functions.CreateProfessorHandler)
@@ -53,4 +56,8 @@ func init() {
 
 	functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
 	functions.HTTP("Matricular", alunos_functions.NormalMatriculateAlunoHandler)
+
+	functions.HTTP("LimparColecao", admin_functions.ClearCollectionHandler)
+
+	functions.HTTP("ListarTurmasMatriculadas", alunos_functions.GetSubjectsAlunoHandler)
 }

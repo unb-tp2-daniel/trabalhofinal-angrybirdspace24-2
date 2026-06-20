@@ -20,9 +20,20 @@
     "onlyBuiltDependencies": [
       "@parcel/watcher",
       "esbuild"
-    ]
+    ],
+    "supportedArchitectures": {
+      "os": [
+        "linux"
+      ],
+      "cpu": [
+        "x64"
+      ]
+    }
   },
   "devDependencies": {
-    "@nuxt/icon": "^2.2.1"
+    "@nuxt/icon": "^2.2.1",
+    "@oxc-parser/binding-linux-x64-gnu": "^0.135.0",
+    "oxc-parser": "^0.135.0",
+    "rolldown": "^1.1.1"
   }
 }

@@ -76,9 +76,16 @@
     //import Footer from '~/components/layout/Footer.vue';
     
     import { ref } from 'vue'
-    import { createUserWithEmailAndPassword } from "firebase/auth"
-    import { getFirebaseAuth } from "../../plugins/firebase.client"
-    const auth = getFirebaseAuth()
+    import { 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    setPersistence, 
+    browserLocalPersistence 
+    } from "firebase/auth" // <-- Added the extra handlers here
+    // import { createUserWithEmailAndPassword } from "firebase/auth"
+
+    // Pull the valid, running auth reference from your composable tool
+    const { auth } = useAuth()
     const usuario = ref('')
     const senha = ref('')
     const matricula = ref('')
@@ -94,6 +101,10 @@
 
     const toggleConfirmarPassword = () => {
         mostrarConfirmarSenha.value = !mostrarConfirmarSenha.value
+    }
+
+    const telaLogin = async () => {
+        await navigateTo('/login') 
     }
 
     const cadastrar = async () => {

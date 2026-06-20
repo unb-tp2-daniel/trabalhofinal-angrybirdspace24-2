@@ -3,7 +3,7 @@
         <Header />
         <Menu :items="menuItems" />
         <div class="container">
-          <ProfileSidebar />
+          <ProfileSidebarReal :aluno="aluno" :email="email" :curso="curso" :ch="ch"/>
           <main class="content">
             <TabelaMatriculas :materias="materias"/>
           </main>
@@ -13,31 +13,78 @@
 </template>
 
 <script setup>
-  const materias = [
-    {
-    nome: 'ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES',
-    local: 'PJC BT 085',
-    horario: '35M34' 
-  },
+  import { ref, watch, onMounted } from 'vue'
+  import { useAuth } from '~/composables/useAuth'
 
-  {
-    nome: 'PROGRAMAÇÃO COMPETITIVA',
-    local: 'BSA N B1 41/13',
-    horario: '24M34'
-  },
+  const { user, matriculaUsuario } = useAuth()
 
-  {
-    nome: 'TÉCNICAS DE PROGRAMAÇÃO 2',
-    local: 'BSA N AT 19/41',
-    horario: '24M12'
+  useHead({ title: 'Aluno - UnB' })
+
+  const aluno = ref(null)
+  const curso = ref(null)
+  const ch = ref(null)
+  const email = ref(null)
+  const materias = ref([])
+
+  const buscarDadosDoAluno = async (uid) => {
+    try {
+      const res_aluno = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/GetAlunoPorId?id=${uid}`)
+      aluno.value = res_aluno
+      console.log("Aluno encontrado:", aluno.value)
+
+      const res_curso = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/GetCursoPorId?id=${aluno.value.cursoId}`)
+      curso.value = res_curso
+      console.log("Curso encontrado:", curso.value)
+
+      const res_ch = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/CalcularCH?idAluno=${uid}`)
+      ch.value = res_ch
+      console.log("Carga horária encontrada:", ch.value)
+
+    } catch (error) {
+      console.error("Erro ao encontrar aluno:", error)
+    }
   }
-]
+
+  const carregarGrade = async (uid) => {
+    try {
+      const res = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmasMatriculadas?id=Unb_${uid}`)
+      
+      console.log(res)
+
+      materias.value = res || []
+      console.log("Grade horária real carregada:", materias.value)
+    }
+    
+    catch (error) {
+      console.error("Erro ao carregar a grade do aluno:", error)
+    }
+  }
+
+  // o watch monitora o estado do usuário, assim que o firebase injetar o usuário no cliente, ele dispara a busca automaticamente
+  watch(user, (novoUsuario) => {
+    if (novoUsuario) {
+      email.value = novoUsuario.email
+      buscarDadosDoAluno(novoUsuario.uid)
+      carregarGrade(novoUsuario.uid)
+    }
+  }, { immediate: true })
+
+  
+
+  onMounted(() => {
+    // se o usuário já veio do localstorage no momento em que a página montou, força a busca direto
+    if (user.value) {
+      email.value = user.value.email
+      buscarDadosDoAluno(user.value.uid)
+      carregarGrade(user.value.uid)
+    }
+  })
 
 const menuItems = [
   {
     label: 'Ensino',
     children: [
-      { label: 'Realizar Matrícula Extraordinária', to: '/aluno/matricula' },
+      { label: 'Realizar Matrícula Extraordinária', to: 'aluno/matricula' },
       { label: 'Trancamento de Matrícula' },
       { label: 'Trancamento Geral de Matrícula' },
       { label: 'Grade Curricular' },

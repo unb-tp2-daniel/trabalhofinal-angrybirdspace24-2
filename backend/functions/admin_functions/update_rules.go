@@ -3,10 +3,8 @@ package admin_functions
 
 import (
 	"net/http"
-	// Importando as nossas pastas isoladas
 )
 
-// UpdateRulesHandler lida exclusivamente com a requisição da internet
 func UpdateRulesHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		http.Error(w, "Método não permitido.", http.StatusMethodNotAllowed)

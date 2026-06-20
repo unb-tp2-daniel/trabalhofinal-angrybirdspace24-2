@@ -34,12 +34,11 @@
         </form>
 
         <div class="links">
-          <p><a @click="loginMicrosoft">ENTRAR COM MICROSOFT</a></p> 
+          <!--<p><a @click="loginMicrosoft">ENTRAR COM MICROSOFT</a></p> -->
           <p><strong>Aluno</strong>, <a @click="cadastroAluno">cadastre-se aqui</a></p>
           <p><strong>Coordenador</strong>, <a @click="cadastroCoordenador">cadastre-se aqui</a></p>
           <p><a @click="recuperarSenha">Esqueceu a senha?</a></p>
           <p><a @click="telaBranca">Esqueceu o login?</a></p>
-          <p><a @click="passa">Não clique aqui</a></p>
         </div>
 
       </div>
@@ -62,6 +61,8 @@
     function telaBranca() {
         navigateTo('/telaBranca')
     }
+
+    /*
     function loginMicrosoft() {
         //Não tá funcionando
         const provider = new OAuthProvider('microsoft.com');
@@ -77,6 +78,7 @@
                 console.log(error)
             });
     }
+    */
 
     function passa() {
         navigateTo('/aluno/')
@@ -90,34 +92,42 @@
     //import Header from '~/components/layout/Header.vue'
     //import Footer from '~/components/layout/Footer.vue';
     
-    import { ref } from 'vue'
-    import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
-    import { getFirebaseAuth } from "../../plugins/firebase.client"
-    import { setPersistence, browserLocalPersistence, OAuthProvider } from "firebase/auth"
-    import TelaBranca from './telaBranca.vue'
+import { ref } from 'vue'
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "firebase/auth"
+import { useAuth } from '~/composables/useAuth' // Importa o nosso composable unificado
+
+const { auth } = useAuth() // Resgata a instância do auth inicializada com segurança
 
     const usuario = ref('')
     const senha = ref('')
-    const mostrarSenha = ref(false) // New state: false = hidden, true = visible
+    const mostrarSenha = ref(false)
+    const error = ref('')
 
     const togglePassword = () => {
-    mostrarSenha.value = !mostrarSenha.value
+        mostrarSenha.value = !mostrarSenha.value
     }
-    const error = ref('')
 
     const login = async () => {
         console.log("foi")
-       try {
-            const auth = getFirebaseAuth()
-            await setPersistence(auth, browserLocalPersistence);
-            const userCredential = await signInWithEmailAndPassword(auth, usuario.value, senha.value)
+        error.value = '' // limpa erros anteriores
+        
+        try {
+            if (!auth.value) {
+                error.value = 'Erro ao carregar o módulo de autenticação.'
+                return
+            }
 
-            await navigateTo('/aluno/') // adicionar verificação de cargo depois
+            await setPersistence(auth.value, browserLocalPersistence)
+            
+            const userCredential = await signInWithEmailAndPassword(auth.value, usuario.value, senha.value)
+            
+            console.log("Usuário logado:", userCredential.user.uid)
+            
+            await navigateTo('/aluno/') 
         } 
-
         catch (err) {
-            console.log(err)
-            error.value = 'Falha no login'
+            console.error("Erro detalhado do login:", err)
+            error.value = 'Falha no login: verificar usuário e senha.'
         }
     }
 

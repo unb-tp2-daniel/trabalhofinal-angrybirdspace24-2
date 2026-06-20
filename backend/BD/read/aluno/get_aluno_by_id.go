@@ -1,4 +1,4 @@
-package read
+package aluno
 
 import (
 	"context"
@@ -35,7 +35,6 @@ func GetAlunoById(ctx context.Context, client *firestore.Client, matricula strin
 
 	return &aluno, nil
 }
-
 
 /*
 func GetAlunoById(ctx context.Context, client *firestore.Client, id string) (*models.Aluno, error) {

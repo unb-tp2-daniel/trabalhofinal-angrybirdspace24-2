@@ -6,12 +6,11 @@ import (
 	"net/http"
 
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read"
+	turmaDB "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read/turma"
 )
 
-// ListTurmasHandler atende a requisição da internet (apenas recebe e devolve)
 func ListTurmasHandler(w http.ResponseWriter, r *http.Request) {
-	//Tornando o acesso visível para o front
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// verifica se é GET
@@ -21,7 +20,7 @@ func ListTurmasHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//chama a função do banco de dados
-	turmas, err := read.GetAllTurmas(database.Ctx, database.Client)
+	turmas, err := turmaDB.GetAllTurmas(database.Ctx, database.Client)
 
 	if err != nil {
 		log.Printf("Erro ao buscar turmas no banco: %v", err)

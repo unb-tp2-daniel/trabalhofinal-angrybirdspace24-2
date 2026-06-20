@@ -1,5 +1,5 @@
 <template>
-    <section v-if="aluno" class="profile">
+    <section v-if="aluno && curso && ch" class="profile">
         
         <section  class="profile">
         <div class="profile__header">
@@ -11,7 +11,10 @@
                 <p v-if="aluno.ativo" class="profile__detail"><strong>Status:</strong> ATIVO</p>
                 <p v-else class="profile__detail"><strong>Status:</strong> INATIVO</p>
                 <p class="profile__detail"><strong>Email:</strong> {{email}}</p>
-                <button type="button" class="profile__editButton">Editar perfil</button>
+                <div style="display: flex; gap: 8px; margin-top: 8px;"> 
+                    <button type="button" class="profile__editButton">Editar perfil</button> 
+                    <button @click="exit" type="button" class="profile__exit">Sair</button> 
+                </div>
             </div>
         </div>
 
@@ -22,11 +25,11 @@
 
             <div class="profile__row">
                 <span class="profile__rowLabel">Curso</span>
-                <span class="profile__rowValue profile__rowValue--text">-</span>
+                <span class="profile__rowValue profile__rowValue--text">{{ curso.nome }}</span>
             </div>
             <div class="profile__row">
-                <span class="profile__rowLabel">Período</span>
-                <span class="profile__rowValue">-</span>
+                <span class="profile__rowLabel">Turno</span>
+                <span class="profile__rowValue">{{ aluno.prioridades.turno }}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">Ingresso</span>
@@ -43,7 +46,7 @@
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">MP</span>
-                <span class="profile__rowValue">-</span>
+                <span class="profile__rowValue">{{ aluno.ira }}</span>
             </div>
         </section>
 
@@ -52,25 +55,25 @@
 
             <div class="profile__row">
                 <span class="profile__rowLabel">CH obrigatória pendente</span>
-                <span class="profile__rowValue">—</span>
+                <span class="profile__rowValue">{{ch.chObrigatoriasPendente}}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">CH obrigatória concluída</span>
-                <span class="profile__rowValue">—</span>
+                <span class="profile__rowValue">{{ch.chObrigatorias - ch.chObrigatoriasPendente}}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">CH total do currículo</span>
-                <span class="profile__rowValue">—</span>
+                <span class="profile__rowValue">{{ch.chObrigatorias + ch.chOptativas}}</span>
             </div>
             <div class="profile__row">
                 <span class="profile__rowLabel">CH complementar pendente</span>
-                <span class="profile__rowValue">—</span>
+                <span class="profile__rowValue">{{ ch.chOptativasPendente }}</span>
             </div>
 
-            <div class="profile__progress" style="--pct: 0">
+            <div class="profile__progress" :style="{ '--pct': aluno.prioridades.integralizado }">
                 <div class="profile__progressHeader">
                     <span class="profile__progressLabel">Conclusão</span>
-                    <span class="profile__progressValue">0%</span>
+                    <span class="profile__progressValue">{{aluno.prioridades.integralizado}}%</span>
                 </div>
                 <div class="profile__progressTrack" aria-label="Percentual de conclusão">
                     <div class="profile__progressFill" />
@@ -78,11 +81,14 @@
             </div>
         </section>
     </section>
-    <ProfileSidebarVazio v-else/>>
+    <ProfileSidebarVazio v-else/>
     
 </template>
 
 <script setup>
+import { signOut } from 'firebase/auth'
+import { useAuth } from '~/composables/useAuth'
+const auth = useAuth().auth
 
 const props = defineProps({
     aluno: {
@@ -95,8 +101,29 @@ const props = defineProps({
         type: String,
         required: true,
         default: 'email@email.com'
+    },
+
+    curso: {
+        type: Object,
+        required: true,
+        default: null
+    },
+    ch: {
+        type: Object,
+        required: true,
+        default: null
     }
 })
+
+async function exit(){
+    try { 
+        await signOut(auth.value); 
+        console.log("Usuário deslogado com sucesso!"); 
+        await navigateTo('/login') 
+    } catch (error) { 
+        console.error("Erro ao deslogar o usuário:", error); 
+    } 
+}
 
 </script>
 
@@ -263,6 +290,21 @@ const props = defineProps({
     letter-spacing: 0.5px;
     cursor: pointer;
     transition: background-color 0.2s;
+}
+
+.profile__exit{ 
+    align-self: flex-start; 
+    margin-top: 6px; 
+    background-color: #eaf0f5; 
+    color: #ff0000; 
+    border: none; 
+    border-radius: 24px; 
+    padding: 7px 10px; 
+    font-size: 12px; 
+    font-weight: 700; 
+    letter-spacing: 0.5px; 
+    cursor: pointer; 
+    transition: background-color 0.2s; 
 }
 
 .profile__editButton:hover {

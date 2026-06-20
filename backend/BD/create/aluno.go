@@ -10,11 +10,11 @@ import (
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
-// CreateAluno recebe a struct pronta e a envia diretamente para o Firestore
 func CreateAluno(Ctx context.Context, Client *firestore.Client, novoAluno models.Aluno) error {
-	// Gera um ID dinâmico ("Unb_20260001", "Unb_20260002")
-	docID := fmt.Sprintf("Unb_%s", novoAluno.Matricula)
-	// O Firestore lê as tags da struct e faz o mapeamento sozinho
+
+	// MELHOR SÓ A MATRICULA DO QUE ESSE ID DINAMICO
+	docID := fmt.Sprintf("%s", novoAluno.Matricula)
+
 	_, err := Client.Collection("alunos").Doc(docID).Set(Ctx, novoAluno)
 	if err != nil {
 		log.Printf("Erro ao criar aluno %s no banco: %v\n", novoAluno.Matricula, err)

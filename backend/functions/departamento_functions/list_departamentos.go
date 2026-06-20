@@ -6,12 +6,11 @@ import (
 	"net/http"
 
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read"
+	departamentoDB "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read/departamento"
 )
 
-// ListDepartamentosHandler atende a requisição
 func ListDepartamentosHandler(w http.ResponseWriter, r *http.Request) {
-	// Tornando o acesso visível para o front
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// verifica se é GET
@@ -20,7 +19,7 @@ func ListDepartamentosHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	deptos, err := read.GetAllDepartamentosResumo(database.Ctx, database.Client)
+	deptos, err := departamentoDB.GetAllDepartamentosResumo(database.Ctx, database.Client)
 
 	if err != nil {
 		log.Printf("Erro ao buscar departamentos no banco: %v", err)
@@ -28,7 +27,6 @@ func ListDepartamentosHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Transforma a lista de structs no JSON que vai pro front e script
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(deptos); err != nil {
 		log.Printf("Erro ao retornar JSON: %v", err)
