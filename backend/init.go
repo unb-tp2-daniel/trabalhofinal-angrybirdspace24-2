@@ -30,6 +30,7 @@ func init() {
 	// Rotas Materias
 	functions.HTTP("CriarMateria", materia_functions.CreateMateriaHandler)
 	functions.HTTP("ListarMaterias", materia_functions.ListMateriasHandler)
+	functions.HTTP("ProcurarMateria", materia_functions.SearchMateriaHandler)
 
 	// Rotas de Departamento
 	functions.HTTP("CriarDepartamento", departamento_functions.CreateDepartamentoHandler)
