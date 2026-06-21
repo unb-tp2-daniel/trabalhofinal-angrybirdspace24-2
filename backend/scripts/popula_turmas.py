@@ -21,7 +21,7 @@ def carregar_dados_existentes(db):
     
     # 2. Mapeia Professores (Garante que o professor existe)
     prof_ref = db.collection("professores").stream()
-    mapa_professores = {doc.id: doc.to_dict().get("nomeProfessor", doc.to_dict().get("nome")) for doc in prof_ref}
+    mapa_professores = {doc.id: doc.to_dict().get("nomeProfessor", doc.to_dict().get("professorNome")) for doc in prof_ref}
     
     # 3. Mapeia Turmas Existentes para controle de ID e choque de horário
     turmas_ref = db.collection("turmas").stream()
