@@ -4,13 +4,18 @@
     <Menu :items="menuItems" />
     <main class="container">
       <TabelaBuscas  @resultados="turmas = $event" /> 
-      <TabelaTurmasAbertas :turmasAbertas="turmas" @selecionar="abrirModal"/>
+      <TabelaTurmasAbertas :turmasAbertas="turmas" @selecionar="abrirModal" @detalhes="abrirDetalhesMateria"/>
 
       <ModalConfirmacao 
       :visivel="modalAberto"
       :turma="turmaSelecionada"
       @fechar="modalAberto = false"
       @confirmar="confirmarMatricula"/>
+
+      <ModalDetalhesMateria
+      :visivel="modalDetalhesAberto"
+      :materia="materiaSelecionada"
+      @fechar="modalDetalhesAberto = false"/>
 
       <ToastResultado
       :visivel="toastVisivel"
@@ -31,6 +36,8 @@ import { useAuth } from '~/composables/useAuth'
 
 const { matriculaUsuario } = useAuth() 
 
+const modalDetalhesAberto = ref(false)
+const materiaSelecionada = ref(null)
 const turmas = ref([])
 const toastVisivel = ref(false)
 const toastMensagem = ref('')
@@ -126,6 +133,29 @@ function mostrarToast(tipo, mensagem){
   },
   { label: 'Ajuda'},
 ]
+
+  async function abrirDetalhesMateria(turma) {
+    try {
+      const materias = await $fetch(
+        'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarMaterias'
+      )
+
+      const codigoProcurado = turma.materiaId || turma.codigoTurma.split("_", 2).join("_")
+
+      const materiaEncontrada = materias.find(m => m.codigo === codigoProcurado)
+
+      if (materiaEncontrada) {
+        materiaSelecionada.value = materiaEncontrada
+        modalDetalhesAberto.value = true
+      } else {
+        alert("Esta matéria não foi encontrada no catálogo do Decanato.")
+      }
+    }
+    catch(err) {
+      console.error("Erro ao buscar matérias:", err)
+      materiaSelecionada.value = null
+    }
+  }
 </script>
 
 <style scoped>
