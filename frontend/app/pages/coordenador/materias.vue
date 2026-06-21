@@ -16,9 +16,14 @@
 
         <div class="filters">
             <input
+                v-model="filtro"
                 type="text"
-                placeholder="Buscar matéria ou departamento..."
+                placeholder="Buscar código, departamento, conteúdo, pré-requisito, equivalência..."
             />
+        </div>
+
+        <div class="results-info">
+            {{ totalFiltrado }} matérias encontradas
         </div>
 
         <div v-if="loading">
@@ -148,6 +153,7 @@
 <script setup>
     import { ref, computed, onMounted } from 'vue'
 
+    const filtro = ref('')
     const materias = ref([])
     const loading = ref(false)
     const error = ref(null)
@@ -173,6 +179,10 @@
         const grupos = {}
 
         for (const materia of materias.value) {
+            if (!materiaContemFiltro(materia, filtro.value)) {
+                continue
+            }
+
             const departamento = materia.departamentoId
 
             if (!grupos[departamento]) {
@@ -184,6 +194,39 @@
 
         return grupos
     })
+
+    function materiaContemFiltro(materia, termo) {
+        if (!termo) return true
+
+        termo = termo.toLowerCase()
+
+        const textoPesquisa = [
+            materia.codigo,
+            materia.departamentoId,
+            materia.cargaHoraria,
+            materia.nivelAcademico,
+            materia.conteudo,
+
+            ...(materia.equivalencias || []),
+
+            ...(materia.preRequisitos || []).flatMap(
+                pr => pr.disciplinas || []
+            ),
+
+            ...(materia.coRequisitos || []).flatMap(
+                cr => cr.disciplinas || []
+            )
+        ]
+            .join(' ')
+            .toLowerCase()
+
+        return textoPesquisa.includes(termo)
+    }
+
+    const totalFiltrado = computed(() =>
+        Object.values(materiasAgrupadas.value)
+            .reduce((acc, lista) => acc + lista.length, 0)
+    )
 
     function index() {
         navigateTo('/coordenador')
@@ -392,4 +435,10 @@
     line-height: 1.4;
 }
 
+.results-info{
+    margin-bottom:20px;
+    color:#1a5276;
+    font-size:14px;
+    font-weight:600;
+}
 </style>
