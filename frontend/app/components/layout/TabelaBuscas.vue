@@ -75,7 +75,6 @@ const ativos = reactive({
   unidade: false
 })
 
-//se tem algo marca se nn xoxo
 watch(filtro, (val) =>{
   ativos.codigoTurma = !!val.codigoTurma
   ativos.nome = !!val.nome

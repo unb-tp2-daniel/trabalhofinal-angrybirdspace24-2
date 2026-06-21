@@ -1,5 +1,24 @@
 <script setup lang="ts">
 
+import { signOut } from 'firebase/auth'
+import { useAuth } from '~/composables/useAuth'
+
+const {auth} = useAuth()
+
+async function logout() {
+  try {
+    if (!auth.value) return
+
+    await signOut(auth.value)
+    await navigateTo('/login')
+    //localStorage.removeItem('token') //o projeto realmente usa esse token??
+
+  } catch (error) {
+    console.error('Erro ao deslogar usuário:', error)
+  }
+}
+
+
  interface MenuItem {
   label: string
   to?: string
@@ -32,6 +51,7 @@ defineProps<{
         </ul>
       </li>
     </ul>
+    <button class="botao-sair" @click="logout">Sair</button>
   </nav>
 </template>
 
@@ -50,6 +70,9 @@ defineProps<{
   background-color: #1a3a7a;
   border-bottom: 1px solid #122d62;
   padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .menu_list{
@@ -118,5 +141,25 @@ defineProps<{
   align-items: center;
   gap: 8px;
 }
+
+  .botao-sair{
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.82);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 11px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .botao-sair:hover{
+    background-color: rgba(255,255,255,0.12);
+    color: white;
+    text-decoration: underline;
+  }
 
 </style>
