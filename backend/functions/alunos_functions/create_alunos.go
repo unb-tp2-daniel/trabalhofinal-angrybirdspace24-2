@@ -6,13 +6,11 @@ import (
 	"log"
 	"net/http"
 
-	// Importando as nossas pastas isoladas
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/create"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
-// CreateAlunoHandler lida exclusivamente com a requisição da internet
 func CreateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Método não permitido.", http.StatusMethodNotAllowed)

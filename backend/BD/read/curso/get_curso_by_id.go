@@ -1,4 +1,4 @@
-package read
+package curso
 
 import (
 	"context"

@@ -6,12 +6,11 @@ import (
 	"net/http"
 
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read"
+	professorDB "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read/professor"
 )
 
-// ListTurmasHandler atende a requisição da internet (apenas recebe e devolve)
 func ListProfessoresHandler(w http.ResponseWriter, r *http.Request) {
-	//Tornando o acesso visível para o front
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// verifica se é GET
@@ -21,7 +20,7 @@ func ListProfessoresHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//chama a função do banco de dados
-	professores, err := read.GetAllProfessores(database.Ctx, database.Client)
+	professores, err := professorDB.GetAllProfessores(database.Ctx, database.Client)
 
 	if err != nil {
 		log.Printf("Erro ao buscar professores no banco: %v", err)

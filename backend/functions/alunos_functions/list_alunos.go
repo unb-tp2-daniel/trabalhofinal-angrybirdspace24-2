@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read"
+	alunoDB "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read/aluno"
 )
 
 func ListAlunosHandler(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +17,7 @@ func ListAlunosHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//chama a função do banco de dados
-	alunos, err := read.GetAllAlunos(database.Ctx, database.Client)
+	alunos, err := alunoDB.GetAllAlunos(database.Ctx, database.Client)
 
 	if err != nil {
 		log.Printf("Erro ao buscar alunos no banco: %v", err)

@@ -1,25 +1,26 @@
 package auth_functions
 
 import (
+	"context"
+	"encoding/json"
+	"log"
+	"net/http"
+
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
-	"net/http"
-	"context"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
-	"log"
-	"encoding/json"
 )
 
-func CreateUser(w http.ResponseWriter, r *http.Request){
-	//Tornando o acesso visível para o front
+func CreateUser(w http.ResponseWriter, r *http.Request) {
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
-    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 	if r.Method == http.MethodOptions {
-        w.WriteHeader(http.StatusOK)
-        return
-    }
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 
 	if r.Method != http.MethodPost {
 		http.Error(w, "Método não permitido.", http.StatusMethodNotAllowed)
@@ -51,7 +52,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request){
 	email := usuario.Email
 	senha := usuario.Senha
 
-	if senha == "" || email == "" || matricula == ""{
+	if senha == "" || email == "" || matricula == "" {
 		http.Error(w, "Campos incompletos", 400)
 		return
 	}

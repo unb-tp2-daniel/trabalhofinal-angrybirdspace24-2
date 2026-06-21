@@ -3,10 +3,8 @@ package professor_functions
 
 import (
 	"net/http"
-	// Importando as nossas pastas isoladas
 )
 
-// GetSubjectsProfessorHandler lida exclusivamente com a requisição da internet
 func GetSubjectsProfessorHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Método não permitido.", http.StatusMethodNotAllowed)

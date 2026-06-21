@@ -3,9 +3,10 @@ package admin_functions
 import (
 	"context"
 	"log"
+
 	"cloud.google.com/go/firestore"
+	alunoDB "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read/aluno"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read"
 )
 
 type CandidatoMatricula struct {
@@ -35,9 +36,9 @@ func CompleteMatricula(ctx context.Context, client *firestore.Client) error {
 		batch := client.Batch() // permite que tenha varias operações sem modificar o banco de dados de vdd
 
 		query := client.Collection("matriculas").
-				Where("turmaId", "==", turmaId).
-				OrderBy("prioridadeNota", firestore.Desc).
-				OrderBy("dataSolicitacao", firestore.Asc)
+			Where("turmaId", "==", turmaId).
+			OrderBy("prioridadeNota", firestore.Desc).
+			OrderBy("dataSolicitacao", firestore.Asc)
 
 		matDocs, err := query.Documents(ctx).GetAll() // resgata o resultado da query
 
@@ -55,15 +56,15 @@ func CompleteMatricula(ctx context.Context, client *firestore.Client) error {
 
 			/* Talvez usar outra abordagem para isso. Com o tempo, e muitas requisições, pode trazer lentidão.
 			A outra abordagem que pensei foi em criar um CursoId no model Matricula, talvez ajude, mas não sei onde colocaar*/
-			aluno, err := read.GetAlunoById(ctx, client, m.AlunoId)
+			aluno, err := alunoDB.GetAlunoById(ctx, client, m.AlunoId)
 			if err != nil {
 				continue
 			}
 
 			fila = append(fila, CandidatoMatricula{
 				Matricula: m,
-				DocRef: doc.Ref,
-				CursoId: aluno.CursoId,
+				DocRef:    doc.Ref,
+				CursoId:   aluno.CursoId,
 			})
 		}
 
@@ -109,11 +110,11 @@ func CompleteMatricula(ctx context.Context, client *firestore.Client) error {
 			statusFinal := ganhou[i]
 
 			batch.Update(candidato.DocRef, []firestore.Update{
-				{Path: "status", Value: statusFinal}, // aceita a matricula dele 
+				{Path: "status", Value: statusFinal}, // aceita a matricula dele
 			})
 
 			if statusFinal {
-				totalOcupadas++;
+				totalOcupadas++
 			}
 		}
 

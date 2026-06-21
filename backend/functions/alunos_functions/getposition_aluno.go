@@ -3,10 +3,8 @@ package alunos_functions
 
 import (
 	"net/http"
-	// Importando as nossas pastas isoladas
 )
 
-// GetPositionAlunoHandler lida exclusivamente com a requisição da internet
 func GetPositionAlunoHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Método não permitido.", http.StatusMethodNotAllowed)

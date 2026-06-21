@@ -2,11 +2,12 @@ package curso_functions
 
 import (
 	"encoding/json"
-	"net/http"
 	"log"
-	// Importando as nossas pastas isoladas
+	"net/http"
+
 	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
-	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read"
+
+	cursoDB "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read/curso"
 )
 
 func GetCursoByIdHandler(w http.ResponseWriter, r *http.Request) {
@@ -18,7 +19,7 @@ func GetCursoByIdHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.URL.Query().Get("id")
-	curso, err := read.GetCursoById(database.Ctx, database.Client, id)
+	curso, err := cursoDB.GetCursoById(database.Ctx, database.Client, id)
 
 	if err != nil {
 		log.Printf("Erro ao buscar curso no banco: %v", err)
@@ -33,4 +34,3 @@ func GetCursoByIdHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
-

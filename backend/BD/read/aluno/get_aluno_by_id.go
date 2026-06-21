@@ -1,9 +1,8 @@
-package read
+package aluno
 
 import (
 	"context"
 	"fmt"
-	"google.golang.org/api/iterator"
 
 	"cloud.google.com/go/firestore"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
@@ -35,33 +34,6 @@ func GetAlunoById(ctx context.Context, client *firestore.Client, matricula strin
 	}
 
 	return &aluno, nil
-}
-
-func GetAllAlunos(Ctx context.Context, Client *firestore.Client) ([]models.Aluno, error) {
-	var alunos []models.Aluno
-
-	// Faz a busca na coleção do Firestore
-	iter := Client.Collection("alunos").Documents(Ctx)
-
-	for {
-		doc, err := iter.Next()
-		if err == iterator.Done {
-			break // Fim da leitura
-		}
-		if err != nil {
-			return nil, err // Retorna o erro para o Handler tratar
-		}
-
-		var t models.Aluno
-		if err := doc.DataTo(&t); err != nil {
-			// Se der erro ao converter um documento específico, apenas ignora e vai pro próximo
-			continue
-		}
-
-		alunos = append(alunos, t)
-	}
-
-	return alunos, nil
 }
 
 /*
