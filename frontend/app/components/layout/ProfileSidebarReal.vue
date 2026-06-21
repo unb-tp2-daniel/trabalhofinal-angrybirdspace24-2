@@ -1,5 +1,5 @@
 <template>
-    <section v-if="aluno" class="profile">
+    <section v-if="aluno && curso && ch" class="profile">
         
         <section  class="profile">
         <div class="profile__header">
@@ -11,7 +11,10 @@
                 <p v-if="aluno.ativo" class="profile__detail"><strong>Status:</strong> ATIVO</p>
                 <p v-else class="profile__detail"><strong>Status:</strong> INATIVO</p>
                 <p class="profile__detail"><strong>Email:</strong> {{email}}</p>
-                <button type="button" class="profile__editButton">Editar perfil</button>
+                <div style="display: flex; gap: 8px; margin-top: 8px;"> 
+                    <button type="button" class="profile__editButton">Editar perfil</button> 
+                    <button @click="exit" type="button" class="profile__exit">Sair</button> 
+                </div>
             </div>
         </div>
 
@@ -78,11 +81,14 @@
             </div>
         </section>
     </section>
-    <ProfileSidebarVazio v-else/>>
+    <ProfileSidebarVazio v-else/>
     
 </template>
 
 <script setup>
+import { signOut } from 'firebase/auth'
+import { useAuth } from '~/composables/useAuth'
+const auth = useAuth().auth
 
 const props = defineProps({
     aluno: {
@@ -109,6 +115,15 @@ const props = defineProps({
     }
 })
 
+async function exit(){
+    try { 
+        await signOut(auth.value); 
+        console.log("Usuário deslogado com sucesso!"); 
+        await navigateTo('/login') 
+    } catch (error) { 
+        console.error("Erro ao deslogar o usuário:", error); 
+    } 
+}
 
 </script>
 
@@ -275,6 +290,21 @@ const props = defineProps({
     letter-spacing: 0.5px;
     cursor: pointer;
     transition: background-color 0.2s;
+}
+
+.profile__exit{ 
+    align-self: flex-start; 
+    margin-top: 6px; 
+    background-color: #eaf0f5; 
+    color: #ff0000; 
+    border: none; 
+    border-radius: 24px; 
+    padding: 7px 10px; 
+    font-size: 12px; 
+    font-weight: 700; 
+    letter-spacing: 0.5px; 
+    cursor: pointer; 
+    transition: background-color 0.2s; 
 }
 
 .profile__editButton:hover {
