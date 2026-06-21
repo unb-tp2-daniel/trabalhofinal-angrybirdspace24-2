@@ -54,10 +54,7 @@
                     </thead>
 
                     <tbody>
-                        <tr
-                            v-for="turma in turmas"
-                            :key="turma.codigoTurma"
-                        >
+                        <tr v-for="turma in turmas":key="turma.codigoTurma">
                             <td>{{ turma.nomeMateria }}</td>
 
                             <td>{{ turma.codigoTurma }}</td>
@@ -102,8 +99,8 @@
                                     Editar
                                 </button>
 
-                                <button class="students" @click="verAlunos(turma)">
-                                    Alunos
+                                <button class="students" @click="verDetalhes(turma)">
+                                    Detalhes
                                 </button>
 
                                 <button class="delete" @click="deletarTurma(turma)">
@@ -116,12 +113,121 @@
             </section>
         </div>
 
-        <button
-            class="new-class-btn"
-            @click="index"
-        >
+        <button class="new-class-btn" @click="index">
             Voltar
         </button>
+    </div>
+
+    <div v-if="modalAberto" class="modal-overlay" @click="modalAberto = false">
+        <div class="modal" @click.stop>
+            <div class="modal-header">
+                <div>
+                    <h2>
+                        Detalhes da Matéria
+                    </h2>
+
+                    <p v-if="materiaSelecionada" class="modal-subtitle">
+                        <strong>{{ turmaSelecionada?.nomeMateria }}</strong>
+                    </p>
+                </div>
+
+                <button class="close-btn" @click="modalAberto = false">
+                    ✕
+                </button>
+            </div>
+
+            <div v-if="carregandoMateria">
+                Carregando...
+            </div>
+
+            <div
+                v-else-if="materiaSelecionada"
+                class="modal-content"
+            >
+                <p>
+                    <strong>Código:</strong>
+                    {{ materiaSelecionada.codigo }}
+                </p>
+
+                <p>
+                    <strong>Departamento:</strong>
+                    {{ materiaSelecionada.departamentoId }}
+                </p>
+
+                <p>
+                    <strong>Carga Horária:</strong>
+                    {{ materiaSelecionada.cargaHoraria }}h
+                </p>
+
+                <p>
+                    <strong>Nível:</strong>
+                    {{ materiaSelecionada.nivelAcademico }}
+                </p>
+
+                <p>
+                    <strong>Pré-requisitos:</strong>
+
+                    <span
+                        v-if="
+                            materiaSelecionada.preRequisitos &&
+                            materiaSelecionada.preRequisitos.length
+                        "
+                    >
+                        {{
+                            materiaSelecionada.preRequisitos
+                                .flatMap(pr => pr.disciplinas)
+                                .join(', ')
+                        }}
+                    </span>
+
+                    <span v-else>
+                        Nenhum
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Co-requisitos:</strong>
+
+                    <span
+                        v-if="
+                            materiaSelecionada.coRequisitos &&
+                            materiaSelecionada.coRequisitos.length
+                        "
+                    >
+                        {{
+                            materiaSelecionada.coRequisitos
+                                .flatMap(cr => cr.disciplinas)
+                                .join(', ')
+                        }}
+                    </span>
+
+                    <span v-else>
+                        Nenhum
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Equivalências:</strong>
+
+                    {{
+                        materiaSelecionada.equivalencias?.join(', ') ||
+                        'Nenhuma'
+                    }}
+                </p>
+
+                <div class="conteudo-box">
+                    <strong>Conteúdo:</strong>
+
+                    <p>
+                        {{ materiaSelecionada.conteudo }}
+                    </p>
+                </div>
+            </div>
+
+            <div v-else>
+                Matéria não encontrada.
+            </div>
+        </div>
     </div>
 
     <Footer />
@@ -130,6 +236,10 @@
 <script setup>
     import { ref, onMounted } from 'vue'
 
+    const turmaSelecionada = ref(null)
+    const modalAberto = ref(false)
+    const materiaSelecionada = ref(null)
+    const carregandoMateria = ref(false)
     const turmas = ref([])
     const loading = ref(false)
     const error = ref(null)
@@ -150,6 +260,27 @@
             error.value = err.message
         } finally {
             loading.value = false
+        }
+    }
+
+    async function verDetalhes(turma) { 
+        turmaSelecionada.value = turma
+        modalAberto.value = true
+        carregandoMateria.value = true
+
+        try {
+            const materias = await $fetch(
+                'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarMaterias'
+            )
+
+            materiaSelecionada.value = materias.find(
+                m => m.codigo === turma.materiaId
+            )
+        } catch (err) {
+            console.error(err)
+            materiaSelecionada.value = null
+        } finally {
+            carregandoMateria.value = false
         }
     }
 
@@ -339,6 +470,71 @@
 
 .delete:hover{
     background:#fecaca;
+}
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.45);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+.modal{
+    background:white;
+    width:800px;
+    max-width:90vw;
+    max-height:85vh;
+    overflow-y:auto;
+    border-radius:16px;
+    padding:24px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.modal-header h2{
+    color:#1a5276;
+}
+
+.close-btn{
+    border:none;
+    background:none;
+    font-size:22px;
+    cursor:pointer;
+}
+
+.modal-content{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.conteudo-box{
+    margin-top:10px;
+    padding:16px;
+    background:#f8fafc;
+    border-radius:10px;
+    border:1px solid #e2e8f0;
+}
+
+.conteudo-box p{
+    margin-top:10px;
+    line-height:1.6;
+}
+
+.modal-subtitle{
+    margin-top:4px;
+    color:#000000;
+    font-weight:500;
+    font-size:20px;
 }
 
 </style>
