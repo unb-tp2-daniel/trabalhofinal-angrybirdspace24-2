@@ -5,7 +5,7 @@
             <h2>Sistema</h2>
 
             <button @click="turmas">Turmas</button>
-            <button>Matrículas</button>
+            <button @click="materias">Matérias</button>
             <button>Relatórios</button>
             <button>Regras</button>
         </aside>
@@ -51,6 +51,10 @@
 <script setup>
     function turmas() {
     navigateTo('/coordenador/turmas')
+    }
+
+    function materias() {
+    navigateTo('/coordenador/materias')
     }
 </script>
 
