@@ -34,12 +34,11 @@
         </form>
 
         <div class="links">
-          <p><a @click="loginMicrosoft">ENTRAR COM MICROSOFT</a></p> 
+          <!--<p><a @click="loginMicrosoft">ENTRAR COM MICROSOFT</a></p> -->
           <p><strong>Aluno</strong>, <a @click="cadastroAluno">cadastre-se aqui</a></p>
           <p><strong>Coordenador</strong>, <a @click="cadastroCoordenador">cadastre-se aqui</a></p>
           <p><a @click="recuperarSenha">Esqueceu a senha?</a></p>
           <p><a @click="telaBranca">Esqueceu o login?</a></p>
-          <p><a @click="passa">Não clique aqui</a></p>
         </div>
 
       </div>
@@ -62,6 +61,8 @@
     function telaBranca() {
         navigateTo('/telaBranca')
     }
+
+    /*
     function loginMicrosoft() {
         //Não tá funcionando
         const provider = new OAuthProvider('microsoft.com');
@@ -77,6 +78,7 @@
                 console.log(error)
             });
     }
+    */
 
     function passa() {
         navigateTo('/aluno/')
