@@ -33,7 +33,8 @@ onMounted(() =>{
 }) 
 
 const emit = defineEmits([
-  'selecionar'
+  'selecionar',
+  'detalhes'
 ])
 
 watch(() => props.turmasAbertas, (novas) => {
@@ -71,6 +72,7 @@ watch(() => props.turmasAbertas, (novas) => {
           <th>Local</th>
           <th>Capacidade</th>
           <th>Ocupadas</th>
+          <th>Ações</th>
         </tr>
       </thead>
 
@@ -79,6 +81,7 @@ watch(() => props.turmasAbertas, (novas) => {
         :key="turma.codigoTurma" 
         :turma="turma"
         @selecionar="emit('selecionar', $event)"
+        @detalhes="emit('detalhes', $event)"
         />
       </tbody>
     </table>
