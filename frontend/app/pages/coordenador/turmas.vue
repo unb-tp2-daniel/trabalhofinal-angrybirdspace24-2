@@ -14,13 +14,14 @@
 
         <div class="filters">
             <input
+                v-model="filtro"
                 type="text"
-                placeholder="Buscar turma, professor ou código..."
+                placeholder="Buscar turma, matéria, professor, horário, local..."
             />
+        </div>
 
-            <select>
-                <option>Todas as matérias</option>
-            </select>
+        <div class="results-info">
+            {{ turmasFiltradas.length }} turmas encontradas
         </div>
 
         <div v-if="loading">
@@ -35,7 +36,7 @@
             <section class="subject-section">
                 <div class="subject-header">
                     <h2>Todas as Turmas</h2>
-                    <span>{{ turmas.length }} turmas</span>
+                    <span>{{ turmasFiltradas.length }} turmas</span>
                 </div>
 
                 <table class="classes-table">
@@ -54,7 +55,7 @@
                     </thead>
 
                     <tbody>
-                        <tr v-for="turma in turmas":key="turma.codigoTurma">
+                        <tr v-for="turma in turmasFiltradas":key="turma.codigoTurma">
                             <td>{{ turma.nomeMateria }}</td>
 
                             <td>{{ turma.codigoTurma }}</td>
@@ -236,6 +237,7 @@
 <script setup>
     import { ref, onMounted } from 'vue'
 
+    const filtro = ref('')
     const turmaSelecionada = ref(null)
     const modalAberto = ref(false)
     const materiaSelecionada = ref(null)
@@ -243,6 +245,12 @@
     const turmas = ref([])
     const loading = ref(false)
     const error = ref(null)
+
+    const turmasFiltradas = computed(() =>
+    turmas.value.filter(turma =>
+        turmaContemFiltro(turma, filtro.value)
+    )
+)
 
     async function carregarTurmas() {
         loading.value = true
@@ -282,6 +290,37 @@
         } finally {
             carregandoMateria.value = false
         }
+    }
+
+    function turmaContemFiltro(turma, termo) {
+        if (!termo) return true
+
+        termo = termo.toLowerCase()
+
+        const status =
+            turma.vagasOcupadas >= turma.vagasTotais
+                ? 'Lotada'
+                : 'Disponível'
+
+        const textoPesquisa = [
+            turma.codigoTurma,
+            turma.materiaId,
+            turma.nomeMateria,
+            turma.professorId,
+            turma.professorNome,
+            turma.semestre,
+            turma.local,
+            turma.horario,
+            turma.vagasTotais,
+            turma.vagasOcupadas,
+            turma.ativo ? 'ativa' : 'inativa',
+            status
+        ]
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase()
+
+        return textoPesquisa.includes(termo)
     }
 
     function index() {
@@ -535,6 +574,13 @@
     color:#000000;
     font-weight:500;
     font-size:20px;
+}
+
+.results-info{
+    margin-bottom:20px;
+    color:#1a5276;
+    font-size:14px;
+    font-weight:600;
 }
 
 </style>
