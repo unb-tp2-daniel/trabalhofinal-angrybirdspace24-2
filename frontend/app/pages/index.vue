@@ -8,8 +8,5 @@
 </template>
 
 <script setup>
-    function telaPing() {
-        navigateTo('/ping')
-    }
     navigateTo('/login')
 </script>

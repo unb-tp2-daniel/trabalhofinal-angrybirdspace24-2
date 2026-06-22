@@ -1,11 +1,14 @@
 import { initializeApp, getApps, getApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 
-export const useAuth = () => {
-  const currentUser = ref(null)
-  const authInstance = ref(null)
+const currentUser = ref(null)
+const authInstance = ref(null)
+const isInited = ref(false)
 
-  if (process.client) {
+let authReadyPromise = null
+
+export const useAuth = () => {
+  if (process.client && !authInstance.value) {
     const config = useRuntimeConfig().public
     const firebaseConfig = {
       apiKey: config.firebaseApiKey,
@@ -19,11 +22,15 @@ export const useAuth = () => {
     const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
     const auth = getAuth(app)
     authInstance.value = auth
-
     currentUser.value = auth.currentUser
 
-    auth.onAuthStateChanged((user) => {
-      currentUser.value = user
+    // segura o fluxo até o onAuthStateChanged disparar
+    authReadyPromise = new Promise((resolve) => {
+      auth.onAuthStateChanged((user) => {
+        currentUser.value = user
+        isInited.value = true
+        resolve(user)
+      })
     })
   }
 
@@ -34,6 +41,9 @@ export const useAuth = () => {
   return {
     auth: authInstance,
     user: currentUser,
-    matriculaUsuario
+    matriculaUsuario,
+    ready: isInited, // se quiser fazer loading
+    
+    restaurarSessao: () => authReadyPromise || Promise.resolve(currentUser.value)
   }
 }
