@@ -4,3 +4,4 @@ dist/
 .env
 serviceAccountKey.json
 frontend/.output/
+.venv
