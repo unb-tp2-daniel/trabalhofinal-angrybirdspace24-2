@@ -1,17 +1,21 @@
 <template>
     <Header />
-
     <div class="page">
-
         <div class="top-section">
             <div>
                 <h1>Matérias</h1>
                 <p>Gerencie todas as matérias cadastradas no sistema</p>
             </div>
 
-            <button class="new-class-btn">
-                + Nova Matéria
-            </button>
+            <div class="top-actions">
+                <button class="new-class-btn" @click="index">
+                    Voltar
+                </button>
+
+                <button class="new-class-btn">
+                    + Nova Turma
+                </button>
+            </div>
         </div>
 
         <div class="filters">
@@ -138,13 +142,6 @@
             </table>
         </section>
 
-        <button
-            class="new-class-btn"
-            @click="index"
-        >
-            Voltar
-        </button>
-
     </div>
 
     <Footer />
@@ -230,18 +227,6 @@
 
     function index() {
         navigateTo('/coordenador')
-    }
-
-    function editarMateria(materia) {
-        console.log('Editar', materia)
-    }
-
-    function visualizarMateria(materia) {
-        console.log('Visualizar', materia)
-    }
-
-    function deletarMateria(materia) {
-        console.log('Excluir', materia)
     }
 
     onMounted(() => {
@@ -440,5 +425,10 @@
     color:#1a5276;
     font-size:14px;
     font-weight:600;
+}
+
+.top-actions{
+    display:flex;
+    gap:12px;
 }
 </style>

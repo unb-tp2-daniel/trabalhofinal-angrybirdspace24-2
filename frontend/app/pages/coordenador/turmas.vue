@@ -7,9 +7,15 @@
                 <p>Gerencie todas as turmas cadastradas no sistema</p>
             </div>
 
-            <button class="new-class-btn">
-                + Nova Turma
-            </button>
+            <div class="top-actions">
+                <button class="new-class-btn" @click="index">
+                    Voltar
+                </button>
+
+                <button class="new-class-btn">
+                    + Nova Turma
+                </button>
+            </div>
         </div>
 
         <div class="filters">
@@ -113,10 +119,6 @@
                 </table>
             </section>
         </div>
-
-        <button class="new-class-btn" @click="index">
-            Voltar
-        </button>
     </div>
 
     <div v-if="modalAberto" class="modal-overlay" @click="modalAberto = false">
@@ -261,8 +263,6 @@
             )
 
             turmas.value = response
-            console.log(response)
-            console.log(JSON.stringify(response, null, 2))
         } catch (err) {
             console.error(err)
             error.value = err.message
@@ -583,4 +583,8 @@
     font-weight:600;
 }
 
+.top-actions{
+    display:flex;
+    gap:12px;
+}
 </style>
