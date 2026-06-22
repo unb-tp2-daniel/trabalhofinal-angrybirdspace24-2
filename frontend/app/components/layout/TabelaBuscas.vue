@@ -117,11 +117,12 @@ async function buscarTurmas() {
 </script>
 
 <style scoped>
-button:disabled{
+button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
-.erro{
+
+.erro {
   display: block;
   margin-top: 6px;
   color: #e53935;
@@ -134,6 +135,8 @@ button:disabled{
   border-radius: 10px;
   overflow: hidden;
   background-color: #f0f5fa;
+  width: 100%; /* Garante que o card ocupe todo o espaço disponível */
+  box-sizing: border-box;
 }
 
 .titulo {
@@ -147,21 +150,33 @@ button:disabled{
 
 .formulario {
   padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* --- ATUALIZAÇÃO REQUISITO DE RESPONSIVIDADE --- */
 .campo {
   display: flex;
-  width: 60%;
+  flex-direction: column; /* Empilha os elementos no celular */
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 14px;
+  width: 100%; /* No celular, usa o espaço total */
+  box-sizing: border-box;
+}
+
+/* Cria uma sub-estrutura interna para alinhar o checkbox junto com a label */
+.campo-header {
+  display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
+  width: 100%;
 }
 
 label {
-  width: 190px;
   font-size: 14px;
   color: #333;
-  flex-shrink: 0; 
+  font-weight: 500;
 }
 
 .caixinha {
@@ -201,8 +216,9 @@ label {
 }
 
 .entrada {
-  height: 30px;
-  flex: 1; 
+  height: 34px; /* Aumentado sutilmente para melhorar o toque no celular */
+  width: 100%; /* Input ocupa largura total no celular */
+  box-sizing: border-box;
   border: 1.5px solid #c8d8ea;
   border-radius: 6px;
   background: white;
@@ -219,13 +235,13 @@ label {
 }
 
 select.entrada {
-  height: 32px;
+  height: 34px;
   cursor: pointer;
 }
 
 .rodape {
-  margin-top: 12px;
-  padding-left: 26px; 
+  margin-top: 16px;
+  width: 100%;
 }
 
 button {
@@ -233,14 +249,35 @@ button {
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 8px 22px;
+  padding: 10px 24px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
+  width: 100%; /* Botão largo no celular facilita o clique */
   transition: background-color 0.15s;
 }
 
-button:hover {
-  background-color: #254d9e;
+/* --- MEDIA QUERY PARA DESKTOP (Telas maiores que 768px) --- */
+@media (min-width: 768px) {
+  .campo {
+    flex-direction: row; /* Volta a ficar inline */
+    align-items: center;
+    gap: 10px;
+    width: 60%; /* Retorna ao design original do SIGAA no desktop */
+    margin-bottom: 10px;
+  }
+
+  label {
+    width: 190px; /* Restaura o alinhamento fixo das labels */
+    flex-shrink: 0; 
+  }
+
+  button {
+    width: auto; /* Botão volta ao tamanho normal */
+  }
+  
+  .rodape {
+    padding-left: 26px; /* Alinha o botão com os inputs do desktop */
+  }
 }
 </style>

@@ -1,38 +1,43 @@
 <template>
-    <div>
+  <div>
     <Header />
     <Menu :items="menuItems" />
     <main class="container">
-      <TabelaBuscas  @resultados="turmas = $event" /> 
-      <TabelaTurmasAbertas :turmasAbertas="turmas" @selecionar="abrirModal" @detalhes="abrirDetalhesMateria"/>
+      <TabelaBuscas @resultados="turmas = $event" /> 
+      
+      <TabelaTurmasAbertas 
+        :turmasAbertas="turmas" 
+        @selecionar="abrirModal" 
+        @detalhes="abrirDetalhesMateria"
+      />
 
       <ModalConfirmacao 
-      :visivel="modalAberto"
-      :turma="turmaSelecionada"
-      @fechar="modalAberto = false"
-      @confirmar="confirmarMatricula"/>
+        :visivel="modalAberto"
+        :turma="turmaSelecionada"
+        @fechar="modalAberto = false"
+        @confirmar="confirmarMatricula"
+      />
 
       <ModalDetalhesMateria
-      :visivel="modalDetalhesAberto"
-      :materia="materiaSelecionada"
-      @fechar="modalDetalhesAberto = false"/>
+        :visivel="modalDetalhesAberto"
+        :materia="materiaSelecionada"
+        @fechar="modalDetalhesAberto = false"
+      />
 
       <ToastResultado
-      :visivel="toastVisivel"
-      :mensagem="toastMensagem"
-      :tipo="toastTipo" />
-
+        :visivel="toastVisivel"
+        :mensagem="toastMensagem"
+        :tipo="toastTipo" />
     </main>
     <Footer />
-    </div>
+  </div>
 </template>
 
 <script setup>
-
-useHead({ title: 'Matrícula Extraordinária - UnB' })
-
 import { ref, computed } from 'vue'
 import { useAuth } from '~/composables/useAuth'
+
+useHead({ title: 'Matrícula Extraordinária - UnB' })
 
 const { matriculaUsuario } = useAuth() 
 
@@ -50,9 +55,9 @@ function abrirModal(turma) {
   modalAberto.value = true
 }
 
-function mostrarToast(tipo, mensagem){
+function mostrarToast(tipo, message) {
   toastTipo.value = tipo
-  toastMensagem.value = mensagem
+  toastMensagem.value = message
   toastVisivel.value = true
 
   setTimeout(() => {
@@ -60,46 +65,41 @@ function mostrarToast(tipo, mensagem){
   }, 3000)
 }
 
+async function confirmarMatricula() {
+  modalAberto.value = false
 
-  async function confirmarMatricula(turma) {
-    modalAberto.value = false
+  // Como o useAuth expõe um ref reativo, acessamos o valor via .value
+  const alunoId = "Unb_" + matriculaUsuario.value 
+  
+  try {
+    const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/MatricularExtraordinaria', {
+      method: 'POST',
+      body: {
+        AlunoId: alunoId,
+        TurmaId: turmaSelecionada.value.codigoTurma,
+        MateriaId: turmaSelecionada.value.codigoTurma.split("_", 2).join("_"),
+        Status: false,
+        DataSolicitacao: null,
+        Prioridades: null,
+        Semestre: "20261",
+        PrioridadeNota: 0
+      }
+    })
 
-    /* ELE RECEBE O ID COMO "Unb_MATRICULA" */
-    const alunoId = "Unb_" + matriculaUsuario.value // por enquanto, depois resgatar pelo usuario autenticado (n sei como faz)
-    console.log(alunoId)
-    try {
-      const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/MatricularExtraordinaria', {
-        method: 'POST',
-        body: {
-          AlunoId: alunoId,
-          TurmaId: turmaSelecionada.value.codigoTurma,
-          MateriaId: turmaSelecionada.value.codigoTurma.split("_", 2).join("_"), // pega so o id da materia
-          Status: false,
-          DataSolicitacao: null,
-          Prioridades: null,
-          Semestre: "20261", // POR ENQUANTO TAMBÉM
-          PrioridadeNota: 0
-        }
-      })
+    mostrarToast('success', 'Matrícula extraordinária confirmada com sucesso!')
 
-      mostrarToast('success', 'Matrícula extraordinária confirmada com sucesso!')
-
-      turma.vagasOcupadas++ // apenas altera localmente pra ficar bontio
+    // CORREÇÃO DE REATIVIDADE: Altera a propriedade diretamente na referência selecionada
+    if (turmaSelecionada.value) {
+      turmaSelecionada.value.vagasOcupadas++
     }
-
-    catch (error) {
-      console.error("Erro na matrícula:", error)
-      
-      const mensagemErro = error.data || 'Erro interno ao processar matrícula.'
-      console.log(mensagemErro)
-      mostrarToast(
-        'error',
-        mensagemErro
-      )
-    }
+  } catch (error) {
+    console.error("Erro na matrícula:", error)
+    const mensagemErro = error.data || 'Erro interno ao processar matrícula.'
+    mostrarToast('error', mensagemErro)
   }
+}
 
-  const menuItems = [
+const menuItems = [
   {
     label: 'Matrícula',
     children: [
@@ -134,33 +134,38 @@ function mostrarToast(tipo, mensagem){
   { label: 'Ajuda'},
 ]
 
-  async function abrirDetalhesMateria(turma) {
-    try {
-      const materias = await $fetch(
-        'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarMaterias'
-      )
+async function abrirDetalhesMateria(turma) {
+  try {
+    const materias = await $fetch(
+      'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarMaterias'
+    )
+    const codigoProcurado = turma.materiaId || turma.codigoTurma.split("_", 2).join("_")
+    const materiaEncontrada = materias.find(m => m.codigo === codigoProcurado)
 
-      const codigoProcurado = turma.materiaId || turma.codigoTurma.split("_", 2).join("_")
-
-      const materiaEncontrada = materias.find(m => m.codigo === codigoProcurado)
-
-      if (materiaEncontrada) {
-        materiaSelecionada.value = materiaEncontrada
-        modalDetalhesAberto.value = true
-      } else {
-        alert("Esta matéria não foi encontrada no catálogo do Decanato.")
-      }
+    if (materiaEncontrada) {
+      materiaSelecionada.value = materiaEncontrada
+      modalDetalhesAberto.value = true
+    } else {
+      alert("Esta matéria não foi encontrada no catálogo do Decanato.")
     }
-    catch(err) {
-      console.error("Erro ao buscar matérias:", err)
-      materiaSelecionada.value = null
-    }
+  } catch(err) {
+    console.error("Erro ao buscar matérias:", err)
+    materiaSelecionada.value = null
   }
+}
 </script>
 
 <style scoped>
- main{
-  width: 70%;
+main {
+  width: 95%;
+  max-width: 1200px;
   margin: 0 auto;
- }
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  main {
+    width: 70%;
+  }
+}
 </style>
