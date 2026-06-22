@@ -10,6 +10,7 @@ type Requisito struct {
 // Materia representa uma disciplina oferecida nos departamentos.
 type Materia struct {
 	CodigoMateria  string               `json:"codigo" firestore:"codigo"`
+	NomeMateria    string               `json:"nomeMateria" firestore:"nomeMateria"`
 	PreRequisitos  []Requisito          `json:"preRequisitos" firestore:"preRequisitos"` // Modificado
 	DepartamentoId string               `json:"departamentoId" firestore:"departamentoId"`
 	CoRequisitos   []Requisito          `json:"coRequisitos" firestore:"coRequisitos"` // Modificado

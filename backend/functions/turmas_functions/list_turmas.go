@@ -20,7 +20,7 @@ func ListTurmasHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//chama a função do banco de dados
-	turmas, err := turmaDB.GetAllTurmas(database.Ctx, database.Client)
+	turmas, err := turmaDB.GetTurmas(database.Ctx, database.Client, 5)
 
 	if err != nil {
 		log.Printf("Erro ao buscar turmas no banco: %v", err)

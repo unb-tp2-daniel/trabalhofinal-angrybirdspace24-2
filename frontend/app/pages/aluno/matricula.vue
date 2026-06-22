@@ -137,7 +137,7 @@ const menuItems = [
 async function abrirDetalhesMateria(turma) {
   try {
     const materias = await $fetch(
-      'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarMaterias'
+      'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas'
     )
     const codigoProcurado = turma.materiaId || turma.codigoTurma.split("_", 2).join("_")
     const materiaEncontrada = materias.find(m => m.codigo === codigoProcurado)

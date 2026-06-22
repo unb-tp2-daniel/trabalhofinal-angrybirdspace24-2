@@ -1,0 +1,582 @@
+{
+  "geral": [
+    "Introdução",
+    "Tópicos Avançados",
+    "Fundamentos",
+    "Prática de",
+    "Seminário de",
+    "Laboratório de",
+    "Estudos em"
+  ],
+
+  "FIL01": [
+    "Filosofia",
+    "Ética",
+    "Metafísica",
+    "Epistemologia",
+    "Lógica",
+    "Política",
+    "Antiga",
+    "Moderna",
+    "Contemporânea",
+    "Estética"
+  ],
+
+  "SC01": [
+    "Saúde Coletiva",
+    "Epidemiologia",
+    "Políticas Públicas",
+    "Promoção da Saúde",
+    "Vigilância em Saúde",
+    "SUS",
+    "Bioestatística",
+    "Saúde da Família",
+    "Planejamento em Saúde",
+    "Determinantes Sociais"
+  ],
+
+  "AGRO01": [
+    "Agronomia",
+    "Solo",
+    "Irrigação",
+    "Culturas",
+    "Produção Vegetal",
+    "Mecanização",
+    "Fitotecnia",
+    "Agrometeorologia",
+    "Fertilidade",
+    "Agricultura"
+  ],
+
+  "EDFI01": [
+    "Educação Física",
+    "Esporte",
+    "Treinamento",
+    "Biomecânica",
+    "Fisiologia",
+    "Movimento",
+    "Atividade Física",
+    "Recreação",
+    "Saúde",
+    "Corpo"
+  ],
+
+  "FIT01": [
+    "Fitopatologia",
+    "Doenças de Plantas",
+    "Fungos",
+    "Bactérias",
+    "Patógenos",
+    "Controle Fitossanitário",
+    "Epidemiologia Vegetal",
+    "Defesa Vegetal",
+    "Micologia",
+    "Sanidade Vegetal"
+  ],
+
+  "LET01": [
+    "Línguas Estrangeiras",
+    "Tradução",
+    "Inglês",
+    "Francês",
+    "Espanhol",
+    "Alemão",
+    "Linguagem",
+    "Interpretação",
+    "Versão",
+    "Estudos da Tradução"
+  ],
+
+  "FIS01": [
+    "Física",
+    "Mecânica",
+    "Eletromagnetismo",
+    "Termodinâmica",
+    "Óptica",
+    "Física Moderna",
+    "Quântica",
+    "Relatividade",
+    "Ondas",
+    "Laboratório"
+  ],
+
+  "SS01": [
+    "Serviço Social",
+    "Política Social",
+    "Assistência Social",
+    "Questão Social",
+    "Direitos Sociais",
+    "Trabalho Social",
+    "Estado",
+    "Família",
+    "Intervenção Social",
+    "Seguridade"
+  ],
+
+  "ECA01": [
+    "Engenharia Civil",
+    "Construção",
+    "Estruturas",
+    "Geotecnia",
+    "Hidráulica",
+    "Saneamento",
+    "Transportes",
+    "Materiais",
+    "Topografia",
+    "Engenharia Ambiental"
+  ],
+
+  "ARQ01": [
+    "Arquitetura",
+    "Urbanismo",
+    "Projeto",
+    "Paisagismo",
+    "Habitação",
+    "Desenho",
+    "Conforto Ambiental",
+    "História da Arquitetura",
+    "Representação",
+    "Planejamento Urbano"
+  ],
+
+  "ECO01": [
+    "Ecologia",
+    "Ecossistemas",
+    "Conservação",
+    "Biodiversidade",
+    "Populações",
+    "Comunidades",
+    "Ambiente",
+    "Impacto Ambiental",
+    "Ecologia de Campo",
+    "Sustentabilidade"
+  ],
+
+  "TLL01": [
+    "Teoria Literária",
+    "Literaturas",
+    "Crítica Literária",
+    "Narrativa",
+    "Poesia",
+    "Romance",
+    "Leitura",
+    "Literatura Brasileira",
+    "Literatura Comparada",
+    "Análise Literária"
+  ],
+
+  "MED01": [
+    "Medicina",
+    "Anatomia",
+    "Fisiologia",
+    "Patologia",
+    "Clínica Médica",
+    "Cirurgia",
+    "Saúde",
+    "Semiologia",
+    "Farmacologia",
+    "Internato"
+  ],
+
+  "VET01": [
+    "Veterinária",
+    "Clínica Veterinária",
+    "Anatomia Animal",
+    "Zootecnia",
+    "Patologia Animal",
+    "Cirurgia Veterinária",
+    "Saúde Animal",
+    "Inspeção",
+    "Reprodução Animal",
+    "Medicina Veterinária"
+  ],
+
+  "HIST01": [
+    "História",
+    "Brasil",
+    "Antiga",
+    "Medieval",
+    "Moderna",
+    "Contemporânea",
+    "Historiografia",
+    "América",
+    "África",
+    "Patrimônio"
+  ],
+
+  "ANT01": [
+    "Antropologia",
+    "Cultura",
+    "Etnologia",
+    "Etnografia",
+    "Sociedade",
+    "Povos Indígenas",
+    "Antropologia Urbana",
+    "Rituais",
+    "Parentesco",
+    "Identidade"
+  ],
+
+  "ADM01": [
+    "Administração",
+    "Gestão",
+    "Organizações",
+    "Marketing",
+    "Finanças",
+    "Recursos Humanos",
+    "Estratégia",
+    "Empreendedorismo",
+    "Operações",
+    "Planejamento"
+  ],
+
+  "ENFE01": [
+    "Enfermagem",
+    "Cuidado",
+    "Saúde",
+    "Semiologia",
+    "Atenção Básica",
+    "Enfermagem Clínica",
+    "Saúde Coletiva",
+    "Urgência",
+    "Pediatria",
+    "Processo de Enfermagem"
+  ],
+
+  "CC01": [
+    "Contabilidade",
+    "Contábil",
+    "Custos",
+    "Auditoria",
+    "Perícia",
+    "Controladoria",
+    "Balanço",
+    "Tributária",
+    "Finanças",
+    "Patrimônio"
+  ],
+
+  "CI01": [
+    "Ciência da Informação",
+    "Biblioteconomia",
+    "Arquivologia",
+    "Documentação",
+    "Gestão da Informação",
+    "Indexação",
+    "Organização da Informação",
+    "Memória",
+    "Fontes de Informação",
+    "Preservação"
+  ],
+
+  "EST01": [
+    "Estatística",
+    "Probabilidade",
+    "Inferência",
+    "Amostragem",
+    "Regressão",
+    "Modelos",
+    "Análise de Dados",
+    "Estatística Aplicada",
+    "Variáveis Aleatórias",
+    "Bioestatística"
+  ],
+
+  "DIR01": [
+    "Direito",
+    "Penal",
+    "Civil",
+    "Constitucional",
+    "Contratos",
+    "Trabalhista",
+    "Tributário",
+    "Internacional",
+    "Humanos",
+    "Processual"
+  ],
+
+  "GEO01": [
+    "Geografia",
+    "Cartografia",
+    "Geopolítica",
+    "Território",
+    "Geografia Humana",
+    "Geografia Física",
+    "Climatologia",
+    "Geomorfologia",
+    "Urbanização",
+    "Espaço"
+  ],
+
+  "MUS01": [
+    "Música",
+    "Harmonia",
+    "Percepção Musical",
+    "Composição",
+    "Instrumento",
+    "Canto",
+    "História da Música",
+    "Arranjo",
+    "Regência",
+    "Teoria Musical"
+  ],
+
+  "SOCIO01": [
+    "Sociologia",
+    "Sociedade",
+    "Teoria Social",
+    "Política",
+    "Cultura",
+    "Desigualdade",
+    "Trabalho",
+    "Movimentos Sociais",
+    "Estado",
+    "Pesquisa Social"
+  ],
+
+  "ZOO01": [
+    "Zoologia",
+    "Animais",
+    "Invertebrados",
+    "Vertebrados",
+    "Taxonomia",
+    "Evolução",
+    "Ecologia Animal",
+    "Sistemática",
+    "Morfologia Animal",
+    "Biodiversidade"
+  ],
+
+  "ODONTO01": [
+    "Odontologia",
+    "Dentística",
+    "Ortodontia",
+    "Periodontia",
+    "Prótese",
+    "Endodontia",
+    "Saúde Bucal",
+    "Cirurgia Oral",
+    "Clínica Odontológica",
+    "Odontopediatria"
+  ],
+
+  "MAT01": [
+    "Cálculo",
+    "Álgebra",
+    "Geometria",
+    "Probabilidade",
+    "Estatística",
+    "Equações",
+    "Lógica",
+    "Análise",
+    "Matemática",
+    "Vetores"
+  ],
+
+  "EDU01": [
+    "Educação",
+    "Didática",
+    "Pedagogia",
+    "Aprendizagem",
+    "Currículo",
+    "Ensino",
+    "Políticas Educacionais",
+    "Avaliação",
+    "Formação de Professores",
+    "Psicologia da Educação"
+  ],
+
+  "FARMA01": [
+    "Farmácia",
+    "Fármacos",
+    "Farmacologia",
+    "Análises Clínicas",
+    "Toxicologia",
+    "Bioquímica",
+    "Assistência Farmacêutica",
+    "Medicamentos",
+    "Farmacotécnica",
+    "Química Farmacêutica"
+  ],
+
+  "BOT01": [
+    "Botânica",
+    "Plantas",
+    "Taxonomia Vegetal",
+    "Fisiologia Vegetal",
+    "Morfologia Vegetal",
+    "Anatomia Vegetal",
+    "Flora",
+    "Sistemática",
+    "Biodiversidade Vegetal",
+    "Ecologia Vegetal"
+  ],
+
+  "CIC01": [
+    "Computação",
+    "Algoritmos",
+    "Grafos",
+    "Sistemas",
+    "Redes",
+    "Dados",
+    "Inteligência Artificial",
+    "Arquitetura",
+    "Software",
+    "Computadores"
+  ],
+
+  "DI01": [
+    "Desenho Industrial",
+    "Design",
+    "Produto",
+    "Projeto",
+    "Ergonomia",
+    "Modelagem",
+    "Representação",
+    "Prototipagem",
+    "Materiais",
+    "Design Gráfico"
+  ],
+
+  "QUI01": [
+    "Química",
+    "Orgânica",
+    "Inorgânica",
+    "Analítica",
+    "Físico-Química",
+    "Bioquímica",
+    "Laboratório",
+    "Síntese",
+    "Estrutura Molecular",
+    "Reações"
+  ],
+
+  "ENP01": [
+    "Engenharia de Produção",
+    "Produção",
+    "Logística",
+    "Pesquisa Operacional",
+    "Qualidade",
+    "Processos",
+    "Gestão Industrial",
+    "Planejamento",
+    "Cadeia de Suprimentos",
+    "Otimização"
+  ],
+
+  "GM01": [
+    "Genética",
+    "Morfologia",
+    "Biologia Molecular",
+    "Citogenética",
+    "Hereditariedade",
+    "Evolução",
+    "Embriologia",
+    "Estrutura",
+    "Genoma",
+    "Desenvolvimento"
+  ],
+
+  "ENE01": [
+    "Circuitos",
+    "Eletrônica",
+    "Sinais",
+    "Potência",
+    "Microcontroladores",
+    "Eletromagnetismo",
+    "Automação",
+    "Controle",
+    "Sistemas Lineares"
+  ],
+
+  "ENF01": [
+    "Engenharia Florestal",
+    "Silvicultura",
+    "Manejo Florestal",
+    "Inventário Florestal",
+    "Conservação",
+    "Recursos Naturais",
+    "Ecologia Florestal",
+    "Tecnologia da Madeira",
+    "Reflorestamento",
+    "Solos Florestais"
+  ],
+
+  "ENM01": [
+    "Engenharia Mecânica",
+    "Mecânica",
+    "Termodinâmica",
+    "Materiais",
+    "Máquinas",
+    "Transferência de Calor",
+    "Fluidos",
+    "Projeto Mecânico",
+    "Automação",
+    "Manufatura"
+  ],
+
+  "LPLC01": [
+    "Linguística",
+    "Português",
+    "Línguas Clássicas",
+    "Sintaxe",
+    "Semântica",
+    "Fonologia",
+    "Morfologia",
+    "Latim",
+    "Análise do Discurso",
+    "Gramática"
+  ],
+
+  "AV01": [
+    "Artes Visuais",
+    "Pintura",
+    "Desenho",
+    "Escultura",
+    "Fotografia",
+    "Gravura",
+    "Poéticas Visuais",
+    "História da Arte",
+    "Imagem",
+    "Ateliê"
+  ],
+
+  "JOR01": [
+    "Jornalismo",
+    "Reportagem",
+    "Redação",
+    "Comunicação",
+    "Mídia",
+    "Radiojornalismo",
+    "Telejornalismo",
+    "Assessoria",
+    "Ética Jornalística",
+    "Apuração"
+  ],
+
+  "BIC01": [
+    "Biologia Celular",
+    "Célula",
+    "Citologia",
+    "Microscopia",
+    "Biologia Molecular",
+    "Membranas",
+    "Organelas",
+    "Metabolismo Celular",
+    "Divisão Celular",
+    "Estrutura Celular"
+  ],
+
+  "AC01": [
+    "Artes Cênicas",
+    "Teatro",
+    "Interpretação",
+    "Encenação",
+    "Dramaturgia",
+    "Corpo",
+    "Performance",
+    "Direção",
+    "Expressão Corporal",
+    "Cena"
+  ]
+}

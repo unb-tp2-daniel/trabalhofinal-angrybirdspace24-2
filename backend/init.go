@@ -50,11 +50,12 @@ func init() {
 	functions.HTTP("ListarProfessores", professor_functions.ListProfessoresHandler)
 
 	functions.HTTP("GetRules", admin_functions.GetRulesHandler)
+	functions.HTTP("ListarALLMaterias", materia_functions.DataRetrievalMateriasHandler)
 
 	//Criando usuário personalizado
 	functions.HTTP("CriarUsuario", auth_functions.CreateUser)
 
-	functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
+	//functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
 	functions.HTTP("Matricular", alunos_functions.NormalMatriculateAlunoHandler)
 
 	functions.HTTP("LimparColecao", admin_functions.ClearCollectionHandler)

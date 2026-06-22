@@ -114,3 +114,31 @@ func ListMateriasOptativasCursoHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Erro na resposta", http.StatusInternalServerError)
 	}
 }
+
+// DataRetrievalMateriasHandler retorna todas as matérias com todos os atributos.
+// Rota exclusiva para administração/data retrieval, sem interferir no front-end.
+func DataRetrievalMateriasHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	// Verifica se é GET
+	if r.Method != http.MethodGet {
+		http.Error(w, "Método não permitido. Use GET.", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Chama a função do banco de dados (que já resgata todos os atributos do model)
+	materias, err := materiaDB.GetAllMaterias(database.Ctx, database.Client)
+
+	if err != nil {
+		log.Printf("Erro de Data Retrieval ao buscar materias: %v", err)
+		http.Error(w, "Erro interno ao ler materias", http.StatusInternalServerError)
+		return
+	}
+
+	// Retorna o JSON completo
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(materias); err != nil {
+		log.Printf("Erro ao retornar JSON no Data Retrieval: %v", err)
+		http.Error(w, "Erro na resposta", http.StatusInternalServerError)
+	}
+}
