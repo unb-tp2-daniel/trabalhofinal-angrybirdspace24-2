@@ -1,6 +1,16 @@
 <script setup lang="ts">
 const router = useRouter()
+const route = useRoute()
 
+function voltarHome() {
+  const partes = route.path.split('/').filter(Boolean)
+
+  if (partes.length > 0) {
+    router.push('/' + partes[0])
+  } else {
+    router.push('/')
+  }
+}
 </script>
 
 <template>
@@ -10,7 +20,7 @@ const router = useRouter()
           src="/images/logo.png" 
           alt="Logo UnB" 
           class="logo-unb" 
-          @click="router.back()" 
+          @click="voltarHome()" 
         />
         <span class="separador">|</span>
         <span class="nome-universidade">Universidade de Brasília</span>

@@ -7,7 +7,7 @@
             <button @click="turmas">Turmas</button>
             <button @click="materias">Matérias</button>
             <button>Relatórios</button>
-            <button>Regras</button>
+            <button @click="exit">Sair</button>
         </aside>
 
         <main class="content">
@@ -49,6 +49,19 @@
 </template>
 
 <script setup>
+import { signOut } from 'firebase/auth'
+import { useAuth } from '~/composables/useAuth'
+const auth = useAuth().auth
+
+    async function exit(){
+        try { 
+            await signOut(auth.value); 
+            console.log("Usuário deslogado com sucesso!"); 
+            await navigateTo('/login') 
+        } catch (error) { 
+            console.error("Erro ao deslogar o usuário:", error); 
+        } 
+    }
     function turmas() {
     navigateTo('/coordenador/turmas')
     }
