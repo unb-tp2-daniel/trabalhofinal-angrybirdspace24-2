@@ -1,16 +1,31 @@
-<!-- pages/matricula-ordinaria.vue -->
 <template>
   <div>
     <Header />
     <Menu :items="menuItems" />
-    
+
     <main class="container">
       <h1 class="titulo-pagina">Matrícula Ordinária</h1>
-      <div class="principal">
-        <TabelaTurmasAbertas />
-        <!-- Tem que ter o componente de grade de horarios, materias optativas e obrigatorias -->
-      </div>
 
+      <TabelaBuscas @resultados="turmas = $event" /> 
+
+      <TabelaTurmasAbertas 
+        :turmasAbertas="turmas" 
+        @selecionar="abrirModal" 
+        @detalhes="abrirDetalhesMateria"
+      />
+
+      <ModalConfirmacao
+        :visivel="modalAberto"
+        :turma="turmaSelecionada"
+        @fechar="modalAberto = false"
+        @confirmar="confirmarMatricula"
+      />
+
+      <ModalDetalhesMateria
+        :visivel="modalDetalhesAberto"
+        :materia="materiaSelecionada"
+        @fechar="modalDetalhesAberto = false"
+      />
 
       <ToastResultado
         :visivel="toastVisivel"
@@ -18,45 +33,34 @@
         :tipo="toastTipo"
       />
     </main>
-    
     <Footer />
   </div>
 </template>
 
 <script setup>
 import { ref} from 'vue'
+import { useAuth } from '~/composables/useAuth'
 
 useHead({ title: 'Matrícula Ordinária - UnB' })
 
-/* const turmasObrigatorias = ref([])
-const turmasOptativas = ref([]) */
-const modalConfirmacaoAberto = ref(false) //da pra usar aqui o msm modal eu acho
+const { matriculaUsuario } = useAuth() 
+const modalDetalhesAberto = ref(false)
+const materiaSelecionada = ref(null)
+const turmas = ref([])
 const toastVisivel = ref(false)
 const toastMensagem = ref('')
 const toastTipo = ref('')
+const modalAberto = ref(false)
+const turmaSelecionada = ref(null)
 
-async function enviarMatricula() {
-  modalConfirmacaoAberto.value = false
-  
-  try {
-    /* for (const ? of ?.value) {
-      await $fetch('...', {
-
-      })
-    } */
-    
-    mostrarToast('success', 'Matrícula realizada com sucesso!')
-    disciplinasSelecionadas.value = []
-  } catch (error) {
-    console.error("Erro na matrícula:", error)
-    const mensagemErro = error.data || 'Erro interno ao processar matrícula.'
-    mostrarToast('error', mensagemErro)
-  }
+function abrirModal(turma) {
+  turmaSelecionada.value = turma
+  modalAberto.value = true
 }
 
-function mostrarToast(tipo, mensagem) {
+function mostrarToast(tipo, message) {
   toastTipo.value = tipo
-  toastMensagem.value = mensagem
+  toastMensagem.value = message
   toastVisivel.value = true
 
   setTimeout(() => {
@@ -64,11 +68,64 @@ function mostrarToast(tipo, mensagem) {
   }, 3000)
 }
 
+async function abrirDetalhesMateria(turma) {
+  try {
+    const materias = await $fetch(
+      'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas'
+    )
+    const codigoProcurado = turma.materiaId || turma.codigoTurma.split("_", 2).join("_")
+    const materiaEncontrada = materias.find(m => m.codigo === codigoProcurado)
+
+    if (materiaEncontrada) {
+      materiaSelecionada.value = materiaEncontrada
+      modalDetalhesAberto.value = true
+    } else {
+      alert("Esta matéria não foi encontrada no catálogo do Decanato.")
+    }
+  } catch(err) {
+    console.error("Erro ao buscar matérias:", err)
+    materiaSelecionada.value = null
+  }
+}
+
+async function confirmarMatricula() {
+  modalAberto.value = false
+
+  // Como o useAuth expõe um ref reativo, acessamos o valor via .value
+  const alunoId = "Unb_" + matriculaUsuario.value 
+  
+  try {
+    const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/MatricularExtraordinaria', {
+      method: 'POST',
+      body: {
+        AlunoId: alunoId,
+        TurmaId: turmaSelecionada.value.codigoTurma,
+        MateriaId: turmaSelecionada.value.codigoTurma.split("_", 2).join("_"),
+        Status: false,
+        DataSolicitacao: null,
+        Prioridades: null,
+        Semestre: "20261",
+        PrioridadeNota: 0
+      }
+    })
+
+    mostrarToast('success', 'Matrícula extraordinária confirmada com sucesso!')
+
+    // CORREÇÃO DE REATIVIDADE: Altera a propriedade diretamente na referência selecionada
+    if (turmaSelecionada.value) {
+      turmaSelecionada.value.vagasOcupadas++
+    }
+  } catch (error) {
+    console.error("Erro na matrícula:", error)
+    const mensagemErro = error.data || 'Erro interno ao processar matrícula.'
+    mostrarToast('error', mensagemErro)
+  }
+}
+
 const menuItems = [
   {
     label: 'Matrícula',
     children: [
-      { label: 'Matrícula Ordinária', to: '/matricula-ordinaria' },
       { label: 'Trancamento de Matrícula' },
       { label: 'Histórico de Matrículas' },
     ]
