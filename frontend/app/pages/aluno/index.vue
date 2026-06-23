@@ -84,7 +84,8 @@ const menuItems = [
   {
     label: 'Ensino',
     children: [
-      { label: 'Realizar Matrícula Extraordinária', to: 'aluno/matricula' },
+      { label: 'Realizar Matrícula Extraordinária', to: '/aluno/matricula' },
+      { label: 'Realizar Matrícula', to: '/aluno/matriculaOrdinaria' },
       { label: 'Trancamento de Matrícula' },
       { label: 'Trancamento Geral de Matrícula' },
       { label: 'Grade Curricular' },
