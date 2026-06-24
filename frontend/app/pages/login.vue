@@ -123,7 +123,12 @@ const { auth } = useAuth() // Resgata a instância do auth inicializada com segu
             
             console.log("Usuário logado:", userCredential.user.uid)
             
-            await navigateTo('/aluno/') 
+            if( userCredential.user.uid.slice(0, 5) != "coord"){
+                await navigateTo('/aluno/')
+            }else{
+                await navigateTo('/coordenador/')
+            }
+             
         } 
         catch (err) {
             console.error("Erro detalhado do login:", err)
