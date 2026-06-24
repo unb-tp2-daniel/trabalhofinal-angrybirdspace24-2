@@ -138,13 +138,30 @@ const menuItems = [
 </script>
 
 <style scoped>
-  .container{
+  .container {
     display: flex;
+    flex-direction: column; /* Padrão: empilha um em cima do outro em telas menores (celular) */
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .content{
+  .content {
     flex: 1;
     padding: 10px;
     background-color: #f5f5f0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto; /* Garante que tabelas grandes não estourem o layout no mobile */
+  }
+
+  /* Media query para telas de Computador (Desktop) */
+  @media (min-width: 769px) {
+    .container {
+      flex-direction: row; /* Volta a ficar lado a lado no PC */
+    }
+    
+    .content {
+      padding: 20px; /* Um pouco mais de espaço no desktop */
+    }
   }
 </style>
