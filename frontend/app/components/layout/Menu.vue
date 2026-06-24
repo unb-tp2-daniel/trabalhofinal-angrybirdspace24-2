@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import { signOut } from 'firebase/auth'
 import { useAuth } from '~/composables/useAuth'
 
@@ -24,33 +25,93 @@ interface MenuItem {
 defineProps<{
   items: MenuItem[]
 }>()
+
+// Controla qual menu está aberto baseado no index ou label
+const activeMenu = ref<string | null>(null)
+
+// Guarda o recuo esquerdo (left) dinâmico para alinhar no desktop  
+const menuLeftOffset = ref<string>('12px')
+
+function toggleMenu(event: MouseEvent, label: string, hasChildren: boolean) {
+  if (!hasChildren) return
+  
+  if (activeMenu.value === label) {
+    activeMenu.value = null
+  } else {
+    activeMenu.value = label
+    
+    // No desktop, calcula a posição exata do botão clicado em relação à barra do menu
+    if (window.innerWidth > 768) {
+      const target = event.currentTarget as HTMLElement
+      const rect = target.getBoundingClientRect()
+      const navBar = target.closest('.menu_bar')
+      if (navBar) {
+        const navRect = navBar.getBoundingClientRect()
+        // Define o 'left' do submenu exatamente onde o botão começa
+        menuLeftOffset.value = `${rect.left - navRect.left}px`
+      }
+    } else {
+      menuLeftOffset.value = '12px' // Padrão seguro para mobile
+    }
+  }
+}
+
+function closeMenu() {
+  activeMenu.value = null
+}
+
+// Fecha o menu se o usuário clicar fora dele
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('click', closeMenu)
+  }
+})
+
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('click', closeMenu)
+  }
+})
 </script>
 
 <template>
-  <nav class="menu_bar">
+  <nav class="menu_bar" @click.stop>
     <div class="menu_scroll_wrapper">
       <ul class="menu_list">
         <li
           v-for="item in items"
           :key="item.label"
           class="menu_item"
+          :class="{ 'item_ativo': activeMenu === item.label }"
+          @click="toggleMenu($event, item.label, !!item.children)"
         >
           <span>{{ item.label }}</span>
-
-          <ul v-if="item.children" class="menu_contexto">
-            <li v-for="child in item.children" :key="child.label">
-              <NuxtLink v-if="child.to" :to="child.to" class="link_menu">
-                {{ child.label }}
-              </NuxtLink>
-              <span v-else>{{ child.label }}</span>
-            </li>
-          </ul>
         </li>
       </ul>
     </div>
+    
     <button class="botao-sair" @click="logout">Sair</button>
+
+    <template v-for="item in items" :key="'context-' + item.label">
+      <ul 
+        v-if="item.children && activeMenu === item.label" 
+        class="menu_contexto"
+        :style="{ left: menuLeftOffset }"
+      >
+        <li 
+          v-for="child in item.children" 
+          :key="child.label"
+          @click="closeMenu"
+        >
+          <NuxtLink v-if="child.to" :to="child.to" class="link_menu">
+            {{ child.label }}
+          </NuxtLink>
+          <span v-else>{{ child.label }}</span>
+        </li>
+      </ul>
+    </template>
   </nav>
-</template>
+</template> 
 
 <style scoped>
 .link_menu {
@@ -72,14 +133,14 @@ defineProps<{
   width: 100%;
   box-sizing: border-box;
   gap: 10px;
+  position: relative; 
 }
 
-/* --- NOVO: GERENCIADOR DO FADE-OUT GRADIENT --- */
 .menu_scroll_wrapper {
   position: relative;
   flex: 1;
-  overflow: hidden;
   display: flex;
+  overflow: hidden;
 }
 
 /* Cria uma sombra suave por cima do menu indicando que há mais conteúdo à direita */
@@ -91,14 +152,8 @@ defineProps<{
     right: 0;
     height: 100%;
     
-    /* Aumentamos a largura para o efeito cobrir mais espaço horizontal */
     width: 65px; 
     
-    /* TÉCNICA DE CONTRAS-TE:
-      1. Começa totalmente invisível (0%)
-      2. No meio do caminho (40%), já injeta o azul com 40% de opacidade
-      3. Na borda final (100%), entrega o azul totalmente sólido 
-    */
     background: linear-gradient(
       to right, 
       rgba(26, 58, 122, 0) 0%, 
@@ -107,7 +162,7 @@ defineProps<{
       #1a3a7a 100%
     );
     
-    /* Adiciona uma linha de sombra projetada vertical para simular profundidade real */
+    /* Adiciona uma linha de sombra projetada vertical*/
     box-shadow: inset -15px 0 15px -10px rgba(13, 29, 61, 0.6);
     
     pointer-events: none;
@@ -132,7 +187,7 @@ defineProps<{
 }
 
 .menu_item {
-  position: relative;
+  /*position: relative;*/
   padding: 11px 14px;
   cursor: pointer;
   font-size: 15px;
@@ -147,26 +202,16 @@ defineProps<{
   flex-shrink: 0;
 }
 
-.menu_item:hover {
+.menu_item:hover, .item_ativo {
   background-color: rgba(255, 255, 255, 0.12);
   color: #fff;
-  border-radius: 10px;
-}
-
-.menu_item:hover .menu_contexto {
-  display: block;
-}
-
-.menu_contexto li:hover {
-  background-color: #589dd6;
-  color: #1a3a7a;
 }
 
 .menu_contexto {
-  display: none;
+  /* display: none; */
   position: absolute;
   top: 100%;
-  left: 0;
+  left: 12px;
   background: white;
   width: 300px;
   border: 1px solid #e2e8f0;
@@ -174,8 +219,9 @@ defineProps<{
   list-style: none;
   padding: 6px;
   margin: 0;
-  z-index: 1000;
+  z-index: 9999;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  display: block;
 }
 
 .menu_contexto li {
@@ -189,6 +235,11 @@ defineProps<{
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.menu_contexto li:hover {
+  background-color: #589dd6;
+  color: white;
 }
 
 .botao-sair {
