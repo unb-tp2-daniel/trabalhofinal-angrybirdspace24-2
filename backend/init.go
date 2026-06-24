@@ -51,6 +51,7 @@ func init() {
 
 	functions.HTTP("GetRules", admin_functions.GetRulesHandler)
 	functions.HTTP("ListarALLMaterias", materia_functions.DataRetrievalMateriasHandler)
+	functions.HTTP("ListarCoordenadores", admin_functions.ListCoordenadoresHandler)
 
 	//Criando usuário personalizado
 	functions.HTTP("CriarUsuario", auth_functions.CreateUser)
