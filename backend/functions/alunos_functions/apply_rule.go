@@ -1,6 +1,8 @@
 package alunos_functions
 
 import (
+	time "time"
+
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/enums"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
@@ -19,18 +21,24 @@ func ApplyRules(aluno models.Aluno, materia models.Materia, curso models.Curso) 
 	return pontuacao
 }
 
-
 func isCalouro(aluno models.Aluno) bool {
-	var semestreAtual = "261" // modificar
+	ano := time.Now().Format("06")
+	semestre := "1"
+
+	if time.Now().Month() > 7 {
+		semestre = "2"
+	}
+
+	semestreAtual := ano + semestre
 	return aluno.Semestre == semestreAtual && aluno.NivelAcademico == enums.Graduacao
 }
 
 func calcularPontosBase(materiaId string, curso models.Curso) float64 {
-	if (curso.Obrigatorias[materiaId]) {
+	if curso.Obrigatorias[materiaId] {
 		return 10_000_000
 	}
 
-	if (curso.Optativas[materiaId]) {
+	if curso.Optativas[materiaId] {
 		return 100_000
 	}
 
@@ -44,7 +52,7 @@ func calcularProgresso(aluno models.Aluno, curso models.Curso, materia models.Ma
 	}
 
 	var bonus float64
-	if (aluno.Prioridades["Daces"] == "sim") {
+	if aluno.Prioridades["Daces"] == "sim" {
 		bonus += 1_000_000
 	}
 
