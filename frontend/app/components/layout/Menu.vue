@@ -72,12 +72,28 @@ onUnmounted(() => {
     window.removeEventListener('click', closeMenu)
   }
 })
+
+const menuListRef = ref<HTMLElement | null>(null)
+
+// Permite rolar o menu horizontalmente usando a rodinha vertical do mouse
+function handleWheel(event: WheelEvent) {
+  if (!menuListRef.value) return
+  // Se o usuário estiver rodando o scroll, move a lista para os lados
+  if (event.deltaY !== 0) {
+    event.preventDefault()
+    menuListRef.value.scrollLeft += event.deltaY
+  }
+}
 </script>
 
 <template>
   <nav class="menu_bar" @click.stop>
     <div class="menu_scroll_wrapper">
-      <ul class="menu_list">
+      <ul 
+        ref="menuListRef"
+        class="menu_list"
+        @wheel="handleWheel"
+        >
         <li
           v-for="item in items"
           :key="item.label"
