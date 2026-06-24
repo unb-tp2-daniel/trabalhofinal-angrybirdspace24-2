@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   // aguarda pacientemente que o firebase leia o localStorage
   await restaurarSessao()
 
-  if (!user.value && to.path !== '/login') {
+  if (!user.value && to.path.startsWith('/aluno')) {
     console.warn("Acesso negado: Redirecionando para a página de login.")
     return navigateTo('/login')
   }
