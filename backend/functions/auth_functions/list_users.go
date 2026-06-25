@@ -13,6 +13,8 @@ import (
 )
 
 func ListUsers(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	if r.Method != http.MethodGet {
 		http.Error(w, "Método não permitido. Use GET.", http.StatusMethodNotAllowed)
 		return
