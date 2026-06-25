@@ -7,6 +7,12 @@
         <h1 class="titulo">AUTENTICAÇÃO INTEGRADA</h1>
         <div class="linha"></div>
 
+        <div v-if="error" class="alerta-erro">
+          <span class="alerta-icone">⚠️</span>
+          <p class="alerta-mensagem">{{ error }}</p>
+          <button type="button" class="alerta-fechar" @click="error = ''">&times;</button>
+        </div>
+
         <form @submit.prevent="login">
           <label for="usuario">Nome de usuário:</label>
           <input 
@@ -112,8 +118,11 @@ const { auth } = useAuth() // Resgata a instância do auth inicializada com segu
         error.value = '' // limpa erros anteriores
         
         try {
+            
+            // throw { code: 'erro-aleatorio-de-rede' } // Adicione essa linha para testar
+
             if (!auth.value) {
-                error.value = 'Erro ao carregar o módulo de autenticação.'
+                error.value = 'Erro crítico: Módulo de autenticação não inicializado.'
                 return
             }
 
@@ -133,9 +142,17 @@ const { auth } = useAuth() // Resgata a instância do auth inicializada com segu
         catch (err) {
             console.error("Erro detalhado do login:", err)
             error.value = 'Falha no login: verificar usuário e senha.'
+
+            if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+                error.value = 'Usuário ou senha incorretos. Por favor, tente novamente.'
+            } else if (err.code === 'auth/invalid-email') {
+                error.value = 'O formato do usuário ou e-mail digitado é inválido.'
+            } else {
+                // Captura falhas genéricas de código, rede ou bloqueios
+                error.value = 'Falha na conexão com o servidor.'
+            }
         }
     }
-
 </script>
 
 <style scoped>
@@ -286,6 +303,60 @@ const { auth } = useAuth() // Resgata a instância do auth inicializada com segu
     .links a:hover { 
         text-decoration: underline;
         cursor: pointer;
+    }
+
+    /* ===================== NOTIFICAÇÃO DE ERRO ===================== */
+    .alerta-erro {
+        display: flex;
+        align-items: center;
+        background-color: #fdf2f2;
+        border: 1px solid #f8b4b4;
+        border-radius: 4px;
+        padding: 10px 12px;
+        margin-bottom: 16px;
+        gap: 8px;
+        position: relative;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .alerta-icone {
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .alerta-mensagem {
+        font-size: 13px;
+        color: #9b1c1c;
+        margin: 0;
+        font-weight: 500;
+        line-height: 1.4;
+        padding-right: 16px; /* Espaço para o botão fechar */
+    }
+
+    .alerta-fechar {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #9b1c1c;
+        font-size: 18px;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+    }
+
+    .alerta-fechar:hover {
+        opacity: 1;
+    }
+
+    /* Efeito suave de surgimento na tela */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
 </style>
