@@ -62,11 +62,14 @@
 
   .titulo{
     color: #2d2d2d;
-    font-size: 20px;
+    font-size: 18px;
     margin-bottom: 10px;
   }
 
   .atualizacao{
+    color: #555;
+    font-size: 12px;
+    width: 100%;
     background-color: #eef2f8;
     border: 2px solid #d0d8e4;
     padding: 12px;

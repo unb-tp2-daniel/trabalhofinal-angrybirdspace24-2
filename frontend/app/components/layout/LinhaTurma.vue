@@ -77,6 +77,7 @@ td{
 }
 
 .docente { 
+  font-size: 12px;
   color: #333; 
 }
 
@@ -102,9 +103,10 @@ td{
 }
 
 .cap_badge {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   border-radius: 20px;
+  text-align: center;
 }
 
 /* .cap-ok   { background: #eaf3de; color: #3b6d11; }

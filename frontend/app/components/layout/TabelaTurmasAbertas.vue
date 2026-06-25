@@ -189,6 +189,7 @@
   }
 
   .pagination{
+  color: #555;
   display: flex;
   justify-content: center;
   align-items: center;

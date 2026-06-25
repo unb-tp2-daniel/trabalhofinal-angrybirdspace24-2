@@ -2,7 +2,7 @@
   <div>
     <Header />
     <Menu :items="menuItems" />
-    <main class="container">
+    <main class="page-container">
       <TabelaBuscas @resultados="turmas = $event" /> 
       
       <TabelaTurmasAbertas 
@@ -103,6 +103,7 @@ const menuItems = [
   {
     label: 'Matrícula',
     children: [
+      { label: 'Página Inicial', to: '/aluno'},
       { label: 'Trancamento de Matrícula'},
       { label: 'Histórico de Matrículas' },
     ]
