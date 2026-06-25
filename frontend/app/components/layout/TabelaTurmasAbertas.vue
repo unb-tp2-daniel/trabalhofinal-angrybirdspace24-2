@@ -12,6 +12,25 @@
     turmas.value.filter(t => t.vagasOcupadas < t.vagasTotais)
   )
 
+  const itensPorPagina = 10
+  const paginaAtual = ref(1)
+
+  const totalPaginas = computed(() =>
+    Math.ceil(turmasDisponiveis.value.length / itensPorPagina)
+  )
+
+  const turmasPaginadas = computed(() => {
+    const inicio = (paginaAtual.value - 1) * itensPorPagina
+    const fim = inicio + itensPorPagina
+
+    return turmasDisponiveis.value.slice(inicio, fim)
+  })
+
+  watch(() => props.turmasAbertas, (novas) => {
+    turmas.value = novas
+    paginaAtual.value = 1
+  })
+
   const fetchTurmas = async () => {
     loading.value = true
     try {
@@ -75,7 +94,7 @@
         </thead>
 
         <tbody>
-          <LinhaTurma v-for="turma in turmasDisponiveis"
+          <LinhaTurma v-for="turma in turmasPaginadas"
             :key="turma.codigoTurma" 
             :turma="turma"
             @selecionar="emit('selecionar', $event)"
@@ -83,6 +102,13 @@
           />
         </tbody>
       </table>
+    </div>
+      <div v-if="totalPaginas >= 1" class="pagination">
+      <button @click="paginaAtual--" :disabled="paginaAtual === 1"> ← </button>
+      <span>
+        Página {{ paginaAtual }} de {{ totalPaginas }}
+      </span>
+      <button @click="paginaAtual++" :disabled="paginaAtual === totalPaginas"> → </button>
     </div>
   </div>
 </template>
@@ -161,4 +187,26 @@
     border-radius: 20px;
     border: 1px solid #e5e5e5;
   }
+
+  .pagination{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+}
+
+.pagination button {
+  border: none;
+  background: #1a3a7a;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 </style>
