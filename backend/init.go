@@ -55,6 +55,8 @@ func init() {
 
 	//Criando usuário personalizado
 	functions.HTTP("CriarUsuario", auth_functions.CreateUser)
+	//Listando usuários
+	functions.HTTP("ListarUsuarios", auth_functions.ListUsers)
 
 	//functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
 	functions.HTTP("Matricular", alunos_functions.NormalMatriculateAlunoHandler)
