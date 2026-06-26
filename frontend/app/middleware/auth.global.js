@@ -1,19 +1,24 @@
-import { useAuth } from '~/composables/useAuth'
-
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   if (process.server) return
 
   const { user, restaurarSessao } = useAuth()
 
-  // aguarda pacientemente que o firebase leia o localStorage
   await restaurarSessao()
 
-  if (!user.value && to.path.startsWith('/aluno')) {
-    console.warn("Acesso negado: Redirecionando para a página de login.")
-    return navigateTo('/login')
+  const isAuthRoute = to.path === '/login' || to.path === '/'
+  const isProtectedRoute =
+    to.path.startsWith('/aluno') ||
+    to.path.startsWith('/coordenador')
+
+  if (!user.value) {
+    if (isProtectedRoute) {
+      return navigateTo('/login')
+    }
+    return
   }
 
-  if (user.value && to.path === '/login') {
-    return navigateTo('/aluno/')
+  if (isAuthRoute) {
+    const isCoordinator = user.value.uid?.startsWith('coord')
+    return navigateTo(isCoordinator ? '/coordenador/' : '/aluno/')
   }
 })
