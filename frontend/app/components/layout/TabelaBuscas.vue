@@ -39,7 +39,17 @@
           <option>INSTITUTO DE COMPUTAÇÃO</option>
         </select>
       </div>
+      <div class="filtros-tipo">
+        <div class="campos-check">
+          <input type="checkbox" class="caixinha" v-model="filtro.obrigatorias"/>
+          <label>Apenas obrigatórias</label>
+        </div>
 
+        <div class="campos-check">
+          <input type="checkbox" class="caixinha" v-model="filtro.optativas"/>
+          <label>Apenas optativas</label>
+        </div>
+      </div>
       <div class="rodape">
         <button @click="buscarTurmas" :disabled="carregando">
           {{ carregando ? 'Buscando...' : 'Buscar' }}
@@ -63,7 +73,9 @@ const filtro = reactive({
   nome: '',
   horario: '',
   docente: '',
-  unidade: ''
+  unidade: '',
+  obrigatorias: false,
+  optativas: false
 })
 
 //checkbox
@@ -179,6 +191,20 @@ label {
   font-weight: 500;
 }
 
+.filtros-tipo {
+  display: flex;
+  gap: 70px;
+  align-items: center;
+  padding-left: 26px;
+
+}
+
+.campo-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .caixinha {
   appearance: none;
   -webkit-appearance: none;
@@ -191,6 +217,7 @@ label {
   flex-shrink: 0;
   position: relative;
   transition: background 0.15s, border-color 0.15s;
+  vertical-align: middle;
 }
 
 .caixinha:checked {
