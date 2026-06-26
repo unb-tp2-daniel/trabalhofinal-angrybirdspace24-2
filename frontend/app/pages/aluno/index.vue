@@ -47,7 +47,7 @@
 
   const carregarGrade = async (uid) => {
     try {
-      const res = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmasMatriculadas?id=Unb_${uid}`)
+      const res = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmasMatriculadas?id=${uid}`)
       
       console.log(res)
 
