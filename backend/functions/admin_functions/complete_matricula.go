@@ -1,96 +1,123 @@
 package admin_functions
 
 import (
-	"context"
 	"log"
+	"net/http"
 
 	"cloud.google.com/go/firestore"
-	alunoDB "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD/read/aluno"
+	database "github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/BD"
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
 type CandidatoMatricula struct {
 	Matricula models.Matricula
 	DocRef    *firestore.DocumentRef
-	CursoId   string
 }
 
 // depois do periodo de matricula/rematricula, essa função é rodada para ver quem passou ou não
-func CompleteMatricula(ctx context.Context, client *firestore.Client) error {
-	// pega todas as turmas ativas
-	turmasDoc, err := client.Collection("turmas").Where("ativo", "==", true).Documents(ctx).GetAll()
 
+/*
+	ESSA FUNÇÃO VAI SE TORNAR UM GSCHEDULE
+	isso significa que ela vai rodar sozinha agendada em algum momento. Com essa configuração,
+	é possível aumentar o timeout para 2 horas. Como, por ora, ela está em HTTP, então o tempo padrão,
+	estourará com certeza com 22k de turmas
+*/
+
+func CompleteMatriculaHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Admin-Token")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Método não permitido. Use POST para processar as matrículas.", http.StatusMethodNotAllowed)
+		return
+	}
+
+	adminToken := r.Header.Get("X-Admin-Token")
+	if adminToken == "" || adminToken != TokenAdminSecreto {
+		log.Printf("Tentativa de reset não autorizada vinda do IP: %s", r.RemoteAddr)
+		http.Error(w, "Não autorizado. Token administrativo inválido.", http.StatusUnauthorized)
+		return
+	}
+
+	ctx := r.Context()
+	client := database.Client
+
+	turmasDoc, err := client.Collection("turmas").Where("ativo", "==", true).Documents(ctx).GetAll()
+	//ids := []interface{}{"ADM01_0004_05", "DI01_0014_06"}
+	//turmasDoc, err := client.Collection("turmas").Where("codigoTurma", "in", ids).Documents(ctx).GetAll()
 	if err != nil {
-		return nil
+		log.Printf("Erro crítico ao buscar turmas ativas: %v", err)
+		http.Error(w, "Erro crítico ao buscar turmas ativas: ", http.StatusInternalServerError)
+		return
 	}
 
 	for _, turmaDoc := range turmasDoc {
 		var turma models.Turma
-		err = turmaDoc.DataTo(&turma)
-		if err != nil {
+		if err := turmaDoc.DataTo(&turma); err != nil {
+			log.Printf("Erro ao decodificar turma %s, pulando...", turmaDoc.Ref.ID)
 			continue
 		}
 
-		turmaId := turmaDoc.Ref.ID // pega id do documento em si ja
-
-		batch := client.Batch() // permite que tenha varias operações sem modificar o banco de dados de vdd
+		turmaId := turmaDoc.Ref.ID
+		batch := client.Batch()
 
 		query := client.Collection("matriculas").
 			Where("turmaId", "==", turmaId).
-			OrderBy("prioridadeNota", firestore.Desc).
+			OrderBy("prioridadenota", firestore.Desc).
 			OrderBy("dataSolicitacao", firestore.Asc)
 
-		matDocs, err := query.Documents(ctx).GetAll() // resgata o resultado da query
-
+		matDocs, err := query.Documents(ctx).GetAll()
 		if err != nil {
 			log.Printf("Erro ao buscar matriculas da turma %s: %v", turmaId, err)
 			continue
 		}
 
-		// auxiliares
+		if len(matDocs) == 0 { // salva o algoritmo de explodir o tempo
+			continue
+		}
+
 		var fila []CandidatoMatricula
 
 		for _, doc := range matDocs {
 			var m models.Matricula
-			doc.DataTo(&m)
-
-			/* Talvez usar outra abordagem para isso. Com o tempo, e muitas requisições, pode trazer lentidão.
-			A outra abordagem que pensei foi em criar um CursoId no model Matricula, talvez ajude, mas não sei onde colocaar*/
-			aluno, err := alunoDB.GetAlunoById(ctx, client, m.AlunoId)
-			if err != nil {
+			if err := doc.DataTo(&m); err != nil {
 				continue
 			}
 
 			fila = append(fila, CandidatoMatricula{
 				Matricula: m,
 				DocRef:    doc.Ref,
-				CursoId:   aluno.CursoId,
 			})
 		}
 
-		// controlar quem ja ganhou vaga e quantas vagas exclusivas foram usadas
-		ganhou := make(map[int]bool) // mapeia o indice do aluno na lista original
+		ganhou := make(map[int]bool)
 		vagasExclusivasUsadas := make(map[string]int64)
 
-		// assegurar as vagas exclusivas
+		// alocação das vagas exclusivas
 		for i, candidato := range fila {
-			limite, temVagaEx := turma.VagasExclusivas[candidato.CursoId]
+			limite, temVagaEx := turma.VagasExclusivas[candidato.Matricula.CursoId]
 
 			if temVagaEx {
-				atual := vagasExclusivasUsadas[candidato.CursoId]
+				atual := vagasExclusivasUsadas[candidato.Matricula.CursoId]
 				if atual < limite {
 					ganhou[i] = true
-					vagasExclusivasUsadas[candidato.CursoId]++
+					vagasExclusivasUsadas[candidato.Matricula.CursoId]++
 				}
 			}
 		}
 
-		// aplicar o restante das vagas
 		var totalExPreenchidas int64 = 0
 		for _, qtd := range vagasExclusivasUsadas {
 			totalExPreenchidas += qtd
 		}
 
+		// alocação das vagas universais restantes
 		vagasRestantes := turma.VagasTotais - totalExPreenchidas
 
 		for i := range fila {
@@ -110,7 +137,7 @@ func CompleteMatricula(ctx context.Context, client *firestore.Client) error {
 			statusFinal := ganhou[i]
 
 			batch.Update(candidato.DocRef, []firestore.Update{
-				{Path: "status", Value: statusFinal}, // aceita a matricula dele
+				{Path: "status", Value: statusFinal},
 			})
 
 			if statusFinal {
@@ -118,18 +145,19 @@ func CompleteMatricula(ctx context.Context, client *firestore.Client) error {
 			}
 		}
 
-		// atualiza o metadata
 		turmaRef := client.Collection("turmas").Doc(turmaId)
 		batch.Update(turmaRef, []firestore.Update{
-			{Path: "VagasOcupadas", Value: totalOcupadas},
+			{Path: "vagasOcupadas", Value: totalOcupadas},
 		})
 
-		// commita as atualizações de uma só vez
+		// commita as alterações da turma inteira de uma só vez
 		_, err = batch.Commit(ctx)
 		if err != nil {
-			log.Printf("erro ao fechar a turma %s: %v", turmaId, err)
+			log.Printf("Erro crítico ao commitar batch da turma %s: %v", turmaId, err)
 		}
 	}
 
-	return nil
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(`{"mensagem": "Período de matrículas encerrado e vagas distribuídas com sucesso!"}`))
 }

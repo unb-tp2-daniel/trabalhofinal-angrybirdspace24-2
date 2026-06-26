@@ -92,15 +92,17 @@ async function confirmarMatricula() {
   modalAberto.value = false
 
   // Como o useAuth expõe um ref reativo, acessamos o valor via .value
-  const alunoId = "Unb_" + matriculaUsuario.value 
+  const alunoId = matriculaUsuario.value 
+  const aluno = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/GetAlunoPorId?id=${alunoId}`)
   
   try {
-    const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/MatricularExtraordinaria', {
+    const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/Matricular', {
       method: 'POST',
       body: {
         AlunoId: alunoId,
         TurmaId: turmaSelecionada.value.codigoTurma,
         MateriaId: turmaSelecionada.value.codigoTurma.split("_", 2).join("_"),
+        CursoId: aluno.cursoId,
         Status: false,
         DataSolicitacao: null,
         Prioridades: null,
@@ -109,7 +111,7 @@ async function confirmarMatricula() {
       }
     })
 
-    mostrarToast('success', 'Matrícula extraordinária confirmada com sucesso!')
+    mostrarToast('success', 'Matrícula confirmada com sucesso!')
 
     // CORREÇÃO DE REATIVIDADE: Altera a propriedade diretamente na referência selecionada
     if (turmaSelecionada.value) {

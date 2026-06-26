@@ -69,8 +69,9 @@ async function confirmarMatricula() {
   modalAberto.value = false
 
   // Como o useAuth expõe um ref reativo, acessamos o valor via .value
-  const alunoId = "Unb_" + matriculaUsuario.value 
-  
+  const alunoId = matriculaUsuario.value 
+  const aluno = await $fetch(`https://southamerica-east1-matriculas242.cloudfunctions.net/GetAlunoPorId?id=${alunoId}`)
+
   try {
     const res = await $fetch('https://southamerica-east1-matriculas242.cloudfunctions.net/MatricularExtraordinaria', {
       method: 'POST',
@@ -78,6 +79,7 @@ async function confirmarMatricula() {
         AlunoId: alunoId,
         TurmaId: turmaSelecionada.value.codigoTurma,
         MateriaId: turmaSelecionada.value.codigoTurma.split("_", 2).join("_"),
+        CursoId: aluno.value.cursoId,
         Status: false,
         DataSolicitacao: null,
         Prioridades: null,
@@ -137,14 +139,13 @@ const menuItems = [
 
 async function abrirDetalhesMateria(turma) {
   try {
-    const materias = await $fetch(
-      'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas'
-    )
     const codigoProcurado = turma.materiaId || turma.codigoTurma.split("_", 2).join("_")
-    const materiaEncontrada = materias.find(m => m.codigo === codigoProcurado)
+    const materias = await $fetch(
+      `https://southamerica-east1-matriculas242.cloudfunctions.net/ProcurarMateria?id=${codigoProcurado}`
+    )
 
-    if (materiaEncontrada) {
-      materiaSelecionada.value = materiaEncontrada
+    if (materias) {
+      materiaSelecionada.value = materias
       modalDetalhesAberto.value = true
     } else {
       alert("Esta matéria não foi encontrada no catálogo do Decanato.")

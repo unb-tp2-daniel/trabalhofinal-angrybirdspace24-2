@@ -58,8 +58,9 @@ func init() {
 	//Listando usuários
 	functions.HTTP("ListarUsuarios", auth_functions.ListUsers)
 
-	//functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
+	functions.HTTP("MatricularExtraordinaria", alunos_functions.MatriculateAlunoHandler)
 	functions.HTTP("Matricular", alunos_functions.NormalMatriculateAlunoHandler)
+	functions.HTTP("CompletarMatricula", admin_functions.CompleteMatriculaHandler)
 
 	functions.HTTP("LimparColecao", admin_functions.ClearCollectionHandler)
 

@@ -20,6 +20,45 @@ import (
 	"github.com/unb-tp2-daniel/trabalhofinal-angrybirdspace24-2/backend/models"
 )
 
+func checkPreRequisitos(aluno *models.Aluno, materia *models.Materia) error {
+	if aluno.MateriasConcluidas == nil {
+		aluno.MateriasConcluidas = make(map[string]string)
+	}
+
+	_, concluiu := aluno.MateriasConcluidas[materia.CodigoMateria]
+	if concluiu {
+		return fmt.Errorf("materia_ja_concluida")
+	}
+
+	if len(materia.PreRequisitos) > 0 {
+		satisfazUm := false
+
+		for _, req := range materia.PreRequisitos {
+			concluiuTodasDoAnd := true
+
+			for _, codigo := range req.Disciplinas {
+				_, concluiu := aluno.MateriasConcluidas[codigo]
+
+				if !concluiu {
+					concluiuTodasDoAnd = false
+					break // analisa próximo bloco direto
+				}
+			}
+
+			if concluiuTodasDoAnd {
+				satisfazUm = true
+				break // Satisfizesse ao menos um bloco OR, está liberado
+			}
+		}
+
+		if !satisfazUm {
+			return fmt.Errorf("pre_requisitos_nao_atendidos")
+		}
+	}
+
+	return nil
+}
+
 func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 	// permite que qualquer origem chegue aqui (ALTERAR DEPOIS; CORS)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -112,39 +151,8 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 			return err
 		}
 
-		if aluno.MateriasConcluidas == nil {
-			aluno.MateriasConcluidas = make(map[string]string)
-		}
-
-		_, concluiu := aluno.MateriasConcluidas[materia.CodigoMateria]
-		if concluiu {
-			return fmt.Errorf("materia_ja_concluida")
-		}
-
-		if len(materia.PreRequisitos) > 0 {
-			satisfazUm := false
-
-			for _, req := range materia.PreRequisitos {
-				concluiuTodasDoAnd := true
-
-				for _, codigo := range req.Disciplinas {
-					_, concluiu := aluno.MateriasConcluidas[codigo]
-
-					if !concluiu {
-						concluiuTodasDoAnd = false
-						break // analisa próximo bloco direto
-					}
-				}
-
-				if concluiuTodasDoAnd {
-					satisfazUm = true
-					break
-				}
-			}
-
-			if !satisfazUm {
-				return fmt.Errorf("pre_requisitos_nao_atendidos")
-			}
+		if err := checkPreRequisitos(&aluno, &materia); err != nil {
+			return err
 		}
 
 		/* validação de vagas e update */
@@ -194,6 +202,16 @@ func MatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 
 // lida com a matricula normal e rematricula do aluno
 func NormalMatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
+	// permite que qualquer origem chegue aqui (ALTERAR DEPOIS; CORS)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	if r.Method != http.MethodPost {
 		http.Error(w, "Método não permitido.", http.StatusMethodNotAllowed)
 		return
@@ -238,10 +256,26 @@ func NormalMatriculateAlunoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := checkPreRequisitos(aluno, materia); err != nil {
+		if err.Error() == "materia_ja_concluida" {
+			http.Error(w, "Aluno já realizou a matéria.", http.StatusConflict)
+			return
+		}
+		if err.Error() == "pre_requisitos_nao_atendidos" {
+			http.Error(w, "Aluno não possui os pré-requisitos necessários.", http.StatusConflict)
+			return
+		}
+	}
+
 	matricula.PrioridadeNota = ApplyRules(*aluno, *materia, *curso)
 
 	err = create.CreateMatricula(ctx, database.Client, matricula)
 	if err != nil {
+		if err.Error() == "aluno_ja_matriculado" {
+			http.Error(w, "Você já possui uma solicitação enviada para esta turma.", http.StatusConflict)
+			return
+		}
+
 		log.Printf("Erro ao salvar matrícula no banco: %v", err)
 		http.Error(w, "Erro interno ao salvar a matrícula", http.StatusInternalServerError)
 		return
