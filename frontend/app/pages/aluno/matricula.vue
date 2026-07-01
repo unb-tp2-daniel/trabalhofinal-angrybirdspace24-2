@@ -79,7 +79,7 @@ async function confirmarMatricula() {
         AlunoId: alunoId,
         TurmaId: turmaSelecionada.value.codigoTurma,
         MateriaId: turmaSelecionada.value.codigoTurma.split("_", 2).join("_"),
-        CursoId: aluno.value.cursoId,
+        CursoId: "",
         Status: false,
         DataSolicitacao: null,
         Prioridades: null,
