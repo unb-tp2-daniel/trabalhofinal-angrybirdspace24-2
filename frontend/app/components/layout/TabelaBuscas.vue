@@ -54,6 +54,9 @@
         <button @click="buscarTurmas" :disabled="carregando">
           {{ carregando ? 'Buscando...' : 'Buscar' }}
         </button>
+        <!-- <button @click="buscarTurmas" :disabled="carregando">
+          {{ carregando ? 'Buscando...' : 'Buscar (' + totalFiltrado + ' encontradas)' }}
+        </button> -->
         <span v-if="erro" class="erro">{{ erro }}</span>
       </div>
 
@@ -67,6 +70,9 @@ import { reactive, ref, watch } from 'vue'
 const emit = defineEmits<{
   (e: 'resultados', turmas: any[]): void
 }>()
+
+// 1. Injetando a autenticação para ler os dados do usuário/aluno
+const { user } = useAuth()
 
 const filtro = reactive({
   codigoTurma: '',
@@ -95,12 +101,9 @@ watch(filtro, (val) =>{
   ativos.unidade = !!val.unidade
 })
 
-const carregando =ref(false)
-const erro =ref('')
-/* dsfafeads
-function buscarTurmas() {
-  console.log(filtro)
-} */
+const carregando = ref(false)
+const erro = ref('')
+// const totalFiltrado = ref(0)
 
 async function buscarTurmas() {
   carregando.value = true
@@ -111,18 +114,68 @@ async function buscarTurmas() {
       'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas'
     )
 
-    const dados = todos.filter(turma =>{
+    // Pegamos o cursoId do usuário autenticado (garantindo que existe)
+    const alunoCursoId = (user.value as any)?.cursoId
+    // 1. Corrigindo o ID padrão com base no seeder ('CIC01')
+    // const alunoCursoId = (user.value as any)?.cursoId || 'CIC01'
+
+    const dados = todos.filter(turma => {
       if (ativos.codigoTurma  && filtro.codigoTurma  && !turma.codigoTurma?.toLowerCase().includes(filtro.codigoTurma.toLowerCase()))  return false
       if (ativos.nome    && filtro.nome    && !turma.nomeMateria?.toLowerCase().includes(filtro.nome.toLowerCase()))    return false
       if (ativos.horario && filtro.horario && !turma.horario?.toLowerCase().includes(filtro.horario.toLowerCase()))     return false
       if (ativos.docente && filtro.docente && !turma.professorNome?.toLowerCase().includes(filtro.docente.toLowerCase())) return false
       if (ativos.unidade && filtro.unidade && turma.unidade !== filtro.unidade) return false
+      
+      // // 2. Aplicação do filtro robusto de Obrigatórias / Optativas
+      // if (filtro.obrigatorias || filtro.optativas) {
+      //   // Mapeando variações comuns que o backend Go costuma enviar no JSON
+      //   const deptoIdTurma = turma.departamentoId || turma.departamentoID || turma.cursoId || turma.cursoID
+      //   const deptoListaTurma = turma.departamentosId || turma.cursosId
+
+      //   // Se o departamento/curso da turma bater com o cursoId do aluno, é obrigatória
+      //   const ehObrigatoria = deptoIdTurma === alunoCursoId || deptoListaTurma?.includes(alunoCursoId)
+
+      //   if (filtro.obrigatorias && !ehObrigatoria) return false
+      //   if (filtro.optativas && ehObrigatoria) return false
+      // }
+
+      // // 2. Aplicação do filtro de Obrigatórias / Optativas baseado no código
+      // if (filtro.obrigatorias || filtro.optativas) {
+      //   // Extrai o prefixo do código da turma (ex: 'MAT01_0026_01' vira 'MAT')
+      //   const prefixoMateria = turma.codigoTurma?.split(/[0-9]/)[0]?.toUpperCase() || ''
+        
+      //   // Se o curso do aluno simulado é CIC01, consideramos obrigatórias as que começam com 'CIC'
+      //   const siglaCursoAluno = alunoCursoId.substring(0, 3).toUpperCase() // Pega 'CIC' de 'CIC01'
+      //   const ehObrigatoria = prefixoMateria === siglaCursoAluno
+
+      //   if (filtro.obrigatorias && !ehObrigatoria) return false
+      //   if (filtro.optativas && ehObrigatoria) return false
+      // }
+      // Aplicação do filtro de Obrigatórias / Optativas baseado no código/departamento
+      if (filtro.obrigatorias || filtro.optativas) {
+        // Se o aluno não tiver cursoId (ex: um usuário novo ou admin), não temos como filtrar obrigatorias/optativas
+        if (!alunoCursoId) {
+          // Em produção, se não sabemos o curso do aluno, podemos escolher mostrar tudo ou ocultar tudo.
+          // Vamos retornar false para o filtro de obrigatórias se ele não tem curso.
+          if (filtro.obrigatorias) return false;
+          if (filtro.optativas) return true; // Tudo vira optativa se ele não tem curso mapeado
+        } else {
+          const prefixoMateria = turma.codigoTurma?.split(/[0-9]/)[0]?.toUpperCase() || ''
+          const siglaCursoAluno = alunoCursoId.substring(0, 3).toUpperCase()
+          const ehObrigatoria = prefixoMateria === siglaCursoAluno
+
+          if (filtro.obrigatorias && !ehObrigatoria) return false
+          if (filtro.optativas && ehObrigatoria) return false
+        }
+      }
+
       return true
     })
+    // totalFiltrado.value = dados.length
     emit('resultados', dados)
-  }catch(e){
+  } catch(e) {
     erro.value = 'Não foi possível carregar as turmas.'
-  }finally{
+  } finally {
     carregando.value = false
   }
 }
