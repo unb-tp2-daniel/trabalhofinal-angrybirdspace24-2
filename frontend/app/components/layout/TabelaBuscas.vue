@@ -110,14 +110,25 @@ async function buscarTurmas() {
   erro.value = ''
 
   try {
+    // 1. Busca todas as turmas da Cloud Function
     const todos = await $fetch<any[]>(
       'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas'
     )
 
-    // Pegamos o cursoId do usuário autenticado (garantindo que existe)
-    const alunoCursoId = (user.value as any)?.cursoId
-    // 1. Corrigindo o ID padrão com base no seeder ('CIC01')
-    // const alunoCursoId = (user.value as any)?.cursoId || 'CIC01'
+    // 2. Resgata o cursoId do usuário logado (usando fallback seguro se não existir)
+    const alunoCursoId = (user.value as any)?.cursoId || 'CIC01'
+
+    // 3. Busca os dados estruturados do curso (Obrigatorias/Optativas) no Firestore
+    const dadosCurso = await $fetch<any>(
+      `https://southamerica-east1-matriculas242.cloudfunctions.net/GetCursoById?id=${alunoCursoId}`
+    ).catch((err) => {
+      console.error("Erro ao buscar dados do curso:", err)
+      return null
+    })
+
+    // Extrai os mapas do documento (conforme estrutura visualizada no console do Firestore)
+    const mapaObrigatorias = dadosCurso?.Obrigatorias || {}
+    const mapaOptativas = dadosCurso?.Optativas || {}
 
     const dados = todos.filter(turma => {
       if (ativos.codigoTurma  && filtro.codigoTurma  && !turma.codigoTurma?.toLowerCase().includes(filtro.codigoTurma.toLowerCase()))  return false
@@ -126,52 +137,32 @@ async function buscarTurmas() {
       if (ativos.docente && filtro.docente && !turma.professorNome?.toLowerCase().includes(filtro.docente.toLowerCase())) return false
       if (ativos.unidade && filtro.unidade && turma.unidade !== filtro.unidade) return false
       
-      // // 2. Aplicação do filtro robusto de Obrigatórias / Optativas
-      // if (filtro.obrigatorias || filtro.optativas) {
-      //   // Mapeando variações comuns que o backend Go costuma enviar no JSON
-      //   const deptoIdTurma = turma.departamentoId || turma.departamentoID || turma.cursoId || turma.cursoID
-      //   const deptoListaTurma = turma.departamentosId || turma.cursosId
-
-      //   // Se o departamento/curso da turma bater com o cursoId do aluno, é obrigatória
-      //   const ehObrigatoria = deptoIdTurma === alunoCursoId || deptoListaTurma?.includes(alunoCursoId)
-
-      //   if (filtro.obrigatorias && !ehObrigatoria) return false
-      //   if (filtro.optativas && ehObrigatoria) return false
-      // }
-
-      // // 2. Aplicação do filtro de Obrigatórias / Optativas baseado no código
-      // if (filtro.obrigatorias || filtro.optativas) {
-      //   // Extrai o prefixo do código da turma (ex: 'MAT01_0026_01' vira 'MAT')
-      //   const prefixoMateria = turma.codigoTurma?.split(/[0-9]/)[0]?.toUpperCase() || ''
-        
-      //   // Se o curso do aluno simulado é CIC01, consideramos obrigatórias as que começam com 'CIC'
-      //   const siglaCursoAluno = alunoCursoId.substring(0, 3).toUpperCase() // Pega 'CIC' de 'CIC01'
-      //   const ehObrigatoria = prefixoMateria === siglaCursoAluno
-
-      //   if (filtro.obrigatorias && !ehObrigatoria) return false
-      //   if (filtro.optativas && ehObrigatoria) return false
-      // }
-      // Aplicação do filtro de Obrigatórias / Optativas baseado no código/departamento
+      // 4. Filtro baseado nas regras reais de mapeamento do banco de dados
       if (filtro.obrigatorias || filtro.optativas) {
-        // Se o aluno não tiver cursoId (ex: um usuário novo ou admin), não temos como filtrar obrigatorias/optativas
-        if (!alunoCursoId) {
-          // Em produção, se não sabemos o curso do aluno, podemos escolher mostrar tudo ou ocultar tudo.
-          // Vamos retornar false para o filtro de obrigatórias se ele não tem curso.
-          if (filtro.obrigatorias) return false;
-          if (filtro.optativas) return true; // Tudo vira optativa se ele não tem curso mapeado
-        } else {
-          const prefixoMateria = turma.codigoTurma?.split(/[0-9]/)[0]?.toUpperCase() || ''
-          const siglaCursoAluno = alunoCursoId.substring(0, 3).toUpperCase()
-          const ehObrigatoria = prefixoMateria === siglaCursoAluno
+        // Extrai o prefixo de letras do curso do aluno (ex: 'ADM' de 'ADM01')
+        const siglaCursoAluno = alunoCursoId.replace(/[0-9]/g, '').toUpperCase()
+        
+        // Extrai o prefixo de letras da turma atual (ex: 'MAT' de 'MAT01_0026_01')
+        const prefixoTurma = turma.codigoTurma?.split(/[0-9]/)[0]?.toUpperCase() || ''
 
-          if (filtro.obrigatorias && !ehObrigatoria) return false
-          if (filtro.optativas && ehObrigatoria) return false
-        }
+        // 1. Abordagem por Código do Banco: Extrai o número da matéria da turma
+        const partesCodigo = turma.codigoTurma?.split("_") || []
+        const numeroMateriaTurma = partesCodigo[1] || ""
+        const materiaIdNoCurso = `${alunoCursoId}_${numeroMateriaTurma}`
+
+        // Verifica se é obrigatória por ID exato ou por pertencer ao mesmo departamento/sigla do curso
+        const ehObrigatoria = !!mapaObrigatorias[materiaIdNoCurso] || (prefixoTurma === siglaCursoAluno && prefixoTurma !== '')
+        
+        // Se não for obrigatória, mapeia pelas optativas do banco ou assume módulo livre
+        const ehOptativa = !!mapaOptativas[materiaIdNoCurso] || (!ehObrigatoria)
+
+        if (filtro.obrigatorias && !ehObrigatoria) return false
+        if (filtro.optativas && !ehOptativa) return false
       }
 
       return true
     })
-    // totalFiltrado.value = dados.length
+
     emit('resultados', dados)
   } catch(e) {
     erro.value = 'Não foi possível carregar as turmas.'
@@ -179,6 +170,81 @@ async function buscarTurmas() {
     carregando.value = false
   }
 }
+
+// async function buscarTurmas() {
+//   carregando.value = true
+//   erro.value = ''
+
+//   try {
+//     const todos = await $fetch<any[]>(
+//       'https://southamerica-east1-matriculas242.cloudfunctions.net/ListarTurmas'
+//     )
+
+//     // Pegamos o cursoId do usuário autenticado (garantindo que existe)
+//     const alunoCursoId = (user.value as any)?.cursoId
+//     // 1. Corrigindo o ID padrão com base no seeder ('CIC01')
+//     // const alunoCursoId = (user.value as any)?.cursoId || 'CIC01'
+
+//     const dados = todos.filter(turma => {
+//       if (ativos.codigoTurma  && filtro.codigoTurma  && !turma.codigoTurma?.toLowerCase().includes(filtro.codigoTurma.toLowerCase()))  return false
+//       if (ativos.nome    && filtro.nome    && !turma.nomeMateria?.toLowerCase().includes(filtro.nome.toLowerCase()))    return false
+//       if (ativos.horario && filtro.horario && !turma.horario?.toLowerCase().includes(filtro.horario.toLowerCase()))     return false
+//       if (ativos.docente && filtro.docente && !turma.professorNome?.toLowerCase().includes(filtro.docente.toLowerCase())) return false
+//       if (ativos.unidade && filtro.unidade && turma.unidade !== filtro.unidade) return false
+      
+//       // // 2. Aplicação do filtro robusto de Obrigatórias / Optativas
+//       // if (filtro.obrigatorias || filtro.optativas) {
+//       //   // Mapeando variações comuns que o backend Go costuma enviar no JSON
+//       //   const deptoIdTurma = turma.departamentoId || turma.departamentoID || turma.cursoId || turma.cursoID
+//       //   const deptoListaTurma = turma.departamentosId || turma.cursosId
+
+//       //   // Se o departamento/curso da turma bater com o cursoId do aluno, é obrigatória
+//       //   const ehObrigatoria = deptoIdTurma === alunoCursoId || deptoListaTurma?.includes(alunoCursoId)
+
+//       //   if (filtro.obrigatorias && !ehObrigatoria) return false
+//       //   if (filtro.optativas && ehObrigatoria) return false
+//       // }
+
+//       // // 2. Aplicação do filtro de Obrigatórias / Optativas baseado no código
+//       // if (filtro.obrigatorias || filtro.optativas) {
+//       //   // Extrai o prefixo do código da turma (ex: 'MAT01_0026_01' vira 'MAT')
+//       //   const prefixoMateria = turma.codigoTurma?.split(/[0-9]/)[0]?.toUpperCase() || ''
+        
+//       //   // Se o curso do aluno simulado é CIC01, consideramos obrigatórias as que começam com 'CIC'
+//       //   const siglaCursoAluno = alunoCursoId.substring(0, 3).toUpperCase() // Pega 'CIC' de 'CIC01'
+//       //   const ehObrigatoria = prefixoMateria === siglaCursoAluno
+
+//       //   if (filtro.obrigatorias && !ehObrigatoria) return false
+//       //   if (filtro.optativas && ehObrigatoria) return false
+//       // }
+//       // Aplicação do filtro de Obrigatórias / Optativas baseado no código/departamento
+//       if (filtro.obrigatorias || filtro.optativas) {
+//         // Se o aluno não tiver cursoId (ex: um usuário novo ou admin), não temos como filtrar obrigatorias/optativas
+//         if (!alunoCursoId) {
+//           // Em produção, se não sabemos o curso do aluno, podemos escolher mostrar tudo ou ocultar tudo.
+//           // Vamos retornar false para o filtro de obrigatórias se ele não tem curso.
+//           if (filtro.obrigatorias) return false;
+//           if (filtro.optativas) return true; // Tudo vira optativa se ele não tem curso mapeado
+//         } else {
+//           const prefixoMateria = turma.codigoTurma?.split(/[0-9]/)[0]?.toUpperCase() || ''
+//           const siglaCursoAluno = alunoCursoId.substring(0, 3).toUpperCase()
+//           const ehObrigatoria = prefixoMateria === siglaCursoAluno
+
+//           if (filtro.obrigatorias && !ehObrigatoria) return false
+//           if (filtro.optativas && ehObrigatoria) return false
+//         }
+//       }
+
+//       return true
+//     })
+//     // totalFiltrado.value = dados.length
+//     emit('resultados', dados)
+//   } catch(e) {
+//     erro.value = 'Não foi possível carregar as turmas.'
+//   } finally {
+//     carregando.value = false
+//   }
+// }
 </script>
 
 <style scoped>
