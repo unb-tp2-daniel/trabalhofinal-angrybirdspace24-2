@@ -68,7 +68,7 @@ def rodar_seeder_turmas():
         # Filtra professores do mesmo departamento. Se não houver, pega de qualquer departamento.
         opcoes_professores = profs_por_depto.get(depto_id, todos_profs)
         
-        for i in range(1, 11): # Gera exatamente 10 turmas (01 a 10)
+        for i in range(1, 4): # Gera exatamente 3 turmas (01 a 03)
             codigo_turma = f"{materia_id}_{i:02d}"
             
             prof_escolhido = random.choice(opcoes_professores)

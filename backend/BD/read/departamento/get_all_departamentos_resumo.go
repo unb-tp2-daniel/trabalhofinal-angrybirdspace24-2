@@ -7,14 +7,14 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-// O Firestore vai ler o documento e preencher só o que bater com essas tags.
+
 type DepartamentoResumo struct {
 	DepartamentoNome string `json:"departamentoNome" firestore:"departamentoNome"`
 	CoordenadorId    string `json:"coordenadorId" firestore:"coordenadorId"`
 	DepartamentoId   string `json:"departamentoId" firestore:"departamentoId"`
 }
 
-// GetAllDepartamentosResumo busca todos os deptos e retorna só o nome e a ID do coordenador
+
 func GetAllDepartamentosResumo(ctx context.Context, client *firestore.Client) ([]DepartamentoResumo, error) {
 	var lista []DepartamentoResumo
 
@@ -23,10 +23,10 @@ func GetAllDepartamentosResumo(ctx context.Context, client *firestore.Client) ([
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
-			break // Fim da lista de documentos
+			break 
 		}
 		if err != nil {
-			return nil, err // Retorna o erro pro Handler lidar
+			return nil, err 
 		}
 
 		var resumo DepartamentoResumo
@@ -35,7 +35,7 @@ func GetAllDepartamentosResumo(ctx context.Context, client *firestore.Client) ([
 			return nil, err
 		}
 
-		// Adiciona na lista
+		
 		lista = append(lista, resumo)
 	}
 
